@@ -1,0 +1,178 @@
+<!--
+  Invite email -- venue owner (ADR-0024).
+
+  This file is the source of truth; production reads it only because someone
+  pasted it into Supabase -> Authentication -> Emails -> Invite user. Keep the
+  two in sync by hand, and re-paste when this changes. Subject line pasted
+  with it on 2026-09-15 (the venue's name when the invite carries one):
+
+      {{ if .Data.venue_name }}Το {{ .Data.venue_name }} είναι στο Ludi — η είσοδός σας{{ else }}Ludi — η είσοδός σας στο dashboard{{ end }}
+
+  Why it looks like this (2026-09-15 redesign, after the first real owner
+  invite went out to Kamares): Greek first, English under it — the same order
+  as every venue-facing thing Ludi prints; the venue's name in the heading so
+  the owner knows this is theirs; the three things the dashboard actually does,
+  in the words of the venue one-pager; ONE button, and the same link as text
+  under it, because Gmail on a phone sometimes swallows a button; who sent it
+  and how to reach them, because a classifier and an owner both want that.
+  Tables and inline styles only, no images: images are blocked by default in
+  most mail clients and the wordmark is a word.
+
+  The link is the token_hash shape, not {{ .ConfirmationURL }}: the
+  ConfirmationURL form runs PKCE and points at GoTrue /verify, which burns the
+  single-use token on a bare GET -- Gmail's link scanner could spend it before
+  the human clicked (diagnosed 2026-09-01, PR #177). The admin origin therefore
+  lives here as well as in ADMIN_SITE_URL; if the admin moves, change both.
+
+  Variables: {{ .TokenHash }} (required), {{ .Data.first_name }} and
+  {{ .Data.venue_name }} come from invite-venue-owner's metadata. Only the
+  double-brace parts are templated -- do not wrap the whole href in them.
+  GoTrue parses this comment too, and an empty double brace here failed
+  the whole template, so GoTrue sent its default invite instead (found
+  against GoTrue 2.197, prod's version, 2026-10-20).
+-->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="background:#f2f4f3;margin:0;padding:0;">
+  <tr>
+    <td align="center" style="padding:32px 16px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+             style="max-width:560px;">
+
+        <!-- Wordmark -->
+        <tr>
+          <td style="padding:0 8px 14px;font-family:Georgia,'Times New Roman',serif;
+                     font-size:22px;font-weight:700;letter-spacing:-0.01em;color:#10181c;">
+            Ludi
+            <span style="font-family:'Courier New',Courier,monospace;font-size:11px;
+                         font-weight:400;letter-spacing:0.14em;color:#5f6e73;
+                         text-transform:uppercase;padding-left:8px;">
+              για γήπεδα · for venues
+            </span>
+          </td>
+        </tr>
+
+        <!-- Card -->
+        <tr>
+          <td style="background:#ffffff;border:1px solid #e3e7e6;border-radius:14px;
+                     padding:32px 28px;font-family:-apple-system,BlinkMacSystemFont,
+                     'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#10181c;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+
+              <!-- Greek -->
+              <tr>
+                <td style="font-family:Georgia,'Times New Roman',serif;font-size:26px;
+                           line-height:1.2;font-weight:700;letter-spacing:-0.01em;
+                           color:#10181c;padding-bottom:14px;">
+                  {{ if .Data.venue_name }}Το {{ .Data.venue_name }} είναι στο Ludi.{{ else }}Το γήπεδό σας είναι στο Ludi.{{ end }}
+                </td>
+              </tr>
+              <tr>
+                <td style="font-size:16px;line-height:1.55;color:#10181c;padding-bottom:12px;">
+                  {{ if .Data.first_name }}Γεια σας {{ .Data.first_name }},{{ else }}Γεια σας,{{ end }}
+                </td>
+              </tr>
+              <tr>
+                <td style="font-size:16px;line-height:1.55;color:#3f4c51;padding-bottom:16px;">
+                  Το dashboard σας είναι έτοιμο. Από το κινητό σας βλέπετε:
+                </td>
+              </tr>
+              <tr>
+                <td style="padding-bottom:20px;">
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <td style="font-size:15px;line-height:1.6;color:#3f4c51;padding:0 0 6px;">
+                        <span style="color:#175e77;font-weight:700;">&#9679;</span>&nbsp;
+                        <strong style="color:#10181c;">τις κρατήσεις της ημέρας</strong> — ποιος έρχεται και πότε
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="font-size:15px;line-height:1.6;color:#3f4c51;padding:0 0 6px;">
+                        <span style="color:#175e77;font-weight:700;">&#9679;</span>&nbsp;
+                        <strong style="color:#10181c;">τις τηλεφωνικές κρατήσεις</strong> — τις γράφετε στο ίδιο βιβλίο, χωρίς χρέωση
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="font-size:15px;line-height:1.6;color:#3f4c51;padding:0;">
+                        <span style="color:#175e77;font-weight:700;">&#9679;</span>&nbsp;
+                        <strong style="color:#10181c;">τα έσοδά σας</strong> — και πότε μπαίνουν στον λογαριασμό σας
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+
+              <!-- Button -->
+              <tr>
+                <td style="padding:2px 0 14px;">
+                  <a href="https://ludi-admin.vercel.app/auth/callback?token_hash={{ .TokenHash }}&type=invite"
+                     style="display:inline-block;background:#175e77;color:#ffffff;
+                            text-decoration:none;font-size:16px;font-weight:600;
+                            padding:14px 28px;border-radius:10px;">
+                    Άνοιγμα dashboard
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td style="font-size:13px;line-height:1.5;color:#5f6e73;padding-bottom:24px;">
+                  Ο σύνδεσμος σας συνδέει απευθείας — δεν υπάρχει κωδικός. Ισχύει μία φορά,
+                  για 24 ώρες. Αν λήξει, γράψτε το email σας στη σελίδα εισόδου και έρχεται νέος.
+                </td>
+              </tr>
+
+              <!-- Divider -->
+              <tr>
+                <td style="border-top:1px solid #e3e7e6;padding-top:22px;"></td>
+              </tr>
+
+              <!-- English -->
+              <tr>
+                <td style="font-family:Georgia,'Times New Roman',serif;font-size:20px;
+                           line-height:1.25;font-weight:700;color:#10181c;padding-bottom:10px;">
+                  {{ if .Data.venue_name }}{{ .Data.venue_name }} is on Ludi.{{ else }}Your venue is on Ludi.{{ end }}
+                </td>
+              </tr>
+              <tr>
+                <td style="font-size:15px;line-height:1.55;color:#3f4c51;padding-bottom:14px;">
+                  Your dashboard is ready. From your phone you can see the day&rsquo;s bookings,
+                  log the ones you take by phone at no charge, and check what you have earned
+                  and when it lands in your account.
+                </td>
+              </tr>
+              <tr>
+                <td style="font-size:13px;line-height:1.5;color:#5f6e73;padding-bottom:4px;">
+                  The button above signs you in directly — there is no password. It works once
+                  and expires in 24 hours; if it has, enter your email on the sign-in page for a
+                  new one. If the button does nothing, use this link:
+                </td>
+              </tr>
+              <tr>
+                <td style="font-size:12px;line-height:1.5;word-break:break-all;padding-bottom:4px;">
+                  <a href="https://ludi-admin.vercel.app/auth/callback?token_hash={{ .TokenHash }}&type=invite"
+                     style="color:#175e77;text-decoration:underline;">https://ludi-admin.vercel.app/auth/callback?token_hash={{ .TokenHash }}&type=invite</a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+          <td style="padding:20px 8px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
+                     Roboto,Helvetica,Arial,sans-serif;font-size:13px;line-height:1.6;color:#5f6e73;">
+            Σας γράφει ο Νικόλας Νεοφύτου, γιατί το Ludi έστησε την πρόσβαση για το γήπεδό σας.
+            Αν δεν το περιμένατε, αγνοήστε αυτό το email — δεν θα συμβεί τίποτα.<br>
+            Sent by Nikolas Neofytou because Ludi set up dashboard access for your venue.
+            Not expecting it? Ignore this email and nothing happens.
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:14px 8px 0;font-family:'Courier New',Courier,monospace;font-size:11px;
+                     letter-spacing:0.08em;color:#8a94a1;">
+            LUDI &middot; ΛΑΡΝΑΚΑ, ΚΥΠΡΟΣ &middot;
+            <a href="mailto:nikolas@ludi.football" style="color:#8a94a1;text-decoration:none;">nikolas@ludi.football</a>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>

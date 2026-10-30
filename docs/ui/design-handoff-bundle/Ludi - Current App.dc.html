@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<style>
+  body { margin: 0; background: #E8E4DB; }
+  a { color: #1F6F8B; text-decoration: none; }
+  a:hover { color: #C1502E; }
+</style>
+</helmet>
+
+<section style="padding:64px 64px 96px;font-family:-apple-system,'SF Pro Text',system-ui,sans-serif">
+  <div style="max-width:760px;margin-bottom:48px">
+    <div style="font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#8A8374;margin-bottom:14px">Recreation · 2026-08-10</div>
+    <h1 style="margin:0 0 14px;font-size:38px;font-weight:600;letter-spacing:-0.02em;color:#1A1814">Ludi v1 — as it renders today</h1>
+    <p style="margin:0;font-size:16px;line-height:1.55;color:#4F4A40;text-wrap:pretty">Every screen below is rebuilt from the source in <code style="font-size:14px;background:#F6F1E8;padding:2px 6px;border-radius:5px">apps/mobile/app</code> and <code style="font-size:14px;background:#F6F1E8;padding:2px 6px;border-radius:5px">packages/ui</code> — same tokens, same padding, same type sizes. Note the typography: <code style="font-size:14px;background:#F6F1E8;padding:2px 6px;border-radius:5px">useFonts({})</code> is empty, so Fraunces and JetBrains Mono resolve to nothing and every string falls back to SF Pro. That fallback is reproduced here rather than corrected — this is the baseline the polish is measured against.</p>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:56px 48px">
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:baseline;gap:10px">
+        <span style="font-size:15px;font-weight:600;color:#1A1814">Discover</span>
+        <span style="font-size:12px;color:#8A8374">app/(tabs)/index.tsx</span>
+      </div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative">
+          <div style="padding:20px;display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:13px;color:#8A8374;text-transform:uppercase;font-weight:600;letter-spacing:0.5px">Larnaca</div>
+            <div style="font-size:34px;font-weight:500;color:#1A1814;letter-spacing:-1px">Kalispéra.</div>
+            <div style="font-size:15px;color:#4F4A40">Ready to play tonight?</div>
+          </div>
+          <div style="padding:0 20px;display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+            <div style="padding:5px 10px;border-radius:100px;border:1px solid rgba(26,24,20,0.14);font-size:12px;font-weight:500;color:#1A1814;letter-spacing:-0.2px">5-a-side</div>
+            <div style="padding:5px 10px;border-radius:100px;border:1px solid rgba(26,24,20,0.14);font-size:12px;font-weight:500;color:#1A1814;letter-spacing:-0.2px">Indoor</div>
+            <div style="padding:5px 10px;border-radius:100px;border:1px solid rgba(26,24,20,0.14);font-size:12px;font-weight:500;color:#1A1814;letter-spacing:-0.2px">Under €40</div>
+          </div>
+          <div style="padding:16px 20px 0;display:flex;flex-direction:column;gap:12px">
+            <div style="padding:20px;border-radius:18px;background:#FFFBF2;border:1px solid rgba(26,24,20,0.08);display:flex;flex-direction:column;gap:8px">
+              <div style="font-size:22px;color:#1A1814;font-weight:500">Pitch 2 — Indoor</div>
+              <div style="font-size:13px;color:#8A8374">Larnaca Sportsplex · 5-a-side · indoor</div>
+              <div style="display:flex;justify-content:flex-end;align-items:center"><span style="font-size:22px;font-weight:600;color:#1A1814">€35<span style="font-size:12px;color:#8A8374">/hr</span></span></div>
+            </div>
+            <div style="padding:20px;border-radius:18px;background:#FFFBF2;border:1px solid rgba(26,24,20,0.08);display:flex;flex-direction:column;gap:8px">
+              <div style="font-size:22px;color:#1A1814;font-weight:500">Pitch 1 — Main turf</div>
+              <div style="font-size:13px;color:#8A8374">Larnaca Sportsplex · 7-a-side · turf</div>
+              <div style="display:flex;justify-content:flex-end;align-items:center"><span style="font-size:22px;font-weight:600;color:#1A1814">€45<span style="font-size:12px;color:#8A8374">/hr</span></span></div>
+            </div>
+            <div style="padding:20px;border-radius:18px;background:#FFFBF2;border:1px solid rgba(26,24,20,0.08);display:flex;flex-direction:column;gap:8px">
+              <div style="font-size:22px;color:#1A1814;font-weight:500">Pitch 3 — Grass</div>
+              <div style="font-size:13px;color:#8A8374">Larnaca Sportsplex · 11-a-side · grass</div>
+              <div style="display:flex;justify-content:flex-end;align-items:center"><span style="font-size:22px;font-weight:600;color:#1A1814">€60<span style="font-size:12px;color:#8A8374">/hr</span></span></div>
+            </div>
+          </div>
+          <div style="padding:20px">
+            <div style="height:48px;border-radius:24px;border:1.5px solid rgba(26,24,20,0.14);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#1A1814;letter-spacing:-0.3px">↔ ΕΛΛΗΝΙΚΑ</div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:0;height:83px;background:#FFFBF2;border-top:1px solid rgba(26,24,20,0.08);display:flex;align-items:flex-start;padding-top:6px">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 11l8-7 8 7v9a2 2 0 01-2 2h-3v-6h-6v6H6a2 2 0 01-2-2v-9z" stroke="#C1502E" stroke-width="1.8" stroke-linejoin="round"></path></svg>
+              <span style="font-size:10px;font-weight:600;color:#C1502E">Discover</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22s7-7.5 7-13a7 7 0 10-14 0c0 5.5 7 13 7 13z" stroke="#8A8374" stroke-width="2" stroke-linejoin="round"></path><circle cx="12" cy="9" r="2.5" stroke="#8A8374" stroke-width="2"></circle></svg>
+              <span style="font-size:10px;font-weight:600;color:#8A8374">Map</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#8A8374" stroke-width="1.8"></circle><path d="M12 3l3 4.5-1.5 5h-3L9 7.5 12 3zM3.5 10l5 1M15.5 11l5-1M9 16.5L7 21M15 16.5l2 4.5" stroke="#8A8374" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <span style="font-size:10px;font-weight:600;color:#8A8374">Matches</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#8A8374" stroke-width="1.8"></rect><path d="M3 10h18M8 3v4M16 3v4" stroke="#8A8374" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-size:10px;font-weight:600;color:#8A8374">Bookings</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#8A8374" stroke-width="1.8"></circle><path d="M4 21c0-4.5 3.5-7 8-7s8 2.5 8 7" stroke="#8A8374" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-size:10px;font-weight:600;color:#8A8374">Profile</span>
+            </div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:baseline;gap:10px">
+        <span style="font-size:15px;font-weight:600;color:#1A1814">Pitch detail</span>
+        <span style="font-size:12px;color:#8A8374">app/pitch/[id].tsx</span>
+      </div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative">
+          <div style="padding:8px 12px 4px"><div style="padding:8px;font-size:17px;color:#1A1814;width:24px">←</div></div>
+          <div style="padding:20px;display:flex;flex-direction:column;gap:6px">
+            <div style="font-size:30px;font-weight:500;color:#1A1814;letter-spacing:-1px">Pitch 1 — Main turf</div>
+            <div style="font-size:14px;color:#4F4A40">Larnaca Sportsplex · 7-a-side · turf</div>
+            <div style="font-size:22px;font-weight:600;color:#1A1814">€45<span style="font-size:13px;color:#8A8374">/hr</span></div>
+          </div>
+          <div style="padding:0 20px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-size:12px;font-weight:600;color:#8A8374;text-transform:uppercase;letter-spacing:0.5px">Amenities</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <div style="padding:5px 10px;border-radius:100px;border:1px solid rgba(26,24,20,0.14);font-size:12px;font-weight:500;color:#1A1814">Showers</div>
+              <div style="padding:5px 10px;border-radius:100px;border:1px solid rgba(26,24,20,0.14);font-size:12px;font-weight:500;color:#1A1814">Parking</div>
+              <div style="padding:5px 10px;border-radius:100px;border:1px solid rgba(26,24,20,0.14);font-size:12px;font-weight:500;color:#1A1814">Lights</div>
+              <div style="padding:5px 10px;border-radius:100px;border:1px solid rgba(26,24,20,0.14);font-size:12px;font-weight:500;color:#1A1814">Ball rental</div>
+            </div>
+          </div>
+          <div style="padding:20px">
+            <div style="height:48px;border-radius:24px;border:1.5px solid rgba(26,24,20,0.14);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#1A1814;letter-spacing:-0.3px">Open in Maps</div>
+          </div>
+          <div style="padding:0 20px;display:flex;flex-direction:column;gap:12px">
+            <div style="font-size:12px;font-weight:600;color:#8A8374;text-transform:uppercase;letter-spacing:0.5px">Availability</div>
+            <div style="display:flex;gap:8px;overflow:hidden">
+              <div style="min-width:56px;padding:10px 14px;border-radius:14px;border:1px solid #C1502E;background:#C1502E;display:flex;flex-direction:column;align-items:center">
+                <span style="font-size:11px;font-weight:600;color:#fff;text-transform:uppercase;letter-spacing:0.4px">Mon</span>
+                <span style="font-size:18px;font-weight:600;color:#fff">10</span>
+              </div>
+              <div style="min-width:56px;padding:10px 14px;border-radius:14px;border:1px solid rgba(26,24,20,0.08);background:#FFFBF2;display:flex;flex-direction:column;align-items:center">
+                <span style="font-size:11px;font-weight:600;color:#8A8374;text-transform:uppercase;letter-spacing:0.4px">Tue</span>
+                <span style="font-size:18px;font-weight:600;color:#1A1814">11</span>
+              </div>
+              <div style="min-width:56px;padding:10px 14px;border-radius:14px;border:1px solid rgba(26,24,20,0.08);background:#FFFBF2;display:flex;flex-direction:column;align-items:center">
+                <span style="font-size:11px;font-weight:600;color:#8A8374;text-transform:uppercase;letter-spacing:0.4px">Wed</span>
+                <span style="font-size:18px;font-weight:600;color:#1A1814">12</span>
+              </div>
+              <div style="min-width:56px;padding:10px 14px;border-radius:14px;border:1px solid rgba(26,24,20,0.08);background:#FFFBF2;display:flex;flex-direction:column;align-items:center">
+                <span style="font-size:11px;font-weight:600;color:#8A8374;text-transform:uppercase;letter-spacing:0.4px">Thu</span>
+                <span style="font-size:18px;font-weight:600;color:#1A1814">13</span>
+              </div>
+              <div style="min-width:56px;padding:10px 14px;border-radius:14px;border:1px solid rgba(26,24,20,0.08);background:#FFFBF2;display:flex;flex-direction:column;align-items:center">
+                <span style="font-size:11px;font-weight:600;color:#8A8374;text-transform:uppercase;letter-spacing:0.4px">Fri</span>
+                <span style="font-size:18px;font-weight:600;color:#1A1814">14</span>
+              </div>
+              <div style="min-width:56px;padding:10px 14px;border-radius:14px;border:1px solid rgba(26,24,20,0.08);background:#FFFBF2;display:flex;flex-direction:column;align-items:center">
+                <span style="font-size:11px;font-weight:600;color:#8A8374;text-transform:uppercase;letter-spacing:0.4px">Sat</span>
+                <span style="font-size:18px;font-weight:600;color:#1A1814">15</span>
+              </div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <div style="padding:10px 14px;border-radius:12px;border:1px solid rgba(26,24,20,0.08);opacity:0.55"><span style="font-size:14px;font-weight:600;color:#1A1814;text-decoration:line-through">09:00</span></div>
+              <div style="padding:10px 14px;border-radius:12px;border:1px solid rgba(26,24,20,0.08);opacity:0.55"><span style="font-size:14px;font-weight:600;color:#1A1814;text-decoration:line-through">10:00</span></div>
+              <div style="padding:10px 14px;border-radius:12px;border:1px solid rgba(26,24,20,0.08);opacity:0.55"><span style="font-size:14px;font-weight:600;color:#1A1814;text-decoration:line-through">11:00</span></div>
+              <div style="padding:10px 14px;border-radius:12px;border:1px solid rgba(26,24,20,0.14);background:#FFFBF2"><span style="font-size:14px;font-weight:600;color:#1A1814">12:00</span></div>
+              <div style="padding:10px 14px;border-radius:12px;border:1px solid rgba(26,24,20,0.14);background:#FFFBF2"><span style="font-size:14px;font-weight:600;color:#1A1814">13:00</span></div>
+              <div style="padding:10px 14px;border-radius:12px;border:1px solid rgba(26,24,20,0.14);background:#FFFBF2"><span style="font-size:14px;font-weight:600;color:#1A1814">14:00</span></div>
+              <div style="padding:10px 14px;border-radius:12px;border:1px solid rgba(26,24,20,0.14);background:#FFFBF2"><span style="font-size:14px;font-weight:600;color:#1A1814">15:00</span></div>
+              <div style="padding:10px 14px;border-radius:12px;border:1px solid rgba(26,24,20,0.14);background:#FFFBF2"><span style="font-size:14px;font-weight:600;color:#1A1814">16:00</span></div>
+              <div style="padding:10px 14px;border-radius:12px;border:1px solid #C1502E;background:#C1502E"><span style="font-size:14px;font-weight:600;color:#fff">17:00</span></div>
+              <div style="padding:10px 14px;border-radius:12px;border:1px solid rgba(26,24,20,0.14);background:#FFFBF2"><span style="font-size:14px;font-weight:600;color:#1A1814">18:00</span></div>
+              <div style="padding:10px 14px;border-radius:12px;border:1px solid rgba(26,24,20,0.14);background:#FFFBF2"><span style="font-size:14px;font-weight:600;color:#1A1814">19:00</span></div>
+              <div style="padding:10px 14px;border-radius:12px;border:1px solid rgba(26,24,20,0.14);background:#FFFBF2"><span style="font-size:14px;font-weight:600;color:#1A1814">20:00</span></div>
+            </div>
+          </div>
+          <div style="padding:20px;display:flex;flex-direction:column;gap:12px">
+            <div style="font-size:12px;font-weight:600;color:#8A8374;text-transform:uppercase;letter-spacing:0.5px">Required addons</div>
+            <div style="font-size:13px;color:#8A8374;line-height:18px">Bibs and a ball are included on every booking — Cyprus rules.</div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:0;background:#F6F1E8;border-top:1px solid rgba(26,24,20,0.08);padding:16px 16px 34px">
+            <div style="height:48px;border-radius:24px;background:#1A1814;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#fff;letter-spacing:-0.3px">Book €53</div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:baseline;gap:10px">
+        <span style="font-size:15px;font-weight:600;color:#1A1814">Bookings</span>
+        <span style="font-size:12px;color:#8A8374">app/(tabs)/bookings.tsx</span>
+      </div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative">
+          <div style="padding:8px 20px 12px;display:flex;flex-direction:column;gap:16px">
+            <div style="font-size:32px;font-weight:500;color:#1A1814;letter-spacing:-1px">Bookings</div>
+            <div style="display:flex;gap:8px">
+              <div style="padding:8px 14px;border-radius:100px;border:1px solid #1A1814;background:#1A1814;font-size:13px;font-weight:500;color:#fff;letter-spacing:-0.2px">Upcoming  2</div>
+              <div style="padding:8px 14px;border-radius:100px;border:1px solid rgba(26,24,20,0.14);font-size:13px;font-weight:500;color:#1A1814;letter-spacing:-0.2px">History</div>
+            </div>
+          </div>
+          <div style="padding:0 20px;display:flex;flex-direction:column;gap:12px">
+            <div style="padding:18px;border-radius:16px;background:#FFFBF2;border:1px solid rgba(26,24,20,0.08);display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;justify-content:space-between;gap:12px">
+                <div style="font-size:18px;font-weight:600;color:#1A1814;flex:1">Pitch 1 — Main turf</div>
+                <div style="padding:4px 10px;border-radius:999px;background:#E0F0E5;height:fit-content"><span style="font-size:11px;font-weight:600;color:#1F6F3D;text-transform:uppercase;letter-spacing:0.4px">Confirmed</span></div>
+              </div>
+              <div style="font-size:13px;color:#8A8374">Larnaca Sportsplex · Larnaca</div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline">
+                <span style="font-size:13px;color:#4F4A40">Mon 10 Aug · 20:00–21:00</span>
+                <span style="font-size:16px;font-weight:600;color:#1A1814">€53</span>
+              </div>
+              <div style="font-size:12px;color:#8A8374">LAR-2026-0001</div>
+            </div>
+            <div style="padding:18px;border-radius:16px;background:#FFFBF2;border:1px solid rgba(26,24,20,0.08);display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;justify-content:space-between;gap:12px">
+                <div style="font-size:18px;font-weight:600;color:#1A1814;flex:1">Pitch 2 — Indoor</div>
+                <div style="padding:4px 10px;border-radius:999px;background:#F2E8D8;height:fit-content"><span style="font-size:11px;font-weight:600;color:#7A6021;text-transform:uppercase;letter-spacing:0.4px">Pending</span></div>
+              </div>
+              <div style="font-size:13px;color:#8A8374">Larnaca Sportsplex · Larnaca</div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline">
+                <span style="font-size:13px;color:#4F4A40">Sat 15 Aug · 19:00–20:00</span>
+                <span style="font-size:16px;font-weight:600;color:#1A1814">€43</span>
+              </div>
+              <div style="font-size:12px;color:#8A8374">LAR-2026-0007</div>
+            </div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:0;height:83px;background:#FFFBF2;border-top:1px solid rgba(26,24,20,0.08);display:flex;align-items:flex-start;padding-top:6px">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 11l8-7 8 7v9a2 2 0 01-2 2h-3v-6h-6v6H6a2 2 0 01-2-2v-9z" stroke="#8A8374" stroke-width="1.8" stroke-linejoin="round"></path></svg>
+              <span style="font-size:10px;font-weight:600;color:#8A8374">Discover</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22s7-7.5 7-13a7 7 0 10-14 0c0 5.5 7 13 7 13z" stroke="#8A8374" stroke-width="2" stroke-linejoin="round"></path><circle cx="12" cy="9" r="2.5" stroke="#8A8374" stroke-width="2"></circle></svg>
+              <span style="font-size:10px;font-weight:600;color:#8A8374">Map</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#8A8374" stroke-width="1.8"></circle><path d="M12 3l3 4.5-1.5 5h-3L9 7.5 12 3zM3.5 10l5 1M15.5 11l5-1M9 16.5L7 21M15 16.5l2 4.5" stroke="#8A8374" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <span style="font-size:10px;font-weight:600;color:#8A8374">Matches</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#C1502E" stroke-width="1.8"></rect><path d="M3 10h18M8 3v4M16 3v4" stroke="#C1502E" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-size:10px;font-weight:600;color:#C1502E">Bookings</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#8A8374" stroke-width="1.8"></circle><path d="M4 21c0-4.5 3.5-7 8-7s8 2.5 8 7" stroke="#8A8374" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-size:10px;font-weight:600;color:#8A8374">Profile</span>
+            </div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:baseline;gap:10px">
+        <span style="font-size:15px;font-weight:600;color:#1A1814">Bookings — empty</span>
+        <span style="font-size:12px;color:#8A8374">§1.4</span>
+      </div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative">
+          <div style="padding:8px 20px 12px;display:flex;flex-direction:column;gap:16px">
+            <div style="font-size:32px;font-weight:500;color:#1A1814;letter-spacing:-1px">Bookings</div>
+            <div style="display:flex;gap:8px">
+              <div style="padding:8px 14px;border-radius:100px;border:1px solid #1A1814;background:#1A1814;font-size:13px;font-weight:500;color:#fff;letter-spacing:-0.2px">Upcoming</div>
+              <div style="padding:8px 14px;border-radius:100px;border:1px solid rgba(26,24,20,0.14);font-size:13px;font-weight:500;color:#1A1814;letter-spacing:-0.2px">History</div>
+            </div>
+          </div>
+          <div style="padding:40px 20px;display:flex;justify-content:center">
+            <span style="font-size:14px;color:#8A8374">No upcoming bookings.</span>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:0;height:83px;background:#FFFBF2;border-top:1px solid rgba(26,24,20,0.08);display:flex;align-items:flex-start;padding-top:6px">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 11l8-7 8 7v9a2 2 0 01-2 2h-3v-6h-6v6H6a2 2 0 01-2-2v-9z" stroke="#8A8374" stroke-width="1.8" stroke-linejoin="round"></path></svg>
+              <span style="font-size:10px;font-weight:600;color:#8A8374">Discover</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22s7-7.5 7-13a7 7 0 10-14 0c0 5.5 7 13 7 13z" stroke="#8A8374" stroke-width="2" stroke-linejoin="round"></path><circle cx="12" cy="9" r="2.5" stroke="#8A8374" stroke-width="2"></circle></svg>
+              <span style="font-size:10px;font-weight:600;color:#8A8374">Map</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#8A8374" stroke-width="1.8"></circle><path d="M12 3l3 4.5-1.5 5h-3L9 7.5 12 3zM3.5 10l5 1M15.5 11l5-1M9 16.5L7 21M15 16.5l2 4.5" stroke="#8A8374" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <span style="font-size:10px;font-weight:600;color:#8A8374">Matches</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#C1502E" stroke-width="1.8"></rect><path d="M3 10h18M8 3v4M16 3v4" stroke="#C1502E" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-size:10px;font-weight:600;color:#C1502E">Bookings</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#8A8374" stroke-width="1.8"></circle><path d="M4 21c0-4.5 3.5-7 8-7s8 2.5 8 7" stroke="#8A8374" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-size:10px;font-weight:600;color:#8A8374">Profile</span>
+            </div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:baseline;gap:10px">
+        <span style="font-size:15px;font-weight:600;color:#1A1814">Matches</span>
+        <span style="font-size:12px;color:#8A8374">app/(tabs)/matches.tsx</span>
+      </div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center">
+          <div style="display:flex;flex-direction:column;align-items:center;padding:20px;margin-bottom:83px">
+            <div style="font-size:28px;color:#1A1814">Matches</div>
+            <div style="font-size:14px;color:#8A8374;margin-top:8px">Upcoming + Results arrive in Stage 3.</div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:0;height:83px;background:#FFFBF2;border-top:1px solid rgba(26,24,20,0.08);display:flex;align-items:flex-start;padding-top:6px">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 11l8-7 8 7v9a2 2 0 01-2 2h-3v-6h-6v6H6a2 2 0 01-2-2v-9z" stroke="#8A8374" stroke-width="1.8" stroke-linejoin="round"></path></svg>
+              <span style="font-size:10px;font-weight:600;color:#8A8374">Discover</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22s7-7.5 7-13a7 7 0 10-14 0c0 5.5 7 13 7 13z" stroke="#8A8374" stroke-width="2" stroke-linejoin="round"></path><circle cx="12" cy="9" r="2.5" stroke="#8A8374" stroke-width="2"></circle></svg>
+              <span style="font-size:10px;font-weight:600;color:#8A8374">Map</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#C1502E" stroke-width="1.8"></circle><path d="M12 3l3 4.5-1.5 5h-3L9 7.5 12 3zM3.5 10l5 1M15.5 11l5-1M9 16.5L7 21M15 16.5l2 4.5" stroke="#C1502E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <span style="font-size:10px;font-weight:600;color:#C1502E">Matches</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#8A8374" stroke-width="1.8"></rect><path d="M3 10h18M8 3v4M16 3v4" stroke="#8A8374" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-size:10px;font-weight:600;color:#8A8374">Bookings</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#8A8374" stroke-width="1.8"></circle><path d="M4 21c0-4.5 3.5-7 8-7s8 2.5 8 7" stroke="#8A8374" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-size:10px;font-weight:600;color:#8A8374">Profile</span>
+            </div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:baseline;gap:10px">
+        <span style="font-size:15px;font-weight:600;color:#1A1814">Map</span>
+        <span style="font-size:12px;color:#8A8374">app/(tabs)/map.tsx</span>
+      </div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center">
+          <div style="display:flex;flex-direction:column;align-items:center;padding:20px;margin-bottom:83px">
+            <div style="font-size:28px;color:#1A1814">Map</div>
+            <div style="font-size:14px;color:#8A8374;margin-top:8px">Mapbox integration arrives in Stage 4.</div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:0;height:83px;background:#FFFBF2;border-top:1px solid rgba(26,24,20,0.08);display:flex;align-items:flex-start;padding-top:6px">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 11l8-7 8 7v9a2 2 0 01-2 2h-3v-6h-6v6H6a2 2 0 01-2-2v-9z" stroke="#8A8374" stroke-width="1.8" stroke-linejoin="round"></path></svg>
+              <span style="font-size:10px;font-weight:600;color:#8A8374">Discover</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22s7-7.5 7-13a7 7 0 10-14 0c0 5.5 7 13 7 13z" stroke="#C1502E" stroke-width="2" stroke-linejoin="round"></path><circle cx="12" cy="9" r="2.5" stroke="#C1502E" stroke-width="2"></circle></svg>
+              <span style="font-size:10px;font-weight:600;color:#C1502E">Map</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#8A8374" stroke-width="1.8"></circle><path d="M12 3l3 4.5-1.5 5h-3L9 7.5 12 3zM3.5 10l5 1M15.5 11l5-1M9 16.5L7 21M15 16.5l2 4.5" stroke="#8A8374" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <span style="font-size:10px;font-weight:600;color:#8A8374">Matches</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#8A8374" stroke-width="1.8"></rect><path d="M3 10h18M8 3v4M16 3v4" stroke="#8A8374" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-size:10px;font-weight:600;color:#8A8374">Bookings</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#8A8374" stroke-width="1.8"></circle><path d="M4 21c0-4.5 3.5-7 8-7s8 2.5 8 7" stroke="#8A8374" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-size:10px;font-weight:600;color:#8A8374">Profile</span>
+            </div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:baseline;gap:10px">
+        <span style="font-size:15px;font-weight:600;color:#1A1814">Profile</span>
+        <span style="font-size:12px;color:#8A8374">app/(tabs)/profile.tsx</span>
+      </div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative">
+          <div style="padding:20px;display:flex;flex-direction:column;gap:24px">
+            <div style="font-size:30px;font-weight:500;color:#1A1814;letter-spacing:-1px">Your profile</div>
+            <div style="height:48px;border-radius:24px;border:1.5px solid rgba(26,24,20,0.14);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#1A1814;letter-spacing:-0.3px">View my card</div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div>
+                <div style="font-size:13px;font-weight:600;color:#4F4A40;margin-bottom:8px;letter-spacing:-0.2px">First name</div>
+                <div style="height:56px;border:1.5px solid rgba(26,24,20,0.14);border-radius:14px;padding:0 18px;background:#FFFBF2;display:flex;align-items:center;font-size:17px;color:#1A1814;letter-spacing:-0.3px">Andreas</div>
+              </div>
+              <div>
+                <div style="font-size:13px;font-weight:600;color:#4F4A40;margin-bottom:8px;letter-spacing:-0.2px">Last name</div>
+                <div style="height:56px;border:1.5px solid rgba(26,24,20,0.14);border-radius:14px;padding:0 18px;background:#FFFBF2;display:flex;align-items:center;font-size:17px;color:#1A1814;letter-spacing:-0.3px">Georgiou</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="font-size:13px;font-weight:600;color:#4F4A40">Language</div>
+              <div style="display:flex;gap:8px">
+                <div style="padding:8px 14px;border-radius:100px;border:1px solid #1A1814;background:#1A1814;font-size:13px;font-weight:500;color:#fff">English</div>
+                <div style="padding:8px 14px;border-radius:100px;border:1px solid rgba(26,24,20,0.14);font-size:13px;font-weight:500;color:#1A1814">Ελληνικά</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="font-size:13px;font-weight:600;color:#4F4A40">Home city</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <div style="padding:8px 14px;border-radius:100px;border:1px solid #1A1814;background:#1A1814;font-size:13px;font-weight:500;color:#fff">Larnaca</div>
+              </div>
+              <div style="font-size:12px;color:#8A8374;margin-top:4px">Larnaca</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="font-size:13px;font-weight:600;color:#4F4A40">Skill level</div>
+              <div style="display:flex;gap:8px;align-items:center">
+                <div style="padding:8px 14px;border-radius:100px;border:1px solid rgba(26,24,20,0.14);font-size:13px;font-weight:500;color:#1A1814">1</div>
+                <div style="padding:8px 14px;border-radius:100px;border:1px solid rgba(26,24,20,0.14);font-size:13px;font-weight:500;color:#1A1814">2</div>
+                <div style="padding:8px 14px;border-radius:100px;border:1px solid #1A1814;background:#1A1814;font-size:13px;font-weight:500;color:#fff">3</div>
+                <div style="padding:8px 14px;border-radius:100px;border:1px solid rgba(26,24,20,0.14);font-size:13px;font-weight:500;color:#1A1814">4</div>
+                <div style="padding:8px 14px;border-radius:100px;border:1px solid rgba(26,24,20,0.14);font-size:13px;font-weight:500;color:#1A1814">5</div>
+                <div style="margin-left:8px;display:flex;gap:2px;align-items:flex-end">
+                  <div style="width:4px;height:7px;border-radius:1px;background:#2E7D4F"></div>
+                  <div style="width:4px;height:9.1px;border-radius:1px;background:#2E7D4F"></div>
+                  <div style="width:4px;height:11.2px;border-radius:1px;background:#2E7D4F"></div>
+                  <div style="width:4px;height:13.3px;border-radius:1px;background:rgba(26,24,20,0.14)"></div>
+                  <div style="width:4px;height:15.4px;border-radius:1px;background:rgba(26,24,20,0.14)"></div>
+                </div>
+              </div>
+              <div style="font-size:12px;color:#8A8374">Regular — plays local pickup often</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="font-size:13px;font-weight:600;color:#4F4A40">Positions</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <div style="padding:8px 14px;border-radius:100px;border:1px solid rgba(26,24,20,0.14);font-size:13px;font-weight:500;color:#1A1814">GK</div>
+                <div style="padding:8px 14px;border-radius:100px;border:1px solid rgba(26,24,20,0.14);font-size:13px;font-weight:500;color:#1A1814">CB</div>
+                <div style="padding:8px 14px;border-radius:100px;border:1px solid rgba(26,24,20,0.14);font-size:13px;font-weight:500;color:#1A1814">LB</div>
+                <div style="padding:8px 14px;border-radius:100px;border:1px solid rgba(26,24,20,0.14);font-size:13px;font-weight:500;color:#1A1814">RB</div>
+                <div style="padding:8px 14px;border-radius:100px;border:1px solid #1A1814;background:#1A1814;font-size:13px;font-weight:500;color:#fff">CDM</div>
+                <div style="padding:8px 14px;border-radius:100px;border:1px solid rgba(26,24,20,0.14);font-size:13px;font-weight:500;color:#1A1814">CM</div>
+                <div style="padding:8px 14px;border-radius:100px;border:1px solid rgba(26,24,20,0.14);font-size:13px;font-weight:500;color:#1A1814">CAM</div>
+                <div style="padding:8px 14px;border-radius:100px;border:1px solid rgba(26,24,20,0.14);font-size:13px;font-weight:500;color:#1A1814">LW</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:baseline;gap:10px">
+        <span style="font-size:15px;font-weight:600;color:#1A1814">Sign in</span>
+        <span style="font-size:12px;color:#8A8374">app/(auth)/signin.tsx</span>
+      </div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative">
+          <div style="padding:24px;display:flex;flex-direction:column;gap:24px;height:calc(100% - 62px);box-sizing:border-box">
+            <div style="display:flex;flex-direction:column;gap:24px;margin-top:32px">
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <div style="font-size:34px;font-weight:500;color:#1A1814;letter-spacing:-1px">Sign in</div>
+                <div style="font-size:15px;color:#4F4A40">We'll text you a 6-digit code.</div>
+              </div>
+              <div>
+                <div style="font-size:13px;font-weight:600;color:#4F4A40;margin-bottom:8px;letter-spacing:-0.2px">Phone number</div>
+                <div style="height:56px;border:1.5px solid rgba(26,24,20,0.14);border-radius:14px;padding:0 18px;background:#FFFBF2;display:flex;align-items:center;gap:8px">
+                  <span style="font-size:17px;color:#8A8374;letter-spacing:-0.3px">+357</span>
+                  <span style="font-size:17px;color:#8A8374;letter-spacing:-0.3px"></span>
+                </div>
+              </div>
+              <div style="height:56px;border-radius:28px;background:#1A1814;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:#fff;letter-spacing:-0.3px">Continue</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;margin:4px 0">
+              <div style="flex:1;height:1px;background:rgba(26,24,20,0.08)"></div>
+              <span style="font-size:13px;color:#4F4A40">or</span>
+              <div style="flex:1;height:1px;background:rgba(26,24,20,0.08)"></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="height:56px;border-radius:28px;border:1.5px solid rgba(26,24,20,0.14);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:#1A1814;letter-spacing:-0.3px">Continue with Apple</div>
+              <div style="height:56px;border-radius:28px;border:1.5px solid rgba(26,24,20,0.14);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:#1A1814;letter-spacing:-0.3px">Continue with Google</div>
+              <div style="height:56px;border-radius:28px;border:1.5px solid rgba(26,24,20,0.14);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:#1A1814;letter-spacing:-0.3px">Continue with email</div>
+            </div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:baseline;gap:10px">
+        <span style="font-size:15px;font-weight:600;color:#1A1814">Enter code</span>
+        <span style="font-size:12px;color:#8A8374">app/(auth)/verify.tsx</span>
+      </div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative">
+          <div style="padding:24px;display:flex;flex-direction:column;justify-content:space-between;height:calc(100% - 62px);box-sizing:border-box">
+            <div style="display:flex;flex-direction:column;gap:24px;margin-top:32px">
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <div style="font-size:34px;font-weight:500;color:#1A1814;letter-spacing:-1px">Enter code</div>
+                <div style="font-size:15px;color:#4F4A40">Sent to 99 123456</div>
+                <div style="font-size:14px;color:#1F6F8B;font-weight:600;margin-top:4px">Change number</div>
+              </div>
+              <div>
+                <div style="font-size:13px;font-weight:600;color:#4F4A40;margin-bottom:8px;letter-spacing:-0.2px">Verification code</div>
+                <div style="height:56px;border:1.5px solid rgba(26,24,20,0.14);border-radius:14px;padding:0 18px;background:#FFFBF2;display:flex;align-items:center;font-size:17px;color:#1A1814;letter-spacing:-0.3px">4218</div>
+              </div>
+              <div style="align-self:center;font-size:14px;color:#1F6F8B;font-weight:600">Resend code</div>
+            </div>
+            <div style="height:56px;border-radius:28px;background:#1A1814;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:#fff;letter-spacing:-0.3px">Verify</div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:baseline;gap:10px">
+        <span style="font-size:15px;font-weight:600;color:#1A1814">Checkout — failure</span>
+        <span style="font-size:12px;color:#8A8374">booking/[id]/checkout.tsx</span>
+      </div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center">
+          <div style="padding:24px;display:flex;flex-direction:column;gap:16px;width:100%;box-sizing:border-box">
+            <div style="font-size:16px;color:#1A1814;text-align:center;line-height:22px">Property 'crypto' doesn't exist</div>
+            <div style="height:48px;border-radius:24px;background:#1A1814;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#fff;letter-spacing:-0.3px">Try again</div>
+            <div style="height:48px;border-radius:24px;border:1.5px solid rgba(26,24,20,0.14);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#1A1814;letter-spacing:-0.3px">Done</div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:baseline;gap:10px">
+        <span style="font-size:15px;font-weight:600;color:#1A1814">Booking confirmed</span>
+        <span style="font-size:12px;color:#8A8374">booking/[id]/confirmed.tsx</span>
+      </div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative">
+          <div style="padding:28px;display:flex;flex-direction:column;justify-content:center;gap:24px;height:calc(100% - 96px);box-sizing:border-box">
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="font-size:40px;font-weight:500;color:#1A1814;letter-spacing:-1.5px">Booked.</div>
+              <div style="display:flex;flex-direction:column;gap:4px">
+                <div style="font-size:12px;color:#8A8374;text-transform:uppercase;letter-spacing:0.5px">Booking code</div>
+                <div style="font-size:26px;font-weight:600;color:#1A1814">LAR-2026-0001</div>
+              </div>
+            </div>
+            <div style="height:48px;border-radius:24px;background:#1A1814;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#fff;letter-spacing:-0.3px">Done</div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:baseline;gap:10px">
+        <span style="font-size:15px;font-weight:600;color:#1A1814">Consent</span>
+        <span style="font-size:12px;color:#8A8374">src/components/ConsentScreen.tsx</span>
+      </div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative">
+          <div style="padding:24px;display:flex;flex-direction:column;justify-content:space-between;gap:24px;height:calc(100% - 96px);box-sizing:border-box">
+            <div style="display:flex;flex-direction:column;gap:16px;margin-top:32px">
+              <div style="font-size:34px;font-weight:500;color:#1A1814;letter-spacing:-1px">Welcome to Ludi</div>
+              <div style="font-size:15px;color:#4F4A40;line-height:22px">Before we start — here's the short version of what we collect and why. The full privacy policy is one tap away.</div>
+              <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+                <div style="display:flex;gap:10px"><span style="font-size:15px;color:#4F4A40">•</span><span style="font-size:15px;color:#4F4A40;flex:1;line-height:22px">Your name, phone or email, and chosen city — so other players can find you and bookings can be confirmed.</span></div>
+                <div style="display:flex;gap:10px"><span style="font-size:15px;color:#4F4A40">•</span><span style="font-size:15px;color:#4F4A40;flex:1;line-height:22px">Your booking history (which pitch, when, with whom) — so we can show your past games and handle refunds.</span></div>
+                <div style="display:flex;gap:10px"><span style="font-size:15px;color:#4F4A40">•</span><span style="font-size:15px;color:#4F4A40;flex:1;line-height:22px">Payment references via Stripe (never the card number itself) — so charges and payouts can be reconciled.</span></div>
+                <div style="display:flex;gap:10px"><span style="font-size:15px;color:#4F4A40">•</span><span style="font-size:15px;color:#4F4A40;flex:1;line-height:22px">Anonymised crash reports and usage events — so we can fix bugs and make the app better.</span></div>
+              </div>
+              <div style="font-size:13px;color:#4F4A40;margin-top:8px;line-height:20px">Data is stored in the EU (Frankfurt) and never sold. You can delete your account at any time from the profile screen.</div>
+              <div style="font-size:14px;color:#1F6F8B;font-weight:600;margin-top:4px">Read the full privacy policy →</div>
+            </div>
+            <div style="height:56px;border-radius:28px;background:#1A1814;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:#fff;letter-spacing:-0.3px">Accept and continue</div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+  </div>
+</section>
+</x-dc>
+</body>
+</html>

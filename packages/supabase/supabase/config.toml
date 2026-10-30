@@ -1,0 +1,203 @@
+# Ludi local Supabase project — config.toml
+#
+# https://supabase.com/docs/guides/cli/config
+# Run `supabase start` from this directory (packages/supabase/) to boot.
+
+# Stable slug used for local container names. Keep short and hyphen-free.
+project_id = "ludi"
+
+[api]
+enabled = true
+# Pinned to 64xxx so this project can run alongside another local supabase
+# (e.g. Virgil) which holds the default 54xxx range. Reflected in
+# apps/mobile/.env as EXPO_PUBLIC_SUPABASE_URL.
+port = 64321
+# Schemas the auto-generated API exposes. Keep `public`; add others as needed.
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 64322
+shadow_port = 64320
+# Match production (Supabase hosted is PG15 today; revisit when they bump default).
+major_version = 15
+
+[db.pooler]
+enabled = false
+port = 64329
+
+[studio]
+enabled = true
+port = 64323
+
+[inbucket]
+# Local email catcher — magic-link and OTP emails land here during dev.
+enabled = true
+port = 64324
+
+[storage]
+enabled = true
+file_size_limit = "50MiB"
+
+[auth]
+enabled = true
+site_url = "http://127.0.0.1:3000"
+# `site_url` is the MOBILE app's target. The admin dashboard is a separate
+# origin, so every URL an email link may return to has to be listed here or
+# GoTrue silently substitutes site_url — an invite that "sends fine" and
+# lands the venue owner in the player app. Verified 2026-08-29: without the
+# 3001 entry, the invite link's redirect_to came back as 127.0.0.1:3000.
+#
+# The same list exists on prod under Authentication → URL Configuration, and
+# must carry the deployed admin origin (https://ludi-admin.vercel.app/**).
+#
+# https://ludi.football/auth/callback/** is the app's magic link from the
+# build after 1.0.0 (38): a universal link with a per-request nonce as its
+# last segment (apps/mobile/src/lib/pending-sign-in.ts). ludi://callback
+# stays for Google's redirect and for builds up to 38.
+additional_redirect_urls = [
+  "ludi://callback",
+  "https://ludi.football/auth/callback/**",
+  "http://localhost:3001/**",
+  "http://127.0.0.1:3001/**",
+]
+jwt_expiry = 3600
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+enable_confirmations = false        # dev-only; production uses magic links
+
+# The two sign-in emails, the same files pasted into prod (each file's header
+# says where). Local runs them too so a link here has prod's shape. The
+# invite template is NOT wired: it hard-codes the deployed admin origin.
+# Edits take effect after `supabase stop && supabase start`.
+[auth.email.template.magic_link]
+subject = "Ludi — ο σύνδεσμός σου · your sign-in link"
+content_path = "./supabase/templates/magic-link.html"
+
+[auth.email.template.confirmation]
+subject = "Καλώς ήρθες στο Ludi · welcome to Ludi"
+content_path = "./supabase/templates/confirm-signup.html"
+
+[auth.sms]
+enable_signup = true
+enable_confirmations = false        # dev-only; production requires OTP
+
+# Local-dev test numbers. Without this section the auth server refuses
+# phone OTP entirely ("no SMS provider enabled") because there's no
+# Twilio/MessageBird wired up. These numbers always accept the mapped
+# code and never trigger an SMS — perfect for simulator dev.
+[auth.sms.test_otp]
+"35799000000" = "123456"
+
+# A real SMS provider must be declared for the CLI to flip the
+# GOTRUE_EXTERNAL_PHONE_ENABLED flag — even if test_otp would otherwise
+# satisfy local dev. Twilio with placeholder creds is the standard
+# workaround; nothing actually gets sent because test_otp short-circuits.
+[auth.sms.twilio]
+enabled = true
+account_sid = "test"
+message_service_sid = "test"
+auth_token = "test"
+
+# Native Sign in with Apple (signInWithIdToken in the mobile app). client_id
+# lists the allowed token audiences = the iOS bundle id; the native idToken's
+# `aud` is the bundle id, so it must appear here or GoTrue rejects the token.
+# `secret` is only used by the web OAuth authorization-code flow, which the
+# mobile app does not use — left empty. Re-run `supabase stop && supabase start`
+# after editing so the local auth server picks this up.
+[auth.external.apple]
+enabled = true
+client_id = "com.nikolasneofytou.ludi"
+secret = ""
+
+[analytics]
+enabled = false
+
+[functions]
+# Edge Functions live alongside this config.toml under ./functions/.
+# Per-function overrides (e.g. verify_jwt) go in [functions.<name>] blocks below.
+
+[functions.create-booking]
+verify_jwt = true
+import_map = "./functions/import_map.json"
+
+[functions.create-walk-in-booking]
+verify_jwt = true
+import_map = "./functions/import_map.json"
+
+[functions.claim-share]
+verify_jwt = true
+import_map = "./functions/import_map.json"
+
+[functions.cover-shortfall]
+verify_jwt = true
+import_map = "./functions/import_map.json"
+
+[functions.take-seat]
+verify_jwt = true
+import_map = "./functions/import_map.json"
+
+[functions.leave-share]
+verify_jwt = true
+import_map = "./functions/import_map.json"
+
+[functions.whatsapp-reply]
+verify_jwt = true
+import_map = "./functions/import_map.json"
+
+[functions.whatsapp-inbound]
+# Meta authenticates by X-Hub-Signature-256, not a Supabase JWT - the
+# stripe-webhook precedent. The function checks the signature itself.
+verify_jwt = false
+import_map = "./functions/import_map.json"
+
+[functions.expire-collecting]
+# Invoked by pg_cron + pg_net with a shared secret header, not a Supabase
+# JWT — the stripe-webhook precedent. The function checks x-expire-secret.
+verify_jwt = false
+import_map = "./functions/import_map.json"
+
+[functions.recorder]
+# The court recorder at the venue authenticates by its device token
+# (x-camera-token), not a Supabase JWT. The function hashes and checks it.
+verify_jwt = false
+import_map = "./functions/import_map.json"
+
+[functions.recording]
+verify_jwt = true
+import_map = "./functions/import_map.json"
+
+[functions.notify-players]
+# Invoked every minute by pg_cron + pg_net with x-notify-secret, the
+# expire-collecting precedent. The function checks the header itself
+# (ADR-0048).
+verify_jwt = false
+import_map = "./functions/import_map.json"
+
+[functions.recordings-sweep]
+# Invoked by pg_cron + pg_net with x-sweep-secret, the expire-collecting
+# precedent.
+verify_jwt = false
+import_map = "./functions/import_map.json"
+
+[functions.invite-venue-owner]
+verify_jwt = true
+import_map = "./functions/import_map.json"
+
+[functions.wallet-pass]
+# The .pkpass GET is opened by Safari, which cannot send an Authorization
+# header, so the gateway must not demand one. The function authenticates
+# both halves itself: the POST that mints a ticket verifies the caller's JWT,
+# and the GET accepts only a single-use, 60-second ticket (see the
+# function's header). Without this block deploy-all would flip it to true.
+verify_jwt = false
+import_map = "./functions/import_map.json"
+
+[functions.stripe-webhook]
+# Stripe authenticates via the `Stripe-Signature` header, not a Supabase JWT.
+# Leave verify_jwt off; the function verifies the signature itself.
+verify_jwt = false
+import_map = "./functions/import_map.json"

@@ -1,0 +1,2917 @@
+/* Ludi admin — shell and primitives (M6 #41c).
+ *
+ * Phone-first. The venue owner checks "is anyone booked tonight?" on a
+ * phone in the office; the schedule editor (#41f) is allowed to assume a
+ * laptop. So every rule here is written for narrow first and widened at
+ * 768px, not the reverse.
+ *
+ * Colour values are NOT mirrored here. `tokensToCssVars()` in
+ * lib/tokens.ts emits the palette as `--ludi-*` custom properties into
+ * the document root, so lib/tokens.ts stays the single source for the
+ * admin and this file just reads it. (apps/site still hand-mirrors its
+ * hex — worth converting when packages/ui-web lands, per ADR-0007.)
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: var(--ludi-bg);
+  color: var(--ludi-ink);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+code,
+.mono {
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, monospace;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* Anything focusable gets the Aegean ring — the admin is a keyboard tool
+ * for the founder even though it is a touch tool for the owner. */
+:where(a, button, input, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--ludi-primary);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ── Microcaps — the instrument voice ──────────────────────────────────
+ * The login plate's readout (mono, small, tracked-out, uppercase) is the
+ * thing that says "this is a tool". Every interior label that names data
+ * rather than being data speaks in it: table headers, stat labels, field
+ * labels, badges, section headings. One utility, composed into those
+ * rules, so the voice cannot drift per-surface. */
+.microcaps {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ── Shell ─────────────────────────────────────────────────────────── */
+
+/* The shell is the login plate carried inward: the deep Aegean band is
+ * the one piece of the entry screen every interior page keeps, so the
+ * app reads as one instrument from sign-in onwards. Same token
+ * (primary-deep) — the palette gains nothing new. */
+.shell-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: var(--ludi-primary-deep);
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.shell-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  margin-right: auto;
+}
+
+/* The scope readout: which venue(s) this session can see, in the plate's
+ * own instrument voice. */
+.shell-scope {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
+}
+
+/* Nav is a horizontal scroller on a phone rather than a hamburger: four
+ * to six destinations, all of them one tap, none of them hidden. */
+.shell-nav {
+  order: 3;
+  display: flex;
+  gap: 4px;
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+
+.shell-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.shell-nav a {
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.72);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.shell-nav a:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.shell-nav a[aria-current='page'] {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+/* The tab a tap is loading (useLinkStatus in shell-nav.tsx). */
+.shell-nav-label[data-pending] {
+  animation: shell-nav-pending 900ms ease-in-out infinite;
+}
+
+@keyframes shell-nav-pending {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell-nav-label[data-pending] {
+    animation: none;
+    opacity: 0.6;
+  }
+}
+
+/* Ghost buttons sitting on the plate (sign out) — the light-ground
+ * secondary treatment is illegible here. */
+.shell-bar .btn-secondary {
+  border-color: rgba(255, 255, 255, 0.28);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.shell-bar .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* The Aegean focus ring vanishes against the Aegean plate. */
+.shell-bar :where(a, button):focus-visible {
+  outline-color: #fff;
+}
+
+.shell-main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+@media (min-width: 768px) {
+  .shell-bar {
+    flex-wrap: nowrap;
+    padding: 12px 24px;
+  }
+
+  .shell-brand {
+    font-size: 20px;
+    margin-right: 16px;
+  }
+
+  .shell-nav {
+    order: 0;
+    width: auto;
+    margin-right: auto;
+    overflow-x: visible;
+  }
+
+  .shell-main {
+    padding: 28px 24px 64px;
+  }
+}
+
+/* ── Page head ─────────────────────────────────────────────────────── */
+
+/* The hairline under the page head is the entry plate's .entry-rule
+ * carried inward — it gives every page the same settled baseline the
+ * login readout sits on. */
+.page-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 12px;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--ludi-line-bold);
+}
+
+.page-title {
+  font-size: 28px;
+  letter-spacing: -0.015em;
+}
+
+.page-meta {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ludi-ink3);
+}
+
+.page-intro {
+  margin: 0 0 16px;
+  max-width: 68ch;
+  font-size: 14px;
+  color: var(--ludi-ink2);
+}
+
+@media (min-width: 768px) {
+  .page-title {
+    font-size: 34px;
+  }
+}
+
+/* ── Surfaces ──────────────────────────────────────────────────────── */
+
+.card {
+  background: var(--ludi-surface);
+  border: 1px solid var(--ludi-line);
+  border-radius: 12px;
+}
+
+.card-pad {
+  padding: 16px;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Filters ───────────────────────────────────────────────────────── */
+
+.filters {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  padding: 16px;
+}
+
+.filters-actions {
+  display: flex;
+  gap: 8px;
+}
+
+@media (min-width: 560px) {
+  .filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 900px) {
+  .filters {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: end;
+  }
+}
+
+/* ── Fields ────────────────────────────────────────────────────────── */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.field-label {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ludi-ink3);
+}
+
+.field-hint {
+  font-size: 12px;
+  color: var(--ludi-ink3);
+}
+
+.input {
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--ludi-line-bold);
+  border-radius: 8px;
+  background: var(--ludi-surface);
+  color: var(--ludi-ink);
+  font-size: 16px; /* 16px stops iOS Safari zooming on focus */
+}
+
+@media (min-width: 768px) {
+  .input {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+}
+
+/* ── Buttons ───────────────────────────────────────────────────────── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 16px;
+  min-height: 40px; /* comfortable touch target */
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Aegean is the CTA fill. Before #41c every button in this app used
+ * `pitch` green, which is the success/availability role — the admin never
+ * got the Chalk & Aegean migration the mobile app took in PR #81. */
+.btn-primary {
+  background: var(--ludi-primary);
+  border-color: var(--ludi-primary-deep);
+  color: #fff;
+  transition: background 120ms ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--ludi-primary-deep);
+}
+
+.btn-secondary {
+  background: transparent;
+  border-color: var(--ludi-line-bold);
+  color: var(--ludi-ink2);
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.btn-secondary:hover {
+  background: var(--ludi-bg);
+  color: var(--ludi-ink);
+}
+
+/* `alert` is the semantic role for refunds, cancellations, deactivation —
+ * never decoration. */
+.btn-danger {
+  background: transparent;
+  border-color: var(--ludi-alert);
+  color: var(--ludi-alert-deep);
+}
+
+.btn-danger:hover {
+  background: var(--ludi-alert-soft);
+}
+
+/* ── Table ─────────────────────────────────────────────────────────── */
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.th {
+  padding: 10px 12px;
+  text-align: left;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--ludi-ink3);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+
+.td {
+  padding: 10px 12px;
+  vertical-align: middle;
+  border-top: 1px solid var(--ludi-line);
+}
+
+/* Laptop scanning aid only — in card mode (phone) rows are already
+ * separated and a hover wash means nothing to touch. */
+@media (min-width: 768px) {
+  .table tbody tr {
+    transition: background 120ms ease;
+  }
+
+  .table tbody tr:hover {
+    background: var(--ludi-bg);
+  }
+}
+
+.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Below 768px the table stops being a table: each row becomes a card and
+ * each cell carries its own column label. A 7-column bookings grid is
+ * unreadable at 375px, and sideways scrolling to answer "who is booked
+ * tonight?" is exactly the friction that sends an owner back to WhatsApp. */
+@media (max-width: 767px) {
+  .table,
+  .table tbody,
+  .table tr {
+    display: block;
+  }
+
+  .table thead {
+    display: none;
+  }
+
+  .table tr {
+    padding: 4px 0;
+    border-top: 1px solid var(--ludi-line);
+  }
+
+  .table tr:first-child {
+    border-top: 0;
+  }
+
+  .td {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 6px 16px;
+    border-top: 0;
+  }
+
+  .td::before {
+    content: attr(data-label);
+    flex: 0 0 auto;
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 10.5px;
+    font-weight: 500;
+    color: var(--ludi-ink3);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  /* A cell with no label is a full-width action row. */
+  .td[data-label='']::before {
+    display: none;
+  }
+
+  .num {
+    text-align: right;
+  }
+}
+
+/* ── Badge ─────────────────────────────────────────────────────────── */
+
+/* Badges are state readouts, not decoration — they speak microcaps like
+ * every other label, and sit as chips rather than pills so they read as
+ * printed values, not buttons. */
+.badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.badge-neutral {
+  background: var(--ludi-bg);
+  color: var(--ludi-ink2);
+}
+
+.badge-good {
+  background: var(--ludi-pitch-soft);
+  color: var(--ludi-pitch-deep);
+}
+
+.badge-warn {
+  background: var(--ludi-sun-soft);
+  color: var(--ludi-sun-deep);
+}
+
+.badge-alert {
+  background: var(--ludi-alert-soft);
+  color: var(--ludi-alert-deep);
+}
+
+.badge-info {
+  background: var(--ludi-primary-soft);
+  color: var(--ludi-primary-deep);
+}
+
+/* ── Stats ─────────────────────────────────────────────────────────── */
+
+/* Auto-fit, not a fixed column count: pages carry three to six tiles, and
+ * a fixed five left a hole after four and a lone tile after six. 140px is
+ * two columns on a 375px phone (343px of content) and up to seven across
+ * the 1100px shell. */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr));
+  gap: 12px;
+}
+
+.stat {
+  padding: 14px 16px;
+  min-width: 0;
+}
+
+.stat-label {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--ludi-ink3);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+/* 24px on a phone so '€12,345.50' fits a half-width tile; wrapping is the
+ * last resort, never overflow. */
+.stat-value {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 24px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  margin-top: 2px;
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 768px) {
+  .stat-value {
+    font-size: 28px;
+  }
+}
+
+/* ── Daily chart (components/gmv-chart.tsx) ────────────────────────── */
+
+/* Bars are a stretched SVG; every label is HTML so it stays readable at
+ * any card width. The left margin is the y-axis gutter. */
+.gmv-plot {
+  position: relative;
+  margin: 8px 4px 0 48px;
+}
+
+.gmv-y-label,
+.gmv-tick {
+  position: absolute;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--ludi-ink3);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.gmv-y-label {
+  right: calc(100% + 8px);
+  transform: translateY(-50%);
+}
+
+.gmv-x {
+  position: relative;
+  height: 20px;
+  margin: 4px 4px 0 48px;
+}
+
+.gmv-tick {
+  top: 2px;
+  transform: translateX(-50%);
+}
+
+/* A phone shows every third date label, not ten crammed ones. */
+@media (max-width: 767px) {
+  .gmv-tick-minor {
+    display: none;
+  }
+}
+
+.gmv-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  justify-content: flex-end;
+  padding: 8px 4px 0;
+  font-size: 12px;
+  color: var(--ludi-ink3);
+}
+
+.gmv-days {
+  margin-top: 12px;
+  border-top: 1px solid var(--ludi-line);
+  padding-top: 10px;
+  font-size: 13px;
+}
+
+.gmv-days summary {
+  cursor: pointer;
+  color: var(--ludi-primary-deep);
+  font-weight: 500;
+}
+
+.gmv-days-wrap {
+  overflow-x: auto;
+  margin-top: 8px;
+}
+
+.gmv-days table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.gmv-days th {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--ludi-ink3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.gmv-days th,
+.gmv-days td {
+  padding: 5px 6px;
+  text-align: right;
+  border-top: 1px solid var(--ludi-line);
+  white-space: nowrap;
+}
+
+.gmv-days thead th {
+  border-top: 0;
+}
+
+.gmv-days th:first-child,
+.gmv-days td:first-child {
+  text-align: left;
+  padding-left: 0;
+}
+
+.gmv-days th:last-child,
+.gmv-days td:last-child {
+  padding-right: 0;
+}
+
+/* The live tell on the Today page — same gesture as the entry plate's
+ * dot: it breathes because the numbers on this page are current, and for
+ * no other reason. Pitch green because green is the availability role. */
+.live-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ludi-pitch);
+  margin-right: 7px;
+  vertical-align: 1px;
+}
+
+/* ── Empty state ───────────────────────────────────────────────────── */
+
+.empty {
+  padding: 40px 24px;
+  text-align: center;
+  color: var(--ludi-ink3);
+}
+
+/* ── Centred pages (login, locked) ─────────────────────────────────── */
+
+.centre {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 24px;
+  text-align: center;
+}
+
+/* ── Range pills ───────────────────────────────────────────────────── */
+
+.pills {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.pills::-webkit-scrollbar {
+  display: none;
+}
+
+.pill {
+  padding: 7px 14px;
+  border: 1px solid var(--ludi-line-bold);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ludi-ink2);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.pill[aria-current='page'] {
+  background: var(--ludi-primary);
+  border-color: var(--ludi-primary-deep);
+  color: #fff;
+}
+
+.footnote {
+  margin: 12px 0 0;
+  max-width: 68ch;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ludi-ink3);
+}
+
+/* ── Auth card ─────────────────────────────────────────────────────── */
+
+.auth {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 28px;
+  background: var(--ludi-surface);
+  border: 1px solid var(--ludi-line);
+  border-radius: 16px;
+}
+
+.auth-error {
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--ludi-alert-soft);
+  color: var(--ludi-alert-deep);
+  font-size: 13px;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.otp-input {
+  letter-spacing: 6px;
+  font-size: 18px;
+  text-align: center;
+}
+
+/* The Td value wrapper. On a wide table it should not introduce a box, so
+ * it disappears into the cell; in card mode it is the second flex item and
+ * carries the alignment. */
+.td-value {
+  display: contents;
+}
+
+@media (max-width: 767px) {
+  .td-value {
+    display: block;
+    min-width: 0;
+    text-align: right;
+  }
+}
+
+/* ── Forms ─────────────────────────────────────────────────────────── */
+
+.form-ok {
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--ludi-pitch-soft);
+  color: var(--ludi-pitch-deep);
+  font-size: 13px;
+}
+
+.field-error {
+  font-size: 12px;
+  color: var(--ludi-alert-deep);
+}
+
+/* Two columns on a laptop, one on a phone. The venue and pitch forms are
+ * short enough that a single column reads fine either way, but paired
+ * fields (lat/lng, type/surface) belong side by side where there's room. */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 640px) {
+  .form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .form-grid .span-2 {
+    grid-column: 1 / -1;
+  }
+}
+
+.form-section {
+  margin: 0 0 4px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--ludi-ink3);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+/* ── Schedule editor ───────────────────────────────────────────────── */
+
+.sched-day {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.sched-day-name {
+  font-size: 18px;
+}
+
+.sched-list {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sched-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+/* The window controls are a row on a laptop and wrap on a phone rather
+ * than shrinking the time inputs to unusable widths. */
+.sched-window {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.sched-window .input {
+  width: auto;
+  min-width: 7.5rem;
+}
+
+.sched-dash {
+  color: var(--ludi-ink3);
+}
+
+/* A refusal has to be readable next to the control that caused it, and it
+ * must not be squeezed into a flex row with the inputs. */
+.sched-messages {
+  flex-basis: 100%;
+}
+
+.sched-messages:empty {
+  display: none;
+}
+
+/* ── Venue map picker ────────────────────────────────────────────────────
+   Leaflet ships its own CSS (imported by the component). These rules are
+   only the surrounding chrome: the canvas box, the search row, and the
+   result list. */
+.map-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.map-picker-search {
+  display: flex;
+  gap: 8px;
+}
+.map-picker-search .input {
+  flex: 1;
+  min-width: 0;
+}
+.map-picker-canvas {
+  height: 280px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--ludi-line, rgba(16, 24, 28, 0.12));
+  /* Leaflet panes carry their own stacking context; without this the map
+     paints over sticky headers and any modal opened above it. */
+  isolation: isolate;
+  z-index: 0;
+}
+.map-picker-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ludi-ink2, #3f4c51);
+  background: var(--ludi-bg, #f2f4f3);
+}
+.map-picker-hits {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--ludi-line, rgba(16, 24, 28, 0.12));
+  border-radius: 10px;
+  overflow: hidden;
+}
+.map-picker-hit {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 9px 12px;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--ludi-line, rgba(16, 24, 28, 0.08));
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.map-picker-hit:hover {
+  background: var(--ludi-bg, #f2f4f3);
+}
+.map-picker-hits li:last-child .map-picker-hit {
+  border-bottom: 0;
+}
+.map-picker-error {
+  color: var(--ludi-alert, #c1502e);
+}
+/* The pin is an inline SVG divIcon; Leaflet gives divIcons a white box by
+   default, which would render a card behind the marker. */
+.map-pin {
+  background: none;
+  border: 0;
+}
+
+/* ---------------------------------------------------------------------------
+ * Entry screen — the admin portal's landing page.
+ *
+ * `/` redirects to `/bookings`, so for anyone not yet signed in `/login` IS
+ * this app's front door, and until now it was a bare card on an empty ground.
+ * A venue owner's first impression of Ludi is this screen.
+ *
+ * The motion vocabulary is borrowed from cato (dev/domitor), deliberately
+ * narrow: things rise into place once, one element breathes to say the system
+ * is live, and a wrong code shakes. Three gestures, no more. Motion here is
+ * meant to read as an instrument settling, not as decoration — an owner sees
+ * this screen twice a week and anything showier would wear out fast.
+ *
+ * These are the first keyframes in this stylesheet, so the reduced-motion
+ * guard at the bottom is the one that establishes the rule: every animation
+ * added later must be listed there, or it will ignore the user's preference.
+ * ------------------------------------------------------------------------ */
+
+@keyframes ludi-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The "live" tell. Never faster than ~2s — a quick pulse reads as an alert,
+ * and nothing here is wrong. */
+@keyframes ludi-breathe {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes ludi-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-6px);
+  }
+  40% {
+    transform: translateX(5px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
+}
+
+/* Stagger: each `.rise` sets --i and inherits one delay rule, so ordering is
+ * a number in the markup rather than a new class per element. */
+.rise {
+  animation: ludi-rise 0.5s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+.breathe {
+  animation: ludi-breathe 2.4s ease-in-out infinite;
+}
+
+.shake {
+  animation: ludi-shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+.entry {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.entry-plate {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 44px;
+  background: var(--ludi-primary-deep);
+  color: #fff;
+}
+
+.entry-eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+  margin: 0;
+}
+
+.entry-title {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(30px, 3.4vw, 44px);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  margin: 18px 0 0;
+  max-width: 15ch;
+}
+
+.entry-lede {
+  margin: 16px 0 0;
+  max-width: 34ch;
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.76);
+}
+
+/* The instrument readout. Mono, small, bottom-anchored — it is the part that
+ * says "this is a tool", and it is why the plate does not read as marketing. */
+.entry-readout {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.entry-readout-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.entry-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ludi-pitch-soft);
+  flex: none;
+}
+
+.entry-rule {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.16);
+  margin: 0 0 14px;
+  border: 0;
+}
+
+.entry-form-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 32px 24px;
+  background: var(--ludi-bg);
+}
+
+/* The plate's voice, restated for the phone.
+ *
+ * The plate is dropped below 880px — correct, a hero above the field pushes
+ * it under the fold. But dropping it also dropped every word saying what
+ * this is and that a code is expected, on the one device the owner actually
+ * uses. Two lines carry it instead of forty: the eyebrow, and the live
+ * readout that is the trust tell.
+ *
+ * Hidden at ≥880px where the plate carries it. `display: none` removes each
+ * from the accessibility tree in turn, so exactly one copy is ever announced
+ * — which is also why the plate stays `aria-hidden` and this does not. */
+.entry-compact {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.entry-compact .entry-eyebrow {
+  color: var(--ludi-ink3);
+}
+
+/* Same readout as the plate's, inverted for light ground. */
+.entry-compact-readout {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ludi-ink3);
+}
+
+.entry-compact .entry-dot {
+  background: var(--ludi-pitch);
+}
+
+.entry-form {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Step counter above the form — two steps, and which one you are on. Cheap
+ * to render, and it answers "is this going to ask me for more?" */
+.entry-step {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ludi-ink3);
+  margin: 0;
+}
+
+@media (min-width: 880px) {
+  .entry {
+    grid-template-columns: 1.02fr 0.98fr;
+  }
+
+  .entry-plate {
+    display: flex;
+  }
+
+  .entry-compact {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise,
+  .breathe,
+  .shake {
+    animation: none;
+  }
+
+  /* `.rise` animates from opacity 0, so switching the animation off without
+   * this would leave the whole screen invisible — the failure mode is total,
+   * not cosmetic. */
+  .rise {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── Enrol a venue — the counter flow (plans/venue-enrol.md) ─────────── */
+
+/* The stepper: five pills, phone-first, scrolls sideways if it must. */
+.enrol-steps {
+  display: flex;
+  gap: 6px;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.enrol-steps::-webkit-scrollbar {
+  display: none;
+}
+.enrol-step > a,
+.enrol-step > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px 6px 6px;
+  border: 1px solid var(--ludi-line-bold);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ludi-ink2);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.enrol-step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--ludi-bg);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+}
+.enrol-step-current > span,
+.enrol-step-current > a {
+  border-color: var(--ludi-primary);
+  color: var(--ludi-primary-deep);
+  background: var(--ludi-primary-soft);
+}
+.enrol-step-current .enrol-step-num {
+  background: var(--ludi-primary);
+  color: #fff;
+}
+.enrol-step-done .enrol-step-num {
+  background: var(--ludi-pitch-soft);
+  color: var(--ludi-pitch-deep);
+}
+
+/* Saved rows (courts, owners) on the resume and review screens. */
+.enrol-saved {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.enrol-saved li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  padding: 8px 0;
+  border-top: 1px solid var(--ludi-line);
+  font-size: 14px;
+}
+.enrol-saved li:first-child {
+  border-top: 0;
+}
+.enrol-saved li > span {
+  color: var(--ludi-ink2);
+}
+.enrol-saved li > a {
+  margin-left: auto;
+  font-weight: 500;
+}
+
+/* The courts table: a card per court on a phone, a row on a laptop. */
+.court-head {
+  display: none;
+}
+.court-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 10px;
+  padding: 12px;
+  border: 1px solid var(--ludi-line);
+  border-radius: 12px;
+}
+.court-row .court-name {
+  grid-column: 1 / -1;
+}
+.court-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+@media (min-width: 768px) {
+  .court-head,
+  .court-row {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) 6.5em 5.5em auto;
+    gap: 8px;
+    align-items: start;
+  }
+  .court-row .court-made-of,
+  .court-row .court-expansion {
+    grid-column: 1 / -1;
+  }
+  .court-head {
+    padding: 0 12px;
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 10.5px;
+    font-weight: 500;
+    color: var(--ludi-ink3);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  .court-row .court-name,
+  .court-actions {
+    grid-column: auto;
+  }
+  .court-row .field-label {
+    display: none;
+  }
+  .court-actions {
+    padding-top: 0;
+    justify-content: flex-start;
+  }
+}
+
+/* The hours grid: one row per day. */
+.hours-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.hours-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 6px 10px;
+  align-items: end;
+  padding: 10px 12px;
+  border: 1px solid var(--ludi-line);
+  border-radius: 12px;
+}
+.hours-day {
+  font-weight: 600;
+}
+.hours-closed {
+  justify-self: end;
+  font-size: 13px;
+  color: var(--ludi-ink2);
+}
+.hours-row-closed {
+  background: var(--ludi-bg);
+}
+.hours-row-closed .field {
+  opacity: 0.45;
+}
+@media (min-width: 640px) {
+  .hours-row {
+    grid-template-columns: 6.5em auto minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+  }
+  .hours-closed {
+    justify-self: start;
+  }
+  .hours-row .field-label {
+    display: none;
+  }
+}
+
+/* Review page: a definition list that reads as a two-column sheet. */
+.review-list {
+  display: grid;
+  grid-template-columns: 8em minmax(0, 1fr);
+  gap: 6px 12px;
+  margin: 0;
+  font-size: 14px;
+}
+.review-list dt {
+  color: var(--ludi-ink3);
+}
+.review-list dd {
+  margin: 0;
+}
+.review-todo {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+}
+
+/* Composite pitches (ADR-0032): "made of" pickers on the pitch form and
+ * the enrolment courts table. */
+.made-of {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin: 6px 0;
+}
+.made-of-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border: 1px solid var(--ludi-line-bold);
+  border-radius: 999px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.made-of-option:has(input:checked) {
+  border-color: var(--ludi-primary);
+  background: var(--ludi-primary-soft);
+  color: var(--ludi-primary-deep);
+}
+.court-made-of {
+  grid-column: 1 / -1;
+  font-size: 13px;
+}
+.court-made-of > summary {
+  cursor: pointer;
+  color: var(--ludi-ink2);
+}
+.court-made-of[open] > summary {
+  color: var(--ludi-ink);
+  font-weight: 500;
+}
+.court-expansion {
+  grid-column: 1 / -1;
+}
+
+/* ── Calendar — the week on the wall (plans/owner-calendar.md) ────── */
+.calendar-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.calendar-venue {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  min-width: 260px;
+}
+.calendar-venue .field {
+  flex: 1;
+}
+.calendar-scroll {
+  overflow-x: auto;
+}
+.calendar {
+  width: 100%;
+  min-width: 860px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+}
+.calendar th,
+.calendar td {
+  vertical-align: top;
+  border-bottom: 1px solid var(--ludi-line);
+  border-right: 1px solid var(--ludi-line);
+  padding: 8px;
+}
+.calendar th:last-child,
+.calendar td:last-child {
+  border-right: 0;
+}
+.calendar thead th {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ludi-ink3);
+  background: var(--ludi-bg);
+  text-align: left;
+  white-space: nowrap;
+}
+.calendar-court-head,
+.calendar-court {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--ludi-surface);
+  min-width: 120px;
+  max-width: 160px;
+}
+.calendar thead .calendar-court-head {
+  background: var(--ludi-bg);
+}
+.calendar-court {
+  text-align: left;
+  font-weight: 600;
+  color: var(--ludi-ink);
+}
+.calendar-court-type {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--ludi-ink3);
+}
+.calendar-cell {
+  min-width: 100px;
+}
+.calendar-today {
+  background: var(--ludi-primary-soft);
+}
+.calendar thead .calendar-today {
+  color: var(--ludi-primary-deep);
+}
+.calendar-empty {
+  color: var(--ludi-line-bold);
+}
+/* The "+" in a free cell: opens the walk-in modal on that court and hour.
+ * Faint until hovered so the grid still reads as the book, not a form. */
+.calendar-add {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0;
+  border: 1px dashed transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ludi-line-bold);
+  font: inherit;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+.calendar-items + .calendar-add {
+  min-height: 20px;
+  margin-top: 4px;
+}
+.calendar-add:hover,
+.calendar-add:focus-visible {
+  border-color: var(--ludi-primary);
+  color: var(--ludi-primary-deep);
+  background: var(--ludi-primary-soft);
+}
+.calendar-items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.calendar-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 6px;
+}
+.calendar-item-link {
+  display: inline-flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+}
+.calendar-time {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11.5px;
+  color: var(--ludi-ink2);
+}
+.calendar-name {
+  font-weight: 600;
+  color: var(--ludi-ink);
+}
+.calendar-walkin .calendar-name {
+  color: var(--ludi-primary-deep);
+}
+.calendar-print-title {
+  margin-bottom: 8px;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 16px;
+}
+.calendar-print-note {
+  float: right;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10px;
+  color: var(--ludi-ink3);
+}
+.print-only {
+  display: none;
+}
+
+/* The day sheet — the owner's paper form with the app's bookings filled in. */
+.pill-active {
+  border-color: var(--ludi-primary);
+  background: var(--ludi-primary-soft);
+  color: var(--ludi-primary-deep);
+}
+.calendar-day-link {
+  color: inherit;
+  text-decoration: none;
+}
+.daysheet {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+}
+.daysheet-court-head {
+  min-width: 120px;
+}
+.daysheet th,
+.daysheet td {
+  border-bottom: 1px solid var(--ludi-line);
+  border-right: 1px solid var(--ludi-line);
+  padding: 8px;
+  vertical-align: top;
+}
+.daysheet th:last-child,
+.daysheet td:last-child {
+  border-right: 0;
+}
+.daysheet thead th {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ludi-ink3);
+  background: var(--ludi-bg);
+  text-align: left;
+}
+.daysheet-hour-head,
+.daysheet-hour {
+  width: 8.5em;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--ludi-surface);
+}
+.daysheet thead .daysheet-hour-head {
+  background: var(--ludi-bg);
+}
+.daysheet-hour {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ludi-ink2);
+  text-align: left;
+  white-space: nowrap;
+}
+.daysheet-cell {
+  height: 52px;
+}
+.daysheet-shut {
+  background: repeating-linear-gradient(135deg, var(--ludi-bg) 0 6px, transparent 6px 12px);
+}
+.daysheet-booked {
+  background: var(--ludi-primary-soft);
+}
+.daysheet-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 6px;
+  align-items: baseline;
+  text-decoration: none;
+  color: inherit;
+}
+.daysheet-head {
+  margin-bottom: 8px;
+}
+/* Managing a booking from the Calendar (plans/calendar-manage.md). */
+.booking-open {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.booking-open:hover .calendar-name,
+.booking-open:focus-visible .calendar-name {
+  text-decoration: underline;
+}
+.calendar-note {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex-basis: 100%;
+  margin-top: 2px;
+  font-size: 11.5px;
+  font-style: italic;
+  color: var(--ludi-ink2);
+}
+.calendar-note::before {
+  content: '“';
+}
+.calendar-note::after {
+  content: '”';
+}
+.sheet-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(26, 24, 20, 0.4);
+}
+.sheet-card {
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 22px;
+  text-align: left;
+  background: var(--ludi-surface);
+  border: 1px solid var(--ludi-line);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(26, 24, 20, 0.18);
+}
+.sheet-title {
+  margin: 0 0 4px;
+  font-size: 20px;
+}
+.sheet-meta {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ludi-ink2);
+}
+.sheet-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0 16px;
+}
+.sheet-note {
+  resize: vertical;
+  min-height: 72px;
+}
+.sheet-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+.sheet-section {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--ludi-line);
+}
+.sheet-foot {
+  justify-content: space-between;
+  margin-top: 20px;
+}
+.sheet-link {
+  font-size: 14px;
+}
+
+/* The CFA round loader and programme (plans/cfa-grassroots-saturday.md). */
+.cfa-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+.cfa-table,
+.programme {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.cfa-table th,
+.cfa-table td,
+.programme th,
+.programme td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--ludi-line);
+  text-align: left;
+  vertical-align: middle;
+}
+.cfa-table th,
+.programme th {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--ludi-ink3);
+  background: var(--ludi-bg);
+}
+.cfa-table .input {
+  min-width: 90px;
+  padding: 6px 8px;
+}
+.cfa-off {
+  opacity: 0.45;
+}
+.cfa-skipped {
+  background: var(--ludi-alert-soft, #fbeaea);
+}
+.programme td {
+  padding: 10px 8px;
+  font-size: 15px;
+}
+.programme-newtime td {
+  border-top: 2px solid var(--ludi-line-bold);
+}
+.programme-notes {
+  width: 22%;
+}
+.screen-qr-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+.screen-qr {
+  flex: 0 0 auto;
+  width: 200px;
+  padding: 8px;
+  background: #fff;
+  border: 1px solid var(--ludi-line);
+  border-radius: 10px;
+}
+.screen-qr svg,
+.programme-qr svg,
+.tv-qr-img svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.programme-head {
+  position: relative;
+}
+/* the venue's mark above the title, its clear space in the print margin */
+.programme-mark {
+  --mark-h: 18mm;
+  display: block;
+  height: var(--mark-h);
+  width: auto;
+  margin: calc(var(--mark-h) * var(--mark-clear) * -1) 0 0 calc(var(--mark-h) * var(--mark-clear) * -1);
+}
+.programme-qr {
+  float: right;
+  width: 36mm;
+  margin-left: 6mm;
+  text-align: center;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 8px;
+  letter-spacing: 0.06em;
+}
+.screen-url {
+  display: block;
+  padding: 10px 12px;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  background: var(--ludi-bg);
+  border: 1px solid var(--ludi-line);
+  border-radius: 8px;
+}
+.screen-tips {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--ludi-ink2);
+  font-size: 14px;
+}
+
+/* The lobby screen — a 32"-60" TV read from across the room. Light, calm,
+ * high contrast; sized in vw/vh so a Full HD and a 4K panel read the same,
+ * and nothing but the schedule takes height: the QR sits in the header.
+ * The margin is the broadcast action-safe ~5% a side: a TV on HDMI at its
+ * default picture size overscans, and Campeone's LG cropped 2vh 2vw
+ * (2026-10-16); 5vh 5vw was right on that TV. */
+.tv {
+  --tv-bg: #f3f6f5;
+  --tv-card: #ffffff;
+  --tv-line: #d7e0de;
+  --tv-ink: #0e242b;
+  --tv-ink2: #3f5358;
+  --tv-ink3: #6b7d81;
+  --tv-primary: #1d6f84;
+  --tv-primary-deep: #0f4d5d;
+  --tv-primary-soft: #dcecef;
+  --tv-free: #1f7a4d;
+  height: 100vh;
+  overflow: hidden;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6vh;
+  padding: 5vh 5vw;
+  background: var(--tv-bg);
+  color: var(--tv-ink);
+  font-size: clamp(16px, 1.45vw, 60px);
+  font-weight: 600;
+  line-height: 1.2;
+}
+.tv-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3vw;
+  padding-bottom: 1.4vh;
+  border-bottom: 3px solid var(--tv-line);
+}
+.tv-head-right {
+  display: flex;
+  align-items: center;
+  gap: 1.2vw;
+}
+.tv-venue {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 2.6em;
+  font-weight: 700;
+  line-height: 1.05;
+}
+.tv-date {
+  margin-top: 0.3em;
+  font-size: 1.1em;
+  color: var(--tv-ink2);
+}
+/* The venue's own mark in place of its name (lib/venue-marks.ts). The file's
+ * box carries the clear space; pulling it up and left into the page margin
+ * lines the drawing up with the date, which stays one clear space below. */
+.tv-mark {
+  --tv-mark-h: 5.2em;
+  display: block;
+  height: var(--tv-mark-h);
+  width: auto;
+  margin: calc(var(--tv-mark-h) * var(--tv-mark-clear) * -1) 0 0 calc(var(--tv-mark-h) * var(--tv-mark-clear) * -1);
+}
+.tv-mark + .tv-date {
+  margin-top: 0;
+}
+.tv-round {
+  color: var(--tv-primary);
+  font-weight: 700;
+}
+.tv-clock {
+  padding: 0.1em 0.45em;
+  border-radius: 0.25em;
+  background: var(--tv-ink);
+  color: #ffffff;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 3.4em;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.tv-body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 19em;
+  gap: 2vw;
+}
+.tv-main {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+}
+.tv-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+}
+.tv-measure {
+  position: absolute;
+  inset: 0 0 auto 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.tv-group {
+  display: grid;
+  grid-template-columns: 4.3em 1fr;
+  gap: 1em;
+  align-items: start;
+}
+.tv-group-time {
+  padding-top: 0.15em;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 1.7em;
+  font-weight: 700;
+  color: var(--tv-ink);
+}
+.tv-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2vh 1.2vw;
+}
+.tv-match {
+  padding: 0.6em 0.9em 0.7em;
+  border: 2px solid var(--tv-line);
+  border-radius: 0.5em;
+  background: var(--tv-card);
+  box-shadow: 0 2px 0 rgba(14, 36, 43, 0.04);
+}
+.tv-match-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5em;
+  margin-bottom: 0.35em;
+}
+.tv-court {
+  padding: 0.1em 0.5em;
+  border-radius: 0.3em;
+  background: var(--tv-primary-deep);
+  color: #ffffff;
+  font-size: 0.95em;
+  font-weight: 700;
+}
+.tv-cat {
+  font-size: 0.95em;
+  font-weight: 700;
+  color: var(--tv-primary);
+}
+.tv-team {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 1.12em;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--tv-ink);
+}
+.tv-team-away {
+  margin-top: 0.12em;
+}
+.tv-now {
+  border: 4px solid var(--tv-primary);
+  background: #eef7f9;
+}
+.tv-done {
+  opacity: 0.45;
+}
+.tv-live {
+  margin-left: auto;
+  padding: 0.1em 0.55em;
+  border-radius: 0.3em;
+  background: var(--tv-primary);
+  color: #ffffff;
+  font-size: 0.8em;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.tv-postponed {
+  background: #b42318;
+}
+.tv-pages {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  gap: 0.45em;
+}
+.tv-dot {
+  width: 0.65em;
+  height: 0.65em;
+  border-radius: 50%;
+  background: var(--tv-line);
+}
+.tv-dot-on {
+  background: var(--tv-primary);
+}
+.tv-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6vh;
+  min-height: 0;
+  padding: 1em;
+  border: 2px solid var(--tv-line);
+  border-radius: 0.6em;
+  background: var(--tv-card);
+}
+.tv-side-title {
+  font-size: 0.8em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tv-ink3);
+}
+.tv-now-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35em;
+}
+.tv-now-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6em;
+  padding: 0.35em 0.5em;
+  border-radius: 0.35em;
+  background: var(--tv-bg);
+}
+.tv-now-court {
+  font-weight: 700;
+}
+.tv-now-what {
+  font-weight: 700;
+  color: var(--tv-free);
+}
+.tv-now-busy {
+  background: var(--tv-primary-soft);
+}
+.tv-now-busy .tv-now-what {
+  color: var(--tv-primary-deep);
+}
+.tv-next {
+  margin-top: auto;
+  padding: 0.7em;
+  border-radius: 0.5em;
+  background: var(--tv-ink);
+  color: #ffffff;
+  text-align: center;
+}
+.tv-next-label {
+  font-size: 0.8em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #c9d8dc;
+}
+.tv-next-time {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 2.2em;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.tv-next-in {
+  font-size: 1em;
+  color: #c9d8dc;
+}
+/* the board (ADR-0054): a row per booking, soonest first — who, which
+ * courts, when. The name and the court numbers are the two things read
+ * from the door, so they are the two big ones. */
+.tv-board {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2vh;
+}
+.tv-body-board {
+  grid-template-columns: 1fr 17em;
+}
+.tv-body-wide {
+  grid-template-columns: 1fr;
+}
+.tv-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 0.8fr) 9.4em 5.8em;
+  align-items: center;
+  gap: 1em;
+  padding: 0.45em 0.8em;
+  border: 2px solid var(--tv-line);
+  border-radius: 0.5em;
+  background: var(--tv-card);
+}
+.tv-row-label {
+  padding-top: 0;
+  padding-bottom: 0;
+  border-color: transparent;
+  background: transparent;
+}
+.tv-row-label > span {
+  font-size: 0.8em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tv-ink3);
+}
+.tv-row-now {
+  border: 4px solid var(--tv-primary);
+  background: #eef7f9;
+}
+.tv-row-want {
+  border-color: var(--tv-want);
+  background: var(--tv-want-soft);
+}
+.tv-row-who {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.9em;
+  font-weight: 700;
+  line-height: 1.15;
+}
+.tv-row-anon {
+  font-family: inherit;
+  font-size: 1.3em;
+  color: var(--tv-ink3);
+}
+.tv-row-courts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4em;
+}
+.tv-chip {
+  min-width: 1.6em;
+  padding: 0 0.3em;
+  border-radius: 0.25em;
+  background: var(--tv-primary-deep);
+  color: #ffffff;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 1.9em;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+}
+.tv-row-time {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 1.35em;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.tv-row-state {
+  justify-self: end;
+  font-size: 1.25em;
+}
+.tv-soon {
+  padding: 0.1em 0.55em;
+  border-radius: 0.3em;
+  background: var(--tv-primary-soft);
+  color: var(--tv-primary-deep);
+  font-size: 0.9em;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.tv-board-more {
+  padding-left: 0.8em;
+  font-size: 0.9em;
+  color: var(--tv-ink3);
+}
+.tv-board-empty {
+  padding-top: 18vh;
+  text-align: center;
+  font-size: 1.6em;
+  color: var(--tv-ink2);
+}
+.tv-brand {
+  display: block;
+  margin-top: 0.4em;
+  font-size: 0.8em;
+  color: var(--tv-ink3);
+}
+.tv-qr-follow {
+  border-color: var(--tv-primary);
+  background: var(--tv-primary-soft);
+}
+.tv-qr-follow .tv-qr-text {
+  color: var(--tv-primary-deep);
+}
+.tv-qr {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.35em 0.6em 0.35em 0.35em;
+  border: 2px solid var(--tv-line);
+  border-radius: 0.5em;
+  background: var(--tv-card);
+  color: var(--tv-ink);
+  font-weight: 700;
+  font-size: 0.85em;
+  line-height: 1.15;
+}
+.tv-qr-img {
+  width: 6.5em;
+}
+/* the wall (plans/venue-wall.md): an open fixture's row, and the next one
+ * short of players in the rail — warm, so it reads from the counter */
+.tv {
+  --tv-want: #b4540a;
+  --tv-want-soft: #fff2e2;
+}
+.tv-want {
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  padding: 0.45em 0.55em;
+  border-radius: 0.5em;
+  background: var(--tv-want-soft);
+}
+.tv-want-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2em;
+}
+.tv-want-when {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+}
+.tv-want-time {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 1.6em;
+  font-weight: 700;
+}
+.tv-want-court {
+  white-space: nowrap;
+  font-weight: 700;
+  color: var(--tv-ink2);
+}
+.tv-want-missing {
+  font-size: 0.9em;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--tv-want);
+}
+.tv-want-price {
+  font-weight: 700;
+}
+.tv-want-scan {
+  font-size: 0.8em;
+  color: var(--tv-ink3);
+}
+.tv-want-qr {
+  flex: 0 0 auto;
+  width: 5.6em;
+  padding: 0.2em;
+  border-radius: 0.3em;
+  background: #ffffff;
+}
+.tv-want-qr svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.tv-want-compact .tv-want-time {
+  font-size: 1.3em;
+}
+.tv-want-compact .tv-want-qr {
+  width: 5em;
+}
+.tv-want-more {
+  font-size: 0.85em;
+  color: var(--tv-ink3);
+}
+.tv-fs {
+  position: fixed;
+  right: 2vw;
+  bottom: 2vh;
+  font-size: 0.75em;
+  padding: 0.4em 1em;
+  border: 2px solid var(--tv-line);
+  border-radius: 0.4em;
+  background: var(--tv-card);
+  color: var(--tv-ink);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+@media (max-width: 900px) {
+  .tv {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+    font-size: 16px;
+    padding: 20px 16px;
+  }
+  .tv-venue {
+    font-size: 1.6em;
+  }
+  .tv-mark {
+    --tv-mark-h: 3.4em;
+  }
+  .tv-clock {
+    font-size: 1.8em;
+  }
+  .tv-body {
+    grid-template-columns: 1fr;
+  }
+  .tv-main {
+    overflow: visible;
+  }
+  .tv-measure {
+    display: none;
+  }
+  .tv-group {
+    grid-template-columns: 1fr;
+    gap: 0.4em;
+  }
+  .tv-cards {
+    grid-template-columns: 1fr;
+  }
+  .tv-team {
+    white-space: normal;
+  }
+  .tv-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 0.3em;
+  }
+  .tv-row-label {
+    display: none;
+  }
+  .tv-board-empty {
+    padding-top: 2em;
+  }
+  .tv-qr {
+    display: none;
+  }
+}
+
+/* The day in two parts (plans/campeone-day-shape.md). */
+.calendar-parts {
+  margin: 0 0 12px;
+}
+/* Three parts on a phone: wrap rather than hide "Whole day" off the edge. */
+.calendar-parts .pills {
+  flex-wrap: wrap;
+  overflow-x: visible;
+}
+.daysheet-part + .daysheet-part {
+  margin-top: 24px;
+}
+.daysheet-part-title {
+  margin: 0 0 8px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ludi-ink3);
+}
+.daysheet-compact .daysheet-cell {
+  height: 40px;
+}
+.daysheet-item .calendar-time {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--ludi-ink3);
+}
+.daysheet-continued {
+  font-size: 11px;
+  font-style: italic;
+  color: var(--ludi-ink3);
+}
+.calendar-afternoon {
+  gap: 2px;
+  color: var(--ludi-ink3);
+}
+.calendar-afternoon + .calendar-items {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--ludi-line);
+}
+.calendar-afternoon .calendar-item {
+  font-size: 11.5px;
+}
+.calendar-afternoon .calendar-name {
+  font-weight: 400;
+  color: var(--ludi-ink3);
+}
+.daysheet-title {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.daysheet-title span {
+  font-weight: 400;
+  margin-left: 8px;
+}
+.daysheet-fields {
+  display: flex;
+  gap: 24px;
+  margin-top: 4px;
+  font-size: 13px;
+}
+.daysheet-fields b {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  margin-right: 6px;
+  color: var(--ludi-ink3);
+}
+.daysheet-stamp {
+  margin-left: auto;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10px;
+  color: var(--ludi-ink3);
+}
+
+/* The sheet. A4 landscape, one page per week if the courts fit; the
+ * shell, the controls and every button go; the court column stops being
+ * sticky; names and codes stay, phones were never here. */
+@media print {
+  /* No `size` here, on purpose. `size: A4 landscape` made Chrome's own
+   * dialog print landscape, but the macOS system dialog (Safari, the Claude
+   * app, Chrome's "system dialog") keeps its portrait paper and draws the
+   * sheet rotated 90° onto it. Without it the dialog's Portrait/Landscape
+   * choice is what you get, and the sheets fit either. */
+  @page {
+    margin: 10mm;
+  }
+  html,
+  body {
+    background: #fff;
+  }
+  .shell-bar,
+  .no-print,
+  .page-head {
+    display: none !important;
+  }
+  .print-only {
+    display: block;
+  }
+  .calendar-code.print-only {
+    display: inline;
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 9px;
+    color: #5f6e73;
+    margin-left: 4px;
+  }
+  .shell-main {
+    max-width: none;
+    padding: 0;
+    margin: 0;
+  }
+  .calendar-card {
+    border: 0;
+    border-radius: 0;
+  }
+  .calendar-scroll {
+    overflow: visible;
+  }
+  .calendar {
+    min-width: 0;
+    width: 100%;
+    font-size: 10.5px;
+  }
+  .calendar th,
+  .calendar td {
+    padding: 5px 6px;
+    border-color: #cfd5d3;
+  }
+  .calendar-time {
+    font-size: 9.5px;
+  }
+  .calendar-court-head,
+  .calendar-court {
+    position: static;
+    min-width: 0;
+    max-width: none;
+  }
+  .calendar tr,
+  .daysheet tr {
+    break-inside: avoid;
+  }
+  .daysheet {
+    font-size: 11px;
+    table-layout: fixed;
+  }
+  .daysheet-court-head {
+    min-width: 0;
+  }
+  .daysheet th,
+  .daysheet td,
+  .daysheet th:last-child,
+  .daysheet td:last-child {
+    border: 1px solid #333;
+    padding: 4px 6px;
+  }
+  .daysheet thead th {
+    background: #d9d9d9;
+    color: #000;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+  }
+  .daysheet-hour-head,
+  .daysheet-hour {
+    position: static;
+    background: #d9d9d9;
+    color: #000;
+  }
+  .daysheet-cell {
+    height: 22mm;
+  }
+  .daysheet-compact .daysheet-cell {
+    height: 13mm;
+  }
+  .daysheet-break {
+    break-before: page;
+  }
+  .daysheet-part + .daysheet-part {
+    margin-top: 0;
+  }
+  .daysheet-continued.print-only {
+    display: inline;
+  }
+  .programme td {
+    padding: 3mm 2mm;
+    font-size: 12px;
+    border-bottom: 1px solid #333;
+  }
+  .programme th {
+    background: #d9d9d9;
+    color: #000;
+    border-bottom: 1px solid #333;
+  }
+  .programme-notes {
+    width: 30%;
+  }
+  .calendar-note {
+    display: block;
+    -webkit-line-clamp: unset;
+    font-size: 9px;
+    color: #333;
+  }
+  .daysheet-shut {
+    background: repeating-linear-gradient(135deg, #e6e6e6 0 3px, transparent 3px 8px);
+  }
+  .daysheet-booked {
+    background: #eef3f4;
+  }
+  .daysheet-title {
+    font-size: 18px;
+  }
+  .daysheet-head {
+    display: block;
+  }
+  .calendar-today {
+    background: #eef3f4;
+  }
+  .badge {
+    border: 1px solid #cfd5d3;
+    background: none !important;
+    color: #3f4c51 !important;
+    font-size: 8px;
+  }
+}
+
+/* Standing bookings (plans/standing-bookings.md) */
+.standing-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px 16px;
+}
+.standing-stats {
+  display: flex;
+  gap: 6px;
+}
+.standing-skips {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  font-size: 13px;
+  color: var(--ludi-ink2);
+}
+
+/* ── Language switch (ADR-0037) ─────────────────────────────────────────
+ * EN · ΕΛ in the shell bar and on the sign-in page. Inherits its colour, so
+ * it is white on the Aegean bar and ink on the entry page without two
+ * rules. The pressed one carries a ring; the other sits back. */
+.lang-switch {
+  display: inline-flex;
+  gap: 2px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+
+.lang-switch button {
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  letter-spacing: inherit;
+  opacity: 0.6;
+  padding: 5px 7px;
+  min-height: 28px;
+}
+
+.lang-switch button[aria-pressed='true'] {
+  border-color: currentColor;
+  opacity: 1;
+}
+
+.lang-switch button:disabled {
+  cursor: default;
+}
+
+.lang-switch button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 1px;
+}
+
+/* The sign-in form's first line: the step label left, the language switch
+ * right. The switch is ink on the light form side. */
+.entry-step-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.entry-step-row .entry-step {
+  margin: 0;
+}
+
+.entry-step-row .lang-switch {
+  color: var(--ludi-ink2);
+}
+
+/* Fill the hour (plans/fill-the-hour.md): the empty hour, and the regulars
+ * to ask, each one a WhatsApp message from the owner's own phone. */
+.fill-slot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+.fill-muted {
+  color: var(--ludi-ink3);
+  font-size: 13px;
+}
+.fill-title {
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 700;
+}
+.fill-message {
+  min-height: 7.5em;
+  font-family: inherit;
+  line-height: 1.45;
+  resize: vertical;
+}
+.fill-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fill-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding: 12px 0;
+  border-top: 1px solid var(--ludi-line);
+}
+.fill-row:first-child {
+  border-top: 0;
+}
+.fill-row-sent .fill-who strong {
+  color: var(--ludi-ink2);
+}
+.fill-who {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.fill-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+.fill-quiet {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ludi-primary-deep);
+  font: inherit;
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.walkin-fill {
+  display: block;
+  margin: 0 0 12px;
+  font-size: 14px;
+}
+
+/* The booking desk (plans/whatsapp-desk.md): a customer's message, what it
+ * reads as, and the answer. */
+.desk-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.desk-card-handled .desk-body {
+  color: var(--ludi-ink2);
+}
+.desk-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+}
+.desk-when {
+  margin-left: auto;
+}
+.desk-body {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--ludi-bg);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 15px;
+  line-height: 1.45;
+}
+.desk-proposal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+}
+.desk-reply {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.desk-paste-who {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+.desk-number {
+  margin: 0;
+}
+.desk-recent {
+  margin: 12px 0 0;
+}
+.desk-today {
+  display: block;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--ludi-primary-soft);
+  color: var(--ludi-primary-deep);
+  font-weight: 700;
+  text-decoration: none;
+}

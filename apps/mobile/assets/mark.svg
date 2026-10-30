@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="1024" height="1024">
+  <!-- Ludi mark, full density: seven Λ planes cut off the bottom edge, one hue
+       stepped from ink to chalk, gold innermost. Source of truth for the
+       generated PNGs — regenerate with scripts/generate-app-icons.mjs.
+       Mirrors the `full` ramp in apps/site/components/ludi-mark.tsx. -->
+  <rect width="180" height="180" fill="#0A2E3D"/>
+  <path d="M90 28 L178 180 L2 180 Z" fill="#0F3F52"/>
+  <path d="M90 50 L162 180 L18 180 Z" fill="#175E77"/>
+  <path d="M90 72 L146 180 L34 180 Z" fill="#2B7E96"/>
+  <path d="M90 94 L130 180 L50 180 Z" fill="#63A6B7"/>
+  <path d="M90 116 L114 180 L66 180 Z" fill="#A3C9D3"/>
+  <path d="M90 138 L100 180 L80 180 Z" fill="#DCE9EC"/>
+  <path d="M90 156 L96 180 L84 180 Z" fill="#D99520"/>
+</svg>

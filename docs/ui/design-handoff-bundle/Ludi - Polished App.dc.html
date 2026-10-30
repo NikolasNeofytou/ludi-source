@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #E8E4DB; }
+  a { color: #8B3415; text-decoration: none; border-bottom: 1px solid rgba(139,52,21,0.3); }
+  a:hover { color: #C1502E; }
+</style>
+</helmet>
+
+<section style="padding:64px 64px 110px;font-family:-apple-system,'SF Pro Text',system-ui,sans-serif">
+
+  <div style="max-width:820px;margin-bottom:44px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#6E6758;margin-bottom:16px">v1 Mediterranean · polish pass · direction 1a</div>
+    <h1 style="margin:0 0 16px;font-family:Fraunces,serif;font-size:44px;font-weight:600;letter-spacing:-0.02em;color:#1A1814;line-height:1.05">The whole app, wearing its own typography</h1>
+    <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:#4F4A40;text-wrap:pretty">Same palette, same copy voice, same availability logic. What changed is everything the handoff called mechanical: fonts loaded, an elevation scale, one 4px spacing rhythm, five states per list screen, and no roadmap vocabulary anywhere near a user.</p>
+    <p style="margin:0;font-size:16px;line-height:1.6;color:#4F4A40;text-wrap:pretty">The interactive Map screen lives in its own file — real Larnaca geography, not a drawing.</p>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:32px;margin-bottom:56px;padding:28px 32px;background:#FFFBF2;border:1px solid rgba(26,24,20,0.08);border-radius:20px;box-shadow:0 2px 8px rgba(26,24,20,0.08);max-width:1240px">
+    <div style="min-width:210px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.09em;margin-bottom:14px">Type roles</div>
+      <div style="font-family:Fraunces,serif;font-size:26px;font-weight:600;color:#1A1814;line-height:1.15">Fraunces</div>
+      <div style="font-size:12.5px;color:#6E6758;margin-bottom:12px">headings · prices · totals</div>
+      <div style="font-size:17px;color:#1A1814;letter-spacing:-0.2px">System sans</div>
+      <div style="font-size:12.5px;color:#6E6758;margin-bottom:12px">body · buttons</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#1A1814;letter-spacing:0.02em">LAR-2026-0001</div>
+      <div style="font-size:12.5px;color:#6E6758">codes · micro-labels · times</div>
+    </div>
+    <div style="min-width:210px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.09em;margin-bottom:14px">Elevation</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:12px"><span style="width:44px;height:26px;border-radius:8px;background:#F6F1E8;border:1px solid rgba(26,24,20,0.08)"></span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#4F4A40">elev0 · rows</span></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="width:44px;height:26px;border-radius:8px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06)"></span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#4F4A40">elev1 · chips</span></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="width:44px;height:26px;border-radius:8px;background:#FFFBF2;box-shadow:0 2px 8px rgba(26,24,20,0.08)"></span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#4F4A40">elev2 · cards</span></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="width:44px;height:26px;border-radius:8px;background:#FFFBF2;box-shadow:0 6px 20px rgba(26,24,20,0.10)"></span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#4F4A40">elev3 · sheets</span></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="width:44px;height:26px;border-radius:8px;background:#FFFBF2;box-shadow:0 12px 32px rgba(26,24,20,0.14)"></span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#4F4A40">elev4 · modals</span></div>
+      </div>
+    </div>
+    <div style="min-width:210px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.09em;margin-bottom:14px">Contrast fixes</div>
+      <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;color:#4F4A40">
+        <div><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#6E6758">ink3</span> <span style="color:#8A8374">#8A8374</span> → <span style="color:#6E6758;font-weight:600">#6E6758</span> <span style="font-family:'JetBrains Mono',monospace;font-size:11px">4.99:1</span></div>
+        <div>accent text on <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px">bg</span> → <span style="color:#8B3415;font-weight:600">deep #8B3415</span></div>
+        <div>tab bar → <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px">surface</span> fill, so <span style="color:#C1502E;font-weight:600">terracotta</span> passes AA</div>
+      </div>
+    </div>
+    <div style="min-width:180px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.09em;margin-bottom:14px">Spacing · radii</div>
+      <div style="display:flex;align-items:flex-end;gap:6px;margin-bottom:14px">
+        <span style="width:4px;height:4px;background:#C1502E"></span>
+        <span style="width:8px;height:8px;background:#C1502E"></span>
+        <span style="width:12px;height:12px;background:#C1502E"></span>
+        <span style="width:16px;height:16px;background:#C1502E"></span>
+        <span style="width:20px;height:20px;background:#C1502E"></span>
+        <span style="width:28px;height:28px;background:#C1502E"></span>
+        <span style="width:40px;height:40px;background:#C1502E"></span>
+      </div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#4F4A40;line-height:1.7">10 chip · 14 input<br>20 card · 28 sheet<br>999 pill</div>
+    </div>
+  </div>
+
+  <div style="font-family:Fraunces,serif;font-size:24px;font-weight:600;color:#1A1814;margin-bottom:6px">Discover</div>
+  <div style="font-size:14px;color:#4F4A40;margin-bottom:28px;max-width:640px">Loading is three card skeletons, not a spinner on blank. Empty names the cities that are coming and offers something to do.</div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:48px 40px;align-items:flex-start;margin-bottom:64px">
+
+    <div style="display:flex;flex-direction:column;gap:14px;width:402px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Discover · full</div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div data-screen-label="Discover" style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative">
+          <div style="padding:20px 20px 0;display:flex;flex-direction:column;gap:4px">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Larnaca</div>
+            <div style="font-family:Fraunces,serif;font-size:34px;font-weight:600;color:#1A1814;letter-spacing:-0.02em;line-height:1.1;margin-top:2px">Kalispéra.</div>
+            <div style="font-size:15px;color:#4F4A40;letter-spacing:-0.2px">Ready to play tonight?</div>
+          </div>
+          <div style="padding:16px 20px 0;display:flex;gap:8px">
+            <div style="padding:7px 12px;border-radius:10px;background:#1A1814;box-shadow:0 1px 3px rgba(26,24,20,0.06);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#FFFBF2;text-transform:uppercase;letter-spacing:0.06em">Tonight</div>
+            <div style="padding:7px 12px;border-radius:10px;background:#FFFBF2;border:1px solid rgba(26,24,20,0.14);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#4F4A40;text-transform:uppercase;letter-spacing:0.06em">5-a-side</div>
+            <div style="padding:7px 12px;border-radius:10px;background:#FFFBF2;border:1px solid rgba(26,24,20,0.14);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#4F4A40;text-transform:uppercase;letter-spacing:0.06em">Indoor</div>
+            <div style="padding:7px 12px;border-radius:10px;background:#FFFBF2;border:1px solid rgba(26,24,20,0.14);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#4F4A40;text-transform:uppercase;letter-spacing:0.06em">&lt; €40</div>
+          </div>
+          <div style="padding:20px;display:flex;flex-direction:column;gap:16px">
+            <div style="background:#FFFBF2;border-radius:20px;border:1px solid rgba(26,24,20,0.08);box-shadow:0 2px 8px rgba(26,24,20,0.08);overflow:hidden">
+              <div style="position:relative;height:170px">
+                <svg width="362" height="170" viewBox="0 0 362 170" style="position:absolute;inset:0">
+                  <rect width="362" height="170" fill="#D6E8EE"></rect>
+                  <g stroke="#FFFBF2" stroke-opacity="0.75" fill="none" stroke-width="2">
+                    <rect x="18" y="16" width="326" height="138" rx="2"></rect>
+                    <line x1="181" y1="16" x2="181" y2="154"></line>
+                    <circle cx="181" cy="85" r="34"></circle>
+                    <rect x="18" y="47" width="42" height="76"></rect>
+                    <rect x="302" y="47" width="42" height="76"></rect>
+                  </g>
+                  <text x="330" y="150" text-anchor="end" font-family="Fraunces, serif" font-size="86" font-weight="600" fill="#1F6F8B" fill-opacity="0.16">5</text>
+                </svg>
+                <div style="position:absolute;top:12px;left:12px;padding:5px 9px;border-radius:8px;background:rgba(255,251,242,0.92);box-shadow:0 1px 3px rgba(26,24,20,0.06);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#2E7D4F;text-transform:uppercase;letter-spacing:0.07em">4 free tonight</div>
+              </div>
+              <div style="padding:16px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+                <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+                  <div style="font-family:Fraunces,serif;font-size:20px;font-weight:600;color:#1A1814;letter-spacing:-0.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Pitch 2 — Indoor</div>
+                  <div style="display:flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;text-transform:uppercase;letter-spacing:0.07em">
+                    <span style="width:6px;height:6px;border-radius:3px;background:#1F6F8B;flex-shrink:0"></span>
+                    <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">5-a-side · Indoor · 1.2 km</span>
+                  </div>
+                </div>
+                <div style="font-family:Fraunces,serif;font-size:22px;font-weight:600;color:#1A1814;white-space:nowrap">€35<span style="font-family:-apple-system,system-ui,sans-serif;font-size:12px;font-weight:400;color:#6E6758">/hr</span></div>
+              </div>
+            </div>
+            <div style="background:#FFFBF2;border-radius:20px;border:1px solid rgba(26,24,20,0.08);box-shadow:0 2px 8px rgba(26,24,20,0.08);overflow:hidden">
+              <div style="position:relative;height:170px">
+                <svg width="362" height="170" viewBox="0 0 362 170" style="position:absolute;inset:0">
+                  <rect width="362" height="170" fill="#F8E8C9"></rect>
+                  <g stroke="#FFFBF2" stroke-opacity="0.8" fill="none" stroke-width="2">
+                    <rect x="18" y="16" width="326" height="138" rx="2"></rect>
+                    <line x1="181" y1="16" x2="181" y2="154"></line>
+                    <circle cx="181" cy="85" r="34"></circle>
+                    <rect x="18" y="47" width="42" height="76"></rect>
+                    <rect x="302" y="47" width="42" height="76"></rect>
+                  </g>
+                  <text x="330" y="150" text-anchor="end" font-family="Fraunces, serif" font-size="86" font-weight="600" fill="#8A5A0E" fill-opacity="0.16">7</text>
+                </svg>
+                <div style="position:absolute;top:12px;left:12px;padding:5px 9px;border-radius:8px;background:rgba(255,251,242,0.92);box-shadow:0 1px 3px rgba(26,24,20,0.06);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#2E7D4F;text-transform:uppercase;letter-spacing:0.07em">2 free tonight</div>
+              </div>
+              <div style="padding:16px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+                <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+                  <div style="font-family:Fraunces,serif;font-size:20px;font-weight:600;color:#1A1814;letter-spacing:-0.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Pitch 1 — Main turf</div>
+                  <div style="display:flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;text-transform:uppercase;letter-spacing:0.07em">
+                    <span style="width:6px;height:6px;border-radius:3px;background:#D99520;flex-shrink:0"></span>
+                    <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">7-a-side · Turf · 1.2 km</span>
+                  </div>
+                </div>
+                <div style="font-family:Fraunces,serif;font-size:22px;font-weight:600;color:#1A1814;white-space:nowrap">€45<span style="font-family:-apple-system,system-ui,sans-serif;font-size:12px;font-weight:400;color:#6E6758">/hr</span></div>
+              </div>
+            </div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:0;height:83px;background:#FFFBF2;border-top:1px solid rgba(26,24,20,0.08);box-shadow:0 -6px 20px rgba(26,24,20,0.10);display:flex;align-items:flex-start;padding-top:8px">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 11l8-7 8 7v9a2 2 0 01-2 2h-3v-6h-6v6H6a2 2 0 01-2-2v-9z" stroke="#C1502E" stroke-width="1.8" stroke-linejoin="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#C1502E;text-transform:uppercase;letter-spacing:0.06em">Discover</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22s7-7.5 7-13a7 7 0 10-14 0c0 5.5 7 13 7 13z" stroke="#6E6758" stroke-width="2" stroke-linejoin="round"></path><circle cx="12" cy="9" r="2.5" stroke="#6E6758" stroke-width="2"></circle></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Map</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#6E6758" stroke-width="1.8"></circle><path d="M12 3l3 4.5-1.5 5h-3L9 7.5 12 3zM3.5 10l5 1M15.5 11l5-1M9 16.5L7 21M15 16.5l2 4.5" stroke="#6E6758" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Matches</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#6E6758" stroke-width="1.8"></rect><path d="M3 10h18M8 3v4M16 3v4" stroke="#6E6758" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Bookings</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#6E6758" stroke-width="1.8"></circle><path d="M4 21c0-4.5 3.5-7 8-7s8 2.5 8 7" stroke="#6E6758" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Profile</span>
+            </div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;width:402px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Discover · loading</div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div data-screen-label="Discover loading" style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative">
+          <div style="padding:20px 20px 0;display:flex;flex-direction:column;gap:4px">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Larnaca</div>
+            <div style="font-family:Fraunces,serif;font-size:34px;font-weight:600;color:#1A1814;letter-spacing:-0.02em;line-height:1.1;margin-top:2px">Kalispéra.</div>
+            <div style="font-size:15px;color:#4F4A40;letter-spacing:-0.2px">Ready to play tonight?</div>
+          </div>
+          <div style="padding:16px 20px 0;display:flex;gap:8px">
+            <div style="height:28px;width:78px;border-radius:10px;background:rgba(26,24,20,0.08)"></div>
+            <div style="height:28px;width:86px;border-radius:10px;background:rgba(26,24,20,0.08)"></div>
+            <div style="height:28px;width:70px;border-radius:10px;background:rgba(26,24,20,0.08)"></div>
+          </div>
+          <div style="padding:20px;display:flex;flex-direction:column;gap:16px">
+            <div style="background:#FFFBF2;border-radius:20px;border:1px solid rgba(26,24,20,0.08);box-shadow:0 2px 8px rgba(26,24,20,0.08);overflow:hidden">
+              <div style="height:170px;background:linear-gradient(100deg,rgba(26,24,20,0.06) 30%,rgba(26,24,20,0.12) 50%,rgba(26,24,20,0.06) 70%)"></div>
+              <div style="padding:16px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+                <div style="display:flex;flex-direction:column;gap:8px;flex:1">
+                  <div style="height:18px;width:62%;border-radius:6px;background:rgba(26,24,20,0.10)"></div>
+                  <div style="height:11px;width:80%;border-radius:5px;background:rgba(26,24,20,0.07)"></div>
+                </div>
+                <div style="height:22px;width:56px;border-radius:6px;background:rgba(26,24,20,0.10)"></div>
+              </div>
+            </div>
+            <div style="background:#FFFBF2;border-radius:20px;border:1px solid rgba(26,24,20,0.08);box-shadow:0 2px 8px rgba(26,24,20,0.08);overflow:hidden">
+              <div style="height:170px;background:linear-gradient(100deg,rgba(26,24,20,0.05) 30%,rgba(26,24,20,0.10) 50%,rgba(26,24,20,0.05) 70%)"></div>
+              <div style="padding:16px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+                <div style="display:flex;flex-direction:column;gap:8px;flex:1">
+                  <div style="height:18px;width:52%;border-radius:6px;background:rgba(26,24,20,0.09)"></div>
+                  <div style="height:11px;width:72%;border-radius:5px;background:rgba(26,24,20,0.06)"></div>
+                </div>
+                <div style="height:22px;width:56px;border-radius:6px;background:rgba(26,24,20,0.09)"></div>
+              </div>
+            </div>
+            <div style="background:#FFFBF2;border-radius:20px;border:1px solid rgba(26,24,20,0.08);box-shadow:0 2px 8px rgba(26,24,20,0.08);overflow:hidden">
+              <div style="height:170px;background:linear-gradient(100deg,rgba(26,24,20,0.04) 30%,rgba(26,24,20,0.08) 50%,rgba(26,24,20,0.04) 70%)"></div>
+            </div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:0;height:83px;background:#FFFBF2;border-top:1px solid rgba(26,24,20,0.08);box-shadow:0 -6px 20px rgba(26,24,20,0.10);display:flex;align-items:flex-start;padding-top:8px">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 11l8-7 8 7v9a2 2 0 01-2 2h-3v-6h-6v6H6a2 2 0 01-2-2v-9z" stroke="#C1502E" stroke-width="1.8" stroke-linejoin="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#C1502E;text-transform:uppercase;letter-spacing:0.06em">Discover</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22s7-7.5 7-13a7 7 0 10-14 0c0 5.5 7 13 7 13z" stroke="#6E6758" stroke-width="2" stroke-linejoin="round"></path><circle cx="12" cy="9" r="2.5" stroke="#6E6758" stroke-width="2"></circle></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Map</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#6E6758" stroke-width="1.8"></circle><path d="M12 3l3 4.5-1.5 5h-3L9 7.5 12 3zM3.5 10l5 1M15.5 11l5-1M9 16.5L7 21M15 16.5l2 4.5" stroke="#6E6758" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Matches</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#6E6758" stroke-width="1.8"></rect><path d="M3 10h18M8 3v4M16 3v4" stroke="#6E6758" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Bookings</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#6E6758" stroke-width="1.8"></circle><path d="M4 21c0-4.5 3.5-7 8-7s8 2.5 8 7" stroke="#6E6758" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Profile</span>
+            </div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;width:402px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Discover · empty city</div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div data-screen-label="Discover empty" style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative">
+          <div style="padding:20px 20px 0;display:flex;flex-direction:column;gap:4px">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Paphos</div>
+            <div style="font-family:Fraunces,serif;font-size:34px;font-weight:600;color:#1A1814;letter-spacing:-0.02em;line-height:1.1;margin-top:2px">Kalispéra.</div>
+            <div style="font-size:15px;color:#4F4A40;letter-spacing:-0.2px">Ready to play tonight?</div>
+          </div>
+          <div style="position:absolute;left:0;right:0;top:200px;bottom:83px;padding:0 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+            <div style="width:96px;height:96px;border-radius:28px;background:#FFFBF2;border:1px solid rgba(26,24,20,0.08);box-shadow:0 2px 8px rgba(26,24,20,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none"><path d="M12 22s7-7.5 7-13a7 7 0 10-14 0c0 5.5 7 13 7 13z" stroke="#C1502E" stroke-width="1.6" stroke-linejoin="round"></path><circle cx="12" cy="9" r="2.5" stroke="#C1502E" stroke-width="1.6"></circle></svg>
+            </div>
+            <div style="font-family:Fraunces,serif;font-size:24px;font-weight:600;color:#1A1814;letter-spacing:-0.01em;margin-top:28px">No pitches in Paphos yet</div>
+            <div style="font-size:15px;color:#4F4A40;line-height:22px;margin-top:10px;max-width:290px;text-wrap:pretty">Larnaca is live today. Limassol and Nicosia are next — we'll tell you the day your city opens.</div>
+            <div style="margin-top:28px;height:48px;border-radius:999px;background:#C1502E;box-shadow:0 2px 8px rgba(26,24,20,0.08);display:flex;align-items:center;justify-content:center;padding:0 28px;font-size:16px;font-weight:600;color:#FFFBF2;letter-spacing:-0.3px">Notify me</div>
+            <div style="margin-top:12px;font-size:15px;font-weight:600;color:#8B3415;padding:12px 16px">Browse Larnaca instead</div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:0;height:83px;background:#FFFBF2;border-top:1px solid rgba(26,24,20,0.08);box-shadow:0 -6px 20px rgba(26,24,20,0.10);display:flex;align-items:flex-start;padding-top:8px">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 11l8-7 8 7v9a2 2 0 01-2 2h-3v-6h-6v6H6a2 2 0 01-2-2v-9z" stroke="#C1502E" stroke-width="1.8" stroke-linejoin="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#C1502E;text-transform:uppercase;letter-spacing:0.06em">Discover</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22s7-7.5 7-13a7 7 0 10-14 0c0 5.5 7 13 7 13z" stroke="#6E6758" stroke-width="2" stroke-linejoin="round"></path><circle cx="12" cy="9" r="2.5" stroke="#6E6758" stroke-width="2"></circle></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Map</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#6E6758" stroke-width="1.8"></circle><path d="M12 3l3 4.5-1.5 5h-3L9 7.5 12 3zM3.5 10l5 1M15.5 11l5-1M9 16.5L7 21M15 16.5l2 4.5" stroke="#6E6758" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Matches</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#6E6758" stroke-width="1.8"></rect><path d="M3 10h18M8 3v4M16 3v4" stroke="#6E6758" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Bookings</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#6E6758" stroke-width="1.8"></circle><path d="M4 21c0-4.5 3.5-7 8-7s8 2.5 8 7" stroke="#6E6758" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Profile</span>
+            </div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+  </div>
+
+  <div style="font-family:Fraunces,serif;font-size:24px;font-weight:600;color:#1A1814;margin-bottom:6px">Pitch detail</div>
+  <div style="font-size:14px;color:#4F4A40;margin-bottom:28px;max-width:640px">The one place the app should feel physically layered: a 280px field hero, a title card overlapping it on <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px">elev3</span>, and the price broken out honestly above the CTA so €35 and €43 are the same story.</div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:48px 40px;align-items:flex-start;margin-bottom:64px">
+
+    <div style="display:flex;flex-direction:column;gap:14px;width:402px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Pitch detail · slot selected</div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div data-screen-label="Pitch detail" style="height:100%;background:#F6F1E8;overflow:hidden;position:relative">
+          <div style="position:relative;height:280px">
+            <svg width="402" height="280" viewBox="0 0 402 280" style="position:absolute;inset:0">
+              <rect width="402" height="280" fill="#D6E8EE"></rect>
+              <g stroke="#FFFBF2" stroke-opacity="0.8" fill="none" stroke-width="2.4">
+                <rect x="22" y="26" width="358" height="228" rx="2"></rect>
+                <line x1="201" y1="26" x2="201" y2="254"></line>
+                <circle cx="201" cy="140" r="52"></circle>
+                <rect x="22" y="84" width="52" height="112"></rect>
+                <rect x="328" y="84" width="52" height="112"></rect>
+              </g>
+              <text x="360" y="248" text-anchor="end" font-family="Fraunces, serif" font-size="150" font-weight="600" fill="#1F6F8B" fill-opacity="0.15">5</text>
+              <rect width="402" height="110" fill="#0F3F52" fill-opacity="0.14"></rect>
+            </svg>
+            <div style="position:absolute;top:56px;left:16px;width:38px;height:38px;border-radius:999px;background:rgba(255,251,242,0.94);box-shadow:0 2px 8px rgba(26,24,20,0.08);display:flex;align-items:center;justify-content:center">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#1A1814" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </div>
+            <div style="position:absolute;top:56px;right:16px;display:flex;gap:8px">
+              <div style="width:38px;height:38px;border-radius:999px;background:rgba(255,251,242,0.94);box-shadow:0 2px 8px rgba(26,24,20,0.08);display:flex;align-items:center;justify-content:center">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A1814" stroke-width="2"><path d="M12 20s-7-4.5-7-10.5A4.5 4.5 0 0112 7a4.5 4.5 0 017 2.5C19 15.5 12 20 12 20z" stroke-linejoin="round"></path></svg>
+              </div>
+              <div style="width:38px;height:38px;border-radius:999px;background:rgba(255,251,242,0.94);box-shadow:0 2px 8px rgba(26,24,20,0.08);display:flex;align-items:center;justify-content:center">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3v13M12 3l-4 4M12 3l4 4M5 14v5a2 2 0 002 2h10a2 2 0 002-2v-5" stroke="#1A1814" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin:-20px 20px 0;background:#FFFBF2;border-radius:28px;border:1px solid rgba(26,24,20,0.08);box-shadow:0 6px 20px rgba(26,24,20,0.10);padding:20px;position:relative">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Larnaca Sportsplex</div>
+            <div style="font-family:Fraunces,serif;font-size:26px;font-weight:600;color:#1A1814;letter-spacing:-0.02em;margin-top:6px;line-height:1.15">Pitch 2 — Indoor</div>
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:12px">
+              <div style="display:flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;text-transform:uppercase;letter-spacing:0.07em">
+                <span style="width:6px;height:6px;border-radius:3px;background:#1F6F8B"></span>
+                <span>5-a-side · Indoor · 1.2 km</span>
+              </div>
+              <div style="font-family:Fraunces,serif;font-size:24px;font-weight:600;color:#1A1814">€35<span style="font-family:-apple-system,system-ui,sans-serif;font-size:12px;font-weight:400;color:#6E6758">/hr</span></div>
+            </div>
+          </div>
+
+          <div style="padding:24px 20px 0;display:flex;gap:8px">
+            <div style="display:flex;align-items:center;gap:7px;padding:8px 12px;border-radius:10px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 4V2M12 4a6 6 0 016 6H6a6 6 0 016-6z" stroke="#4F4A40" stroke-width="1.7" stroke-linecap="round"></path><path d="M8 14v1M12 14v1M16 14v1M9 18v1M13 18v1" stroke="#4F4A40" stroke-width="1.7" stroke-linecap="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#4F4A40;text-transform:uppercase;letter-spacing:0.06em">Showers</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:7px;padding:8px 12px;border-radius:10px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3" stroke="#4F4A40" stroke-width="1.7"></rect><path d="M10 16V8h3a2.5 2.5 0 010 5h-3" stroke="#4F4A40" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#4F4A40;text-transform:uppercase;letter-spacing:0.06em">Parking</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:7px;padding:8px 12px;border-radius:10px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#4F4A40" stroke-width="1.8"></circle><path d="M12 3l3 4.5-1.5 5h-3L9 7.5 12 3zM3.5 10l5 1M15.5 11l5-1M9 16.5L7 21M15 16.5l2 4.5" stroke="#4F4A40" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#4F4A40;text-transform:uppercase;letter-spacing:0.06em">Ball</span>
+            </div>
+          </div>
+
+          <div style="padding:28px 20px 0">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Availability</div>
+            <div style="position:relative;margin-top:12px">
+              <div style="display:flex;gap:8px;overflow:hidden">
+                <div style="min-width:56px;padding:10px 0;border-radius:14px;background:#C1502E;box-shadow:0 2px 8px rgba(26,24,20,0.08);display:flex;flex-direction:column;align-items:center;gap:2px">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#FFFBF2;text-transform:uppercase;letter-spacing:0.07em">Mon</span>
+                  <span style="font-family:Fraunces,serif;font-size:19px;font-weight:600;color:#FFFBF2">10</span>
+                </div>
+                <div style="min-width:56px;padding:10px 0;border-radius:14px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);display:flex;flex-direction:column;align-items:center;gap:2px">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.07em">Tue</span>
+                  <span style="font-family:Fraunces,serif;font-size:19px;font-weight:600;color:#1A1814">11</span>
+                </div>
+                <div style="min-width:56px;padding:10px 0;border-radius:14px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);display:flex;flex-direction:column;align-items:center;gap:2px">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.07em">Wed</span>
+                  <span style="font-family:Fraunces,serif;font-size:19px;font-weight:600;color:#1A1814">12</span>
+                </div>
+                <div style="min-width:56px;padding:10px 0;border-radius:14px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);display:flex;flex-direction:column;align-items:center;gap:2px">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.07em">Thu</span>
+                  <span style="font-family:Fraunces,serif;font-size:19px;font-weight:600;color:#1A1814">13</span>
+                </div>
+                <div style="min-width:56px;padding:10px 0;border-radius:14px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);display:flex;flex-direction:column;align-items:center;gap:2px">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.07em">Fri</span>
+                  <span style="font-family:Fraunces,serif;font-size:19px;font-weight:600;color:#1A1814">14</span>
+                </div>
+                <div style="min-width:56px;padding:10px 0;border-radius:14px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);display:flex;flex-direction:column;align-items:center;gap:2px">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.07em">Sat</span>
+                  <span style="font-family:Fraunces,serif;font-size:19px;font-weight:600;color:#1A1814">15</span>
+                </div>
+              </div>
+              <div style="position:absolute;top:0;right:0;bottom:0;width:36px;background:linear-gradient(to right,rgba(246,241,232,0),#F6F1E8)"></div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:16px">
+              <div style="width:79px;padding:11px 0;text-align:center;border-radius:14px;background:#F6F1E8"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#6E6758;text-decoration:line-through">18:00</span></div>
+              <div style="width:79px;padding:11px 0;text-align:center;border-radius:14px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06)"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#1A1814">19:00</span></div>
+              <div style="width:79px;padding:11px 0;text-align:center;border-radius:14px;background:#C1502E;box-shadow:0 2px 8px rgba(26,24,20,0.08)"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:#FFFBF2">20:00</span></div>
+              <div style="width:79px;padding:11px 0;text-align:center;border-radius:14px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06)"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#1A1814">21:00</span></div>
+            </div>
+          </div>
+
+          <div style="position:absolute;left:0;right:0;bottom:0;background:#FFFBF2;border-top:1px solid rgba(26,24,20,0.08);box-shadow:0 -6px 20px rgba(26,24,20,0.10);padding:16px 20px 34px">
+            <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px">
+              <div style="display:flex;justify-content:space-between;align-items:baseline">
+                <span style="font-size:14px;color:#4F4A40">Pitch · Mon 20:00–21:00</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#1A1814">€35.00</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline">
+                <span style="font-size:14px;color:#4F4A40">Bibs <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">· required</span></span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#1A1814">€5.00</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;padding-bottom:9px;border-bottom:1px solid rgba(26,24,20,0.08)">
+                <span style="font-size:14px;color:#4F4A40">Match ball <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">· required</span></span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#1A1814">€3.00</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;padding-top:2px">
+                <span style="font-size:14px;font-weight:600;color:#1A1814">Total</span>
+                <span style="font-family:Fraunces,serif;font-size:22px;font-weight:600;color:#1A1814">€43.00</span>
+              </div>
+            </div>
+            <div style="height:52px;border-radius:999px;background:#C1502E;box-shadow:0 2px 8px rgba(26,24,20,0.08);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:#FFFBF2;letter-spacing:-0.3px">Book <span style="font-family:Fraunces,serif;font-weight:600;margin-left:6px">€43</span></div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;width:402px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Pitch detail · day sold out</div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div data-screen-label="Pitch detail sold out" style="height:100%;background:#F6F1E8;overflow:hidden;position:relative">
+          <div style="position:relative;height:280px">
+            <svg width="402" height="280" viewBox="0 0 402 280" style="position:absolute;inset:0">
+              <rect width="402" height="280" fill="#F8E8C9"></rect>
+              <g stroke="#FFFBF2" stroke-opacity="0.85" fill="none" stroke-width="2.4">
+                <rect x="22" y="26" width="358" height="228" rx="2"></rect>
+                <line x1="201" y1="26" x2="201" y2="254"></line>
+                <circle cx="201" cy="140" r="52"></circle>
+                <rect x="22" y="84" width="52" height="112"></rect>
+                <rect x="328" y="84" width="52" height="112"></rect>
+              </g>
+              <text x="360" y="248" text-anchor="end" font-family="Fraunces, serif" font-size="150" font-weight="600" fill="#8A5A0E" fill-opacity="0.15">7</text>
+              <rect width="402" height="110" fill="#8A5A0E" fill-opacity="0.10"></rect>
+            </svg>
+            <div style="position:absolute;top:56px;left:16px;width:38px;height:38px;border-radius:999px;background:rgba(255,251,242,0.94);box-shadow:0 2px 8px rgba(26,24,20,0.08);display:flex;align-items:center;justify-content:center">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#1A1814" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </div>
+          </div>
+          <div style="margin:-20px 20px 0;background:#FFFBF2;border-radius:28px;border:1px solid rgba(26,24,20,0.08);box-shadow:0 6px 20px rgba(26,24,20,0.10);padding:20px">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Larnaca Sportsplex</div>
+            <div style="font-family:Fraunces,serif;font-size:26px;font-weight:600;color:#1A1814;letter-spacing:-0.02em;margin-top:6px;line-height:1.15">Pitch 1 — Main turf</div>
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:12px">
+              <div style="display:flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;text-transform:uppercase;letter-spacing:0.07em">
+                <span style="width:6px;height:6px;border-radius:3px;background:#D99520"></span>
+                <span>7-a-side · Turf · 1.2 km</span>
+              </div>
+              <div style="font-family:Fraunces,serif;font-size:24px;font-weight:600;color:#1A1814">€45<span style="font-family:-apple-system,system-ui,sans-serif;font-size:12px;font-weight:400;color:#6E6758">/hr</span></div>
+            </div>
+          </div>
+          <div style="padding:28px 20px 0">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Availability</div>
+            <div style="position:relative;margin-top:12px">
+              <div style="display:flex;gap:8px;overflow:hidden">
+                <div style="min-width:56px;padding:10px 0;border-radius:14px;background:#C1502E;box-shadow:0 2px 8px rgba(26,24,20,0.08);display:flex;flex-direction:column;align-items:center;gap:2px">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#FFFBF2;text-transform:uppercase;letter-spacing:0.07em">Mon</span>
+                  <span style="font-family:Fraunces,serif;font-size:19px;font-weight:600;color:#FFFBF2">10</span>
+                </div>
+                <div style="min-width:56px;padding:10px 0;border-radius:14px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);display:flex;flex-direction:column;align-items:center;gap:2px">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.07em">Tue</span>
+                  <span style="font-family:Fraunces,serif;font-size:19px;font-weight:600;color:#1A1814">11</span>
+                </div>
+                <div style="min-width:56px;padding:10px 0;border-radius:14px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);display:flex;flex-direction:column;align-items:center;gap:2px">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.07em">Wed</span>
+                  <span style="font-family:Fraunces,serif;font-size:19px;font-weight:600;color:#1A1814">12</span>
+                </div>
+                <div style="min-width:56px;padding:10px 0;border-radius:14px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);display:flex;flex-direction:column;align-items:center;gap:2px">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.07em">Thu</span>
+                  <span style="font-family:Fraunces,serif;font-size:19px;font-weight:600;color:#1A1814">13</span>
+                </div>
+                <div style="min-width:56px;padding:10px 0;border-radius:14px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);display:flex;flex-direction:column;align-items:center;gap:2px">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.07em">Fri</span>
+                  <span style="font-family:Fraunces,serif;font-size:19px;font-weight:600;color:#1A1814">14</span>
+                </div>
+                <div style="min-width:56px;padding:10px 0;border-radius:14px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);display:flex;flex-direction:column;align-items:center;gap:2px">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.07em">Sat</span>
+                  <span style="font-family:Fraunces,serif;font-size:19px;font-weight:600;color:#1A1814">15</span>
+                </div>
+              </div>
+              <div style="position:absolute;top:0;right:0;bottom:0;width:36px;background:linear-gradient(to right,rgba(246,241,232,0),#F6F1E8)"></div>
+            </div>
+            <div style="margin-top:16px;background:#FFFBF2;border-radius:20px;border:1px solid rgba(26,24,20,0.08);box-shadow:0 2px 8px rgba(26,24,20,0.08);padding:20px;display:flex;flex-direction:column;align-items:flex-start;gap:10px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="width:8px;height:8px;border-radius:4px;background:#D99520"></span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;color:#8A5A0E;text-transform:uppercase;letter-spacing:0.08em">Fully booked</span>
+              </div>
+              <div style="font-family:Fraunces,serif;font-size:21px;font-weight:600;color:#1A1814;letter-spacing:-0.01em">Nothing free on Monday</div>
+              <div style="font-size:14.5px;color:#4F4A40;line-height:21px">Tuesday has six open slots from 18:00, same pitch, same price.</div>
+              <div style="margin-top:6px;height:44px;border-radius:999px;background:#F6F1E8;border:1px solid rgba(26,24,20,0.14);display:flex;align-items:center;justify-content:center;padding:0 22px;font-size:15px;font-weight:600;color:#1A1814;letter-spacing:-0.2px">Try Tue 11 →</div>
+            </div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:0;background:#FFFBF2;border-top:1px solid rgba(26,24,20,0.08);box-shadow:0 -6px 20px rgba(26,24,20,0.10);padding:16px 20px 34px">
+            <div style="height:52px;border-radius:999px;background:#F6F1E8;border:1px solid rgba(26,24,20,0.08);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:#6E6758;letter-spacing:-0.3px">Pick a time</div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+  </div>
+
+  <div style="font-family:Fraunces,serif;font-size:24px;font-weight:600;color:#1A1814;margin-bottom:6px">Bookings</div>
+  <div style="font-size:14px;color:#4F4A40;margin-bottom:28px;max-width:640px">A real segmented control, a left accent rail carrying booking state (with a text label beside it, never colour alone), and relative time under 24 hours. The code is set in mono because it is the artifact people screenshot.</div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:48px 40px;align-items:flex-start;margin-bottom:64px">
+
+    <div style="display:flex;flex-direction:column;gap:14px;width:402px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Bookings · upcoming</div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div data-screen-label="Bookings" style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative">
+          <div style="padding:20px 20px 0">
+            <div style="font-family:Fraunces,serif;font-size:32px;font-weight:600;color:#1A1814;letter-spacing:-0.02em">Bookings</div>
+            <div style="display:flex;gap:4px;margin-top:20px;padding:4px;border-radius:999px;background:rgba(26,24,20,0.06)">
+              <div style="flex:1;text-align:center;padding:9px 0;border-radius:999px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);font-size:14px;font-weight:600;color:#1A1814;letter-spacing:-0.2px">Upcoming <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#6E6758">2</span></div>
+              <div style="flex:1;text-align:center;padding:9px 0;border-radius:999px;font-size:14px;font-weight:600;color:#6E6758;letter-spacing:-0.2px">History</div>
+            </div>
+          </div>
+
+          <div style="padding:24px 20px 0;display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;background:#FFFBF2;border-radius:20px;border:1px solid rgba(26,24,20,0.08);box-shadow:0 2px 8px rgba(26,24,20,0.08);overflow:hidden">
+              <div style="width:4px;background:#2E7D4F;flex-shrink:0"></div>
+              <div style="flex:1;padding:18px;min-width:0">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;color:#174028;text-transform:uppercase;letter-spacing:0.08em">Confirmed</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#6E6758;letter-spacing:0.04em">LAR-2026-0001</span>
+                </div>
+                <div style="font-family:Fraunces,serif;font-size:24px;font-weight:600;color:#1A1814;letter-spacing:-0.02em;margin-top:10px">Tonight · 20:00</div>
+                <div style="font-family:Fraunces,serif;font-size:18px;font-weight:600;color:#1A1814;margin-top:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Pitch 1 — Main turf</div>
+                <div style="font-size:13.5px;color:#4F4A40;margin-top:4px">Larnaca Sportsplex · Larnaca</div>
+                <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid rgba(26,24,20,0.08)">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">1 hr · 7-a-side</span>
+                  <span style="font-family:Fraunces,serif;font-size:20px;font-weight:600;color:#1A1814">€53</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex;background:#FFFBF2;border-radius:20px;border:1px solid rgba(26,24,20,0.08);box-shadow:0 1px 3px rgba(26,24,20,0.06);overflow:hidden">
+              <div style="width:4px;background:#D99520;flex-shrink:0"></div>
+              <div style="flex:1;padding:18px;min-width:0">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;color:#8A5A0E;text-transform:uppercase;letter-spacing:0.08em">Pending</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#6E6758;letter-spacing:0.04em">LAR-2026-0007</span>
+                </div>
+                <div style="font-family:Fraunces,serif;font-size:18px;font-weight:600;color:#1A1814;margin-top:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Pitch 2 — Indoor</div>
+                <div style="font-size:13.5px;color:#4F4A40;margin-top:4px">Sat 15 Aug · 19:00–20:00</div>
+                <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid rgba(26,24,20,0.08)">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">1 hr · 5-a-side</span>
+                  <span style="font-family:Fraunces,serif;font-size:20px;font-weight:600;color:#1A1814">€43</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="position:absolute;left:0;right:0;bottom:0;height:83px;background:#FFFBF2;border-top:1px solid rgba(26,24,20,0.08);box-shadow:0 -6px 20px rgba(26,24,20,0.10);display:flex;align-items:flex-start;padding-top:8px">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 11l8-7 8 7v9a2 2 0 01-2 2h-3v-6h-6v6H6a2 2 0 01-2-2v-9z" stroke="#6E6758" stroke-width="1.8" stroke-linejoin="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Discover</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22s7-7.5 7-13a7 7 0 10-14 0c0 5.5 7 13 7 13z" stroke="#6E6758" stroke-width="2" stroke-linejoin="round"></path><circle cx="12" cy="9" r="2.5" stroke="#6E6758" stroke-width="2"></circle></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Map</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#6E6758" stroke-width="1.8"></circle><path d="M12 3l3 4.5-1.5 5h-3L9 7.5 12 3zM3.5 10l5 1M15.5 11l5-1M9 16.5L7 21M15 16.5l2 4.5" stroke="#6E6758" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Matches</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#C1502E" stroke-width="1.8"></rect><path d="M3 10h18M8 3v4M16 3v4" stroke="#C1502E" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#C1502E;text-transform:uppercase;letter-spacing:0.06em">Bookings</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#6E6758" stroke-width="1.8"></circle><path d="M4 21c0-4.5 3.5-7 8-7s8 2.5 8 7" stroke="#6E6758" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Profile</span>
+            </div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;width:402px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Bookings · empty</div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div data-screen-label="Bookings empty" style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative">
+          <div style="padding:20px 20px 0">
+            <div style="font-family:Fraunces,serif;font-size:32px;font-weight:600;color:#1A1814;letter-spacing:-0.02em">Bookings</div>
+            <div style="display:flex;gap:4px;margin-top:20px;padding:4px;border-radius:999px;background:rgba(26,24,20,0.06)">
+              <div style="flex:1;text-align:center;padding:9px 0;border-radius:999px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);font-size:14px;font-weight:600;color:#1A1814;letter-spacing:-0.2px">Upcoming</div>
+              <div style="flex:1;text-align:center;padding:9px 0;border-radius:999px;font-size:14px;font-weight:600;color:#6E6758;letter-spacing:-0.2px">History</div>
+            </div>
+          </div>
+          <div style="position:absolute;left:0;right:0;top:190px;bottom:83px;padding:0 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+            <div style="width:96px;height:96px;border-radius:28px;background:#FFFBF2;border:1px solid rgba(26,24,20,0.08);box-shadow:0 2px 8px rgba(26,24,20,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#C1502E" stroke-width="1.5"></rect><path d="M3 10h18M8 3v4M16 3v4" stroke="#C1502E" stroke-width="1.5" stroke-linecap="round"></path></svg>
+            </div>
+            <div style="font-family:Fraunces,serif;font-size:24px;font-weight:600;color:#1A1814;letter-spacing:-0.01em;margin-top:28px">Nothing booked yet</div>
+            <div style="font-size:15px;color:#4F4A40;line-height:22px;margin-top:10px;max-width:280px;text-wrap:pretty">Six slots are free in Larnaca tonight, from 19:00. Bibs and a ball come with every booking.</div>
+            <div style="margin-top:28px;height:48px;border-radius:999px;background:#C1502E;box-shadow:0 2px 8px rgba(26,24,20,0.08);display:flex;align-items:center;justify-content:center;padding:0 30px;font-size:16px;font-weight:600;color:#FFFBF2;letter-spacing:-0.3px">Find a pitch</div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:0;height:83px;background:#FFFBF2;border-top:1px solid rgba(26,24,20,0.08);box-shadow:0 -6px 20px rgba(26,24,20,0.10);display:flex;align-items:flex-start;padding-top:8px">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 11l8-7 8 7v9a2 2 0 01-2 2h-3v-6h-6v6H6a2 2 0 01-2-2v-9z" stroke="#6E6758" stroke-width="1.8" stroke-linejoin="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Discover</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22s7-7.5 7-13a7 7 0 10-14 0c0 5.5 7 13 7 13z" stroke="#6E6758" stroke-width="2" stroke-linejoin="round"></path><circle cx="12" cy="9" r="2.5" stroke="#6E6758" stroke-width="2"></circle></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Map</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#6E6758" stroke-width="1.8"></circle><path d="M12 3l3 4.5-1.5 5h-3L9 7.5 12 3zM3.5 10l5 1M15.5 11l5-1M9 16.5L7 21M15 16.5l2 4.5" stroke="#6E6758" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Matches</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#C1502E" stroke-width="1.8"></rect><path d="M3 10h18M8 3v4M16 3v4" stroke="#C1502E" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#C1502E;text-transform:uppercase;letter-spacing:0.06em">Bookings</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#6E6758" stroke-width="1.8"></circle><path d="M4 21c0-4.5 3.5-7 8-7s8 2.5 8 7" stroke="#6E6758" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Profile</span>
+            </div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+  </div>
+
+  <div style="font-family:Fraunces,serif;font-size:24px;font-weight:600;color:#1A1814;margin-bottom:6px">Checkout and confirmation</div>
+  <div style="font-size:14px;color:#4F4A40;margin-bottom:28px;max-width:640px">No screen ever shows a raw runtime error again: every failure maps to a title, an explanation of the money position, and a next move. The confirmation is the one moment in the app that gets to celebrate.</div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:48px 40px;align-items:flex-start;margin-bottom:64px">
+
+    <div style="display:flex;flex-direction:column;gap:14px;width:402px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Checkout · confirming (10s+)</div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div data-screen-label="Checkout polling" style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative">
+          <div style="padding:20px 20px 0;display:flex;align-items:center;justify-content:space-between">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Step 3 of 3 · Confirming</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#6E6758">00:14</span>
+          </div>
+          <div style="padding:12px 20px 0;display:flex;gap:6px">
+            <div style="flex:1;height:3px;border-radius:2px;background:#2E7D4F"></div>
+            <div style="flex:1;height:3px;border-radius:2px;background:#2E7D4F"></div>
+            <div style="flex:1;height:3px;border-radius:2px;background:linear-gradient(to right,#C1502E 60%,rgba(26,24,20,0.10) 60%)"></div>
+          </div>
+          <div style="padding:36px 20px 0">
+            <div style="font-family:Fraunces,serif;font-size:30px;font-weight:600;color:#1A1814;letter-spacing:-0.02em;line-height:1.15">Holding your slot…</div>
+            <div style="font-size:15px;color:#4F4A40;line-height:22px;margin-top:10px">Mon 10 Aug, 20:00 at Pitch 2 — Indoor. This usually takes a few seconds.</div>
+          </div>
+          <div style="padding:28px 20px 0">
+            <div style="background:#FFFBF2;border-radius:20px;border:1px solid rgba(26,24,20,0.08);box-shadow:0 2px 8px rgba(26,24,20,0.08);padding:20px;display:flex;flex-direction:column;gap:14px">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div style="height:12px;width:120px;border-radius:5px;background:rgba(26,24,20,0.08)"></div>
+                <div style="height:12px;width:52px;border-radius:5px;background:rgba(26,24,20,0.08)"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div style="height:12px;width:96px;border-radius:5px;background:rgba(26,24,20,0.07)"></div>
+                <div style="height:12px;width:44px;border-radius:5px;background:rgba(26,24,20,0.07)"></div>
+              </div>
+              <div style="height:1px;background:rgba(26,24,20,0.08)"></div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-size:14px;font-weight:600;color:#1A1814">Total</span>
+                <span style="font-family:Fraunces,serif;font-size:22px;font-weight:600;color:#1A1814">€43.00</span>
+              </div>
+            </div>
+          </div>
+          <div style="padding:20px 20px 0">
+            <div style="background:#F8E8C9;border-radius:20px;padding:18px;display:flex;gap:12px;align-items:flex-start">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="9" stroke="#8A5A0E" stroke-width="2"></circle><path d="M12 7v5l3 2" stroke="#8A5A0E" stroke-width="2" stroke-linecap="round"></path></svg>
+              <div>
+                <div style="font-size:14.5px;font-weight:600;color:#8A5A0E">Still confirming with your bank</div>
+                <div style="font-size:14px;color:#4F4A40;line-height:21px;margin-top:4px">Your card has not been charged twice. If this doesn't clear in a minute we'll email you and release the slot.</div>
+              </div>
+            </div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:0;background:#FFFBF2;border-top:1px solid rgba(26,24,20,0.08);box-shadow:0 -6px 20px rgba(26,24,20,0.10);padding:16px 20px 34px">
+            <div style="height:52px;border-radius:999px;border:1.5px solid rgba(26,24,20,0.14);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:#1A1814;letter-spacing:-0.3px">Check status</div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;width:402px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Checkout · card declined</div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div data-screen-label="Checkout failure" style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative">
+          <div style="padding:20px 20px 0"><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Payment · not completed</span></div>
+          <div style="padding:64px 24px 0;display:flex;flex-direction:column;align-items:center;text-align:center">
+            <div style="width:88px;height:88px;border-radius:999px;background:#F4E1D4;display:flex;align-items:center;justify-content:center">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="#8B3415" stroke-width="2.2" stroke-linecap="round"></path></svg>
+            </div>
+            <div style="font-family:Fraunces,serif;font-size:30px;font-weight:600;color:#1A1814;letter-spacing:-0.02em;margin-top:28px;line-height:1.15">Your card was declined</div>
+            <div style="font-size:15.5px;color:#4F4A40;line-height:23px;margin-top:12px;max-width:300px;text-wrap:pretty">No charge was made — your bank turned the payment down. We're holding Mon 20:00 for another <span style="font-family:'JetBrains Mono',monospace;font-size:14px;color:#1A1814">4:32</span> so you can try a different card.</div>
+            <div style="margin-top:24px;padding:10px 14px;border-radius:12px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#6E6758;letter-spacing:0.04em">REF LAR-2026-0008 · CARD_DECLINED</div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:0;background:#FFFBF2;border-top:1px solid rgba(26,24,20,0.08);box-shadow:0 -6px 20px rgba(26,24,20,0.10);padding:16px 20px 34px;display:flex;flex-direction:column;gap:10px">
+            <div style="height:52px;border-radius:999px;background:#C1502E;box-shadow:0 2px 8px rgba(26,24,20,0.08);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:#FFFBF2;letter-spacing:-0.3px">Try another card</div>
+            <div style="height:52px;border-radius:999px;border:1.5px solid rgba(26,24,20,0.14);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:#1A1814;letter-spacing:-0.3px">Back to pitch</div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;width:402px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Confirmed · the screenshot moment</div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div data-screen-label="Booking confirmed" style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative">
+          <div style="padding:44px 24px 0;display:flex;flex-direction:column;align-items:center">
+            <div style="width:64px;height:64px;border-radius:999px;background:#2E7D4F;box-shadow:0 6px 20px rgba(26,24,20,0.10);display:flex;align-items:center;justify-content:center">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 6" stroke="#FFFBF2" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </div>
+            <div style="font-family:Fraunces,serif;font-size:40px;font-weight:600;color:#1A1814;letter-spacing:-0.03em;margin-top:24px">Booked.</div>
+            <div style="font-size:15.5px;color:#4F4A40;margin-top:6px">Tonight at 20:00. Show this code at the gate.</div>
+          </div>
+
+          <div style="padding:28px 20px 0">
+            <div style="background:#D8ECDD;border-radius:28px;padding:28px 24px;display:flex;flex-direction:column;align-items:center;box-shadow:0 6px 20px rgba(26,24,20,0.10)">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;color:#174028;text-transform:uppercase;letter-spacing:0.1em">Booking code</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:#174028;letter-spacing:0.02em;margin-top:12px">LAR-2026-0001</div>
+              <div style="width:100%;height:1px;background:rgba(23,64,40,0.15);margin:22px 0"></div>
+              <div style="width:100%;display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;justify-content:space-between"><span style="font-size:14px;color:#174028;opacity:0.75">Pitch</span><span style="font-size:14px;font-weight:600;color:#174028">Pitch 1 — Main turf</span></div>
+                <div style="display:flex;justify-content:space-between"><span style="font-size:14px;color:#174028;opacity:0.75">When</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#174028">Mon 10 Aug · 20:00–21:00</span></div>
+                <div style="display:flex;justify-content:space-between"><span style="font-size:14px;color:#174028;opacity:0.75">Paid</span><span style="font-family:Fraunces,serif;font-size:18px;font-weight:600;color:#174028">€53.00</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding:20px 20px 0;display:flex;gap:10px">
+            <div style="flex:1;height:48px;border-radius:999px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);display:flex;align-items:center;justify-content:center;gap:8px">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#1A1814" stroke-width="1.8"></rect><path d="M3 10h18M8 3v4M16 3v4" stroke="#1A1814" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-size:14.5px;font-weight:600;color:#1A1814;letter-spacing:-0.2px">Add to calendar</span>
+            </div>
+            <div style="flex:1;height:48px;border-radius:999px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);display:flex;align-items:center;justify-content:center;gap:8px">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 3v13M12 3l-4 4M12 3l4 4M5 14v5a2 2 0 002 2h10a2 2 0 002-2v-5" stroke="#1A1814" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <span style="font-size:14.5px;font-weight:600;color:#1A1814;letter-spacing:-0.2px">Share</span>
+            </div>
+          </div>
+
+          <div style="position:absolute;left:0;right:0;bottom:0;padding:16px 20px 34px">
+            <div style="height:52px;border-radius:999px;background:#1A1814;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:#FFFBF2;letter-spacing:-0.3px">Done</div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+  </div>
+
+  <div style="font-family:Fraunces,serif;font-size:24px;font-weight:600;color:#1A1814;margin-bottom:6px">Matches — designed, not apologised for</div>
+  <div style="font-size:14px;color:#4F4A40;margin-bottom:28px;max-width:640px">The tab that said "Stage 3" now shows what it will be: open matches you can join, priced per player, with skill level and spots left on the row. Until the backend lands, ship this tab hidden — never the placeholder.</div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:48px 40px;align-items:flex-start;margin-bottom:64px">
+
+    <div style="display:flex;flex-direction:column;gap:14px;width:402px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Matches · open</div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div data-screen-label="Matches" style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative">
+          <div style="padding:20px 20px 0">
+            <div style="font-family:Fraunces,serif;font-size:32px;font-weight:600;color:#1A1814;letter-spacing:-0.02em">Matches</div>
+            <div style="display:flex;gap:4px;margin-top:20px;padding:4px;border-radius:999px;background:rgba(26,24,20,0.06)">
+              <div style="flex:1;text-align:center;padding:9px 0;border-radius:999px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);font-size:14px;font-weight:600;color:#1A1814;letter-spacing:-0.2px">Open <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#6E6758">3</span></div>
+              <div style="flex:1;text-align:center;padding:9px 0;border-radius:999px;font-size:14px;font-weight:600;color:#6E6758;letter-spacing:-0.2px">Mine</div>
+            </div>
+          </div>
+
+          <div style="padding:24px 20px 0;display:flex;flex-direction:column;gap:12px">
+            <div style="background:#FFFBF2;border-radius:20px;border:1px solid rgba(26,24,20,0.08);box-shadow:0 2px 8px rgba(26,24,20,0.08);padding:18px">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div style="display:flex;align-items:center;gap:7px">
+                  <span style="width:6px;height:6px;border-radius:3px;background:#1F6F8B"></span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Tonight 20:00 · 5-a-side</span>
+                </div>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;color:#8B3415;text-transform:uppercase;letter-spacing:0.07em">3 spots</span>
+              </div>
+              <div style="font-family:Fraunces,serif;font-size:21px;font-weight:600;color:#1A1814;letter-spacing:-0.01em;margin-top:10px">Pitch 2 — Indoor</div>
+              <div style="font-size:13.5px;color:#4F4A40;margin-top:3px">Larnaca Sportsplex · 1.2 km</div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px">
+                <div style="display:flex;align-items:center">
+                  <div style="width:28px;height:28px;border-radius:999px;background:#C1502E;border:2px solid #FFFBF2;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff">A</div>
+                  <div style="width:28px;height:28px;border-radius:999px;background:#1F6F8B;border:2px solid #FFFBF2;margin-left:-8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff">M</div>
+                  <div style="width:28px;height:28px;border-radius:999px;background:#6B7A3A;border:2px solid #FFFBF2;margin-left:-8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff">K</div>
+                  <div style="width:28px;height:28px;border-radius:999px;background:#D99520;border:2px solid #FFFBF2;margin-left:-8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff">S</div>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;margin-left:10px">7 / 10</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div style="display:flex;gap:2px;align-items:flex-end">
+                    <span style="width:4px;height:7px;border-radius:1px;background:#2E7D4F"></span>
+                    <span style="width:4px;height:9px;border-radius:1px;background:#2E7D4F"></span>
+                    <span style="width:4px;height:11px;border-radius:1px;background:#2E7D4F"></span>
+                    <span style="width:4px;height:13px;border-radius:1px;background:rgba(26,24,20,0.14)"></span>
+                    <span style="width:4px;height:15px;border-radius:1px;background:rgba(26,24,20,0.14)"></span>
+                  </div>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Level 3</span>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:16px;border-top:1px solid rgba(26,24,20,0.08)">
+                <div>
+                  <span style="font-family:Fraunces,serif;font-size:22px;font-weight:600;color:#1A1814">€6.20</span>
+                  <span style="font-size:12px;color:#6E6758"> / player</span>
+                </div>
+                <div style="height:40px;border-radius:999px;background:#C1502E;display:flex;align-items:center;padding:0 22px;font-size:15px;font-weight:600;color:#FFFBF2;letter-spacing:-0.2px">Join</div>
+              </div>
+            </div>
+
+            <div style="background:#FFFBF2;border-radius:20px;border:1px solid rgba(26,24,20,0.08);box-shadow:0 1px 3px rgba(26,24,20,0.06);padding:18px">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div style="display:flex;align-items:center;gap:7px">
+                  <span style="width:6px;height:6px;border-radius:3px;background:#D99520"></span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Tomorrow 19:00 · 7-a-side</span>
+                </div>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.07em">1 spot</span>
+              </div>
+              <div style="font-family:Fraunces,serif;font-size:21px;font-weight:600;color:#1A1814;letter-spacing:-0.01em;margin-top:10px">Pitch 1 — Main turf</div>
+              <div style="font-size:13.5px;color:#4F4A40;margin-top:3px">Larnaca Sportsplex · 1.2 km</div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:16px;border-top:1px solid rgba(26,24,20,0.08)">
+                <div>
+                  <span style="font-family:Fraunces,serif;font-size:22px;font-weight:600;color:#1A1814">€4.40</span>
+                  <span style="font-size:12px;color:#6E6758"> / player</span>
+                </div>
+                <div style="height:40px;border-radius:999px;border:1.5px solid rgba(26,24,20,0.14);display:flex;align-items:center;padding:0 22px;font-size:15px;font-weight:600;color:#1A1814;letter-spacing:-0.2px">Join</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="position:absolute;left:20px;right:20px;bottom:99px">
+            <div style="height:52px;border-radius:999px;background:#1A1814;box-shadow:0 6px 20px rgba(26,24,20,0.10);display:flex;align-items:center;justify-content:center;gap:8px">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#FFFBF2" stroke-width="2.2" stroke-linecap="round"></path></svg>
+              <span style="font-size:16px;font-weight:600;color:#FFFBF2;letter-spacing:-0.3px">Organise a match</span>
+            </div>
+          </div>
+
+          <div style="position:absolute;left:0;right:0;bottom:0;height:83px;background:#FFFBF2;border-top:1px solid rgba(26,24,20,0.08);box-shadow:0 -6px 20px rgba(26,24,20,0.10);display:flex;align-items:flex-start;padding-top:8px">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 11l8-7 8 7v9a2 2 0 01-2 2h-3v-6h-6v6H6a2 2 0 01-2-2v-9z" stroke="#6E6758" stroke-width="1.8" stroke-linejoin="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Discover</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22s7-7.5 7-13a7 7 0 10-14 0c0 5.5 7 13 7 13z" stroke="#6E6758" stroke-width="2" stroke-linejoin="round"></path><circle cx="12" cy="9" r="2.5" stroke="#6E6758" stroke-width="2"></circle></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Map</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#C1502E" stroke-width="1.8"></circle><path d="M12 3l3 4.5-1.5 5h-3L9 7.5 12 3zM3.5 10l5 1M15.5 11l5-1M9 16.5L7 21M15 16.5l2 4.5" stroke="#C1502E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#C1502E;text-transform:uppercase;letter-spacing:0.06em">Matches</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#6E6758" stroke-width="1.8"></rect><path d="M3 10h18M8 3v4M16 3v4" stroke="#6E6758" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Bookings</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#6E6758" stroke-width="1.8"></circle><path d="M4 21c0-4.5 3.5-7 8-7s8 2.5 8 7" stroke="#6E6758" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Profile</span>
+            </div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;width:402px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Profile · grouped</div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div data-screen-label="Profile" style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative">
+          <div style="padding:20px 20px 0">
+            <div style="font-family:Fraunces,serif;font-size:32px;font-weight:600;color:#1A1814;letter-spacing:-0.02em">Your profile</div>
+          </div>
+
+          <div style="padding:20px 20px 0">
+            <div style="background:#F4E1D4;border-radius:28px;padding:20px;box-shadow:0 2px 8px rgba(26,24,20,0.08);display:flex;align-items:center;gap:16px">
+              <div style="width:56px;height:56px;border-radius:999px;background:#C1502E;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#fff;letter-spacing:-0.5px">A</div>
+              <div style="flex:1;min-width:0">
+                <div style="font-family:Fraunces,serif;font-size:22px;font-weight:600;color:#1A1814;letter-spacing:-0.01em">Andreas Georgiou</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8B3415;text-transform:uppercase;letter-spacing:0.07em;margin-top:5px">Level 3 · CDM · Larnaca</div>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="#8B3415" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </div>
+          </div>
+
+          <div style="padding:12px 20px 0">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.09em;padding:16px 4px 8px">Play style</div>
+            <div style="background:#FFFBF2;border-radius:20px;border:1px solid rgba(26,24,20,0.08);box-shadow:0 1px 3px rgba(26,24,20,0.06);padding:18px;display:flex;flex-direction:column;gap:18px">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <span style="font-size:15px;color:#1A1814">Skill level</span>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div style="display:flex;gap:2px;align-items:flex-end">
+                    <span style="width:4px;height:7px;border-radius:1px;background:#2E7D4F"></span>
+                    <span style="width:4px;height:9px;border-radius:1px;background:#2E7D4F"></span>
+                    <span style="width:4px;height:11px;border-radius:1px;background:#2E7D4F"></span>
+                    <span style="width:4px;height:13px;border-radius:1px;background:rgba(26,24,20,0.14)"></span>
+                    <span style="width:4px;height:15px;border-radius:1px;background:rgba(26,24,20,0.14)"></span>
+                  </div>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#1A1814">3</span>
+                </div>
+              </div>
+              <div style="height:1px;background:rgba(26,24,20,0.08)"></div>
+              <div>
+                <span style="font-size:15px;color:#1A1814">Positions</span>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+                  <span style="padding:7px 12px;border-radius:10px;background:#1A1814;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#FFFBF2;letter-spacing:0.04em">CDM</span>
+                  <span style="padding:7px 12px;border-radius:10px;background:#1A1814;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#FFFBF2;letter-spacing:0.04em">CM</span>
+                  <span style="padding:7px 12px;border-radius:10px;background:#F6F1E8;border:1px solid rgba(26,24,20,0.14);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#4F4A40;letter-spacing:0.04em">CB</span>
+                  <span style="padding:7px 12px;border-radius:10px;background:#F6F1E8;border:1px solid rgba(26,24,20,0.14);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#4F4A40;letter-spacing:0.04em">LB</span>
+                  <span style="padding:7px 12px;border-radius:10px;background:#F6F1E8;border:1px solid rgba(26,24,20,0.14);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#4F4A40;letter-spacing:0.04em">ST</span>
+                </div>
+              </div>
+              <div style="height:1px;background:rgba(26,24,20,0.08)"></div>
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <span style="font-size:15px;color:#1A1814">Height</span>
+                <span style="font-family:Fraunces,serif;font-size:18px;font-weight:600;color:#1A1814">178 cm</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding:0 20px">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.09em;padding:20px 4px 8px">Preferences</div>
+            <div style="background:#FFFBF2;border-radius:20px;border:1px solid rgba(26,24,20,0.08);box-shadow:0 1px 3px rgba(26,24,20,0.06);padding:18px;display:flex;flex-direction:column;gap:16px">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <span style="font-size:15px;color:#1A1814">Language</span>
+                <div style="display:flex;gap:3px;padding:3px;border-radius:999px;background:rgba(26,24,20,0.06)">
+                  <span style="padding:5px 12px;border-radius:999px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);font-size:13px;font-weight:600;color:#1A1814">EN</span>
+                  <span style="padding:5px 12px;border-radius:999px;font-size:13px;font-weight:600;color:#6E6758">ΕΛ</span>
+                </div>
+              </div>
+              <div style="height:1px;background:rgba(26,24,20,0.08)"></div>
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <span style="font-size:15px;color:#1A1814">Home city</span>
+                <span style="font-size:15px;font-weight:600;color:#1A1814">Larnaca</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="position:absolute;left:0;right:0;bottom:0;height:83px;background:#FFFBF2;border-top:1px solid rgba(26,24,20,0.08);box-shadow:0 -6px 20px rgba(26,24,20,0.10);display:flex;align-items:flex-start;padding-top:8px">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 11l8-7 8 7v9a2 2 0 01-2 2h-3v-6h-6v6H6a2 2 0 01-2-2v-9z" stroke="#6E6758" stroke-width="1.8" stroke-linejoin="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Discover</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22s7-7.5 7-13a7 7 0 10-14 0c0 5.5 7 13 7 13z" stroke="#6E6758" stroke-width="2" stroke-linejoin="round"></path><circle cx="12" cy="9" r="2.5" stroke="#6E6758" stroke-width="2"></circle></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Map</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#6E6758" stroke-width="1.8"></circle><path d="M12 3l3 4.5-1.5 5h-3L9 7.5 12 3zM3.5 10l5 1M15.5 11l5-1M9 16.5L7 21M15 16.5l2 4.5" stroke="#6E6758" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Matches</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#6E6758" stroke-width="1.8"></rect><path d="M3 10h18M8 3v4M16 3v4" stroke="#6E6758" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Bookings</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#C1502E" stroke-width="1.8"></circle><path d="M4 21c0-4.5 3.5-7 8-7s8 2.5 8 7" stroke="#C1502E" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#C1502E;text-transform:uppercase;letter-spacing:0.06em">Profile</span>
+            </div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+  </div>
+
+  <div style="font-family:Fraunces,serif;font-size:24px;font-weight:600;color:#1A1814;margin-bottom:6px">Getting in</div>
+  <div style="font-size:14px;color:#4F4A40;margin-bottom:28px;max-width:640px">Phone is the primary method because that is what the Cypriot market expects; Apple, Google and email are equal seconds. Buttons are sized for Greek, which runs 20–35% longer. The OTP screen gets six real boxes and a countdown that actually counts.</div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:48px 40px;align-items:flex-start;margin-bottom:64px">
+
+    <div style="display:flex;flex-direction:column;gap:14px;width:402px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Sign in · EN</div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div data-screen-label="Sign in" style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative">
+          <div style="padding:56px 24px 0;display:flex;flex-direction:column;align-items:center">
+            <div style="width:52px;height:52px;border-radius:16px;background:#C1502E;box-shadow:0 2px 8px rgba(26,24,20,0.08);display:flex;align-items:center;justify-content:center">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#FFFBF2" stroke-width="1.8"></circle><path d="M12 3l3 4.5-1.5 5h-3L9 7.5 12 3zM3.5 10l5 1M15.5 11l5-1M9 16.5L7 21M15 16.5l2 4.5" stroke="#FFFBF2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </div>
+            <div style="font-family:Fraunces,serif;font-size:34px;font-weight:600;color:#1A1814;letter-spacing:-0.02em;margin-top:24px">Sign in</div>
+            <div style="font-size:15.5px;color:#4F4A40;margin-top:6px;text-align:center">We'll text you a 6-digit code.</div>
+          </div>
+
+          <div style="padding:36px 24px 0">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px">Phone number</div>
+            <div style="height:58px;border:1.5px solid #C1502E;border-radius:14px;padding:0 18px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);display:flex;align-items:center;gap:10px">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:16px;color:#6E6758">+357</span>
+              <span style="width:1px;height:22px;background:rgba(26,24,20,0.14)"></span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:17px;color:#1A1814;letter-spacing:0.04em">99 123456</span>
+            </div>
+            <div style="height:56px;border-radius:999px;background:#C1502E;box-shadow:0 2px 8px rgba(26,24,20,0.08);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:#FFFBF2;letter-spacing:-0.3px;margin-top:16px">Continue</div>
+          </div>
+
+          <div style="padding:28px 24px 0;display:flex;align-items:center;gap:12px">
+            <div style="flex:1;height:1px;background:rgba(26,24,20,0.08)"></div>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">or</span>
+            <div style="flex:1;height:1px;background:rgba(26,24,20,0.08)"></div>
+          </div>
+
+          <div style="padding:20px 24px 0;display:flex;flex-direction:column;gap:10px">
+            <div style="min-height:52px;border-radius:999px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);display:flex;align-items:center;justify-content:center;padding:14px 20px;font-size:16px;font-weight:600;color:#1A1814;letter-spacing:-0.2px;text-align:center">Continue with Apple</div>
+            <div style="min-height:52px;border-radius:999px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);display:flex;align-items:center;justify-content:center;padding:14px 20px;font-size:16px;font-weight:600;color:#1A1814;letter-spacing:-0.2px;text-align:center">Continue with Google</div>
+            <div style="min-height:52px;border-radius:999px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);display:flex;align-items:center;justify-content:center;padding:14px 20px;font-size:16px;font-weight:600;color:#1A1814;letter-spacing:-0.2px;text-align:center">Continue with email</div>
+          </div>
+
+          <div style="position:absolute;left:24px;right:24px;bottom:34px;font-size:13px;color:#6E6758;text-align:center;line-height:19px">By continuing you accept the terms and the privacy policy.</div>
+        </div>
+      </x-import>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;width:402px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">OTP · six boxes</div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div data-screen-label="OTP" style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative">
+          <div style="padding:20px 20px 0"><div style="width:38px;height:38px;border-radius:999px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#1A1814" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></div></div>
+          <div style="padding:36px 24px 0">
+            <div style="font-family:Fraunces,serif;font-size:34px;font-weight:600;color:#1A1814;letter-spacing:-0.02em;line-height:1.1">Enter code</div>
+            <div style="font-size:15.5px;color:#4F4A40;margin-top:8px">Sent to <span style="font-family:'JetBrains Mono',monospace;font-size:14.5px;color:#1A1814">+357 99 123456</span></div>
+            <div style="font-size:15px;font-weight:600;color:#8B3415;margin-top:10px">Change number</div>
+          </div>
+          <div style="padding:36px 24px 0;display:flex;gap:8px">
+            <div style="flex:1;height:64px;border-radius:14px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:24px;color:#1A1814">4</div>
+            <div style="flex:1;height:64px;border-radius:14px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:24px;color:#1A1814">2</div>
+            <div style="flex:1;height:64px;border-radius:14px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:24px;color:#1A1814">1</div>
+            <div style="flex:1;height:64px;border-radius:14px;background:#FFFBF2;border:1.5px solid #C1502E;box-shadow:0 1px 3px rgba(26,24,20,0.06);display:flex;align-items:center;justify-content:center"><span style="width:2px;height:26px;background:#C1502E"></span></div>
+            <div style="flex:1;height:64px;border-radius:14px;background:#F6F1E8;border:1px solid rgba(26,24,20,0.08)"></div>
+            <div style="flex:1;height:64px;border-radius:14px;background:#F6F1E8;border:1px solid rgba(26,24,20,0.08)"></div>
+          </div>
+          <div style="padding:24px 24px 0;text-align:center">
+            <span style="font-size:14.5px;color:#6E6758">Resend code in </span><span style="font-family:'JetBrains Mono',monospace;font-size:14.5px;color:#1A1814">0:24</span>
+          </div>
+          <div style="position:absolute;left:24px;right:24px;bottom:34px">
+            <div style="height:56px;border-radius:999px;background:#C1502E;box-shadow:0 2px 8px rgba(26,24,20,0.08);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:#FFFBF2;letter-spacing:-0.3px">Verify</div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;width:402px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Consent · first launch</div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div data-screen-label="Consent" style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative">
+          <div style="padding:36px 24px 0">
+            <div style="font-family:Fraunces,serif;font-size:32px;font-weight:600;color:#1A1814;letter-spacing:-0.02em;line-height:1.12">Welcome to Ludi</div>
+            <div style="font-size:15.5px;color:#4F4A40;line-height:23px;margin-top:12px;text-wrap:pretty">Before we start — here's the short version of what we collect and why. The full privacy policy is one tap away.</div>
+          </div>
+          <div style="padding:24px 24px 0;display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;gap:14px;align-items:flex-start">
+              <div style="width:34px;height:34px;border-radius:11px;background:#F4E1D4;flex-shrink:0;display:flex;align-items:center;justify-content:center">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#8B3415" stroke-width="1.8"></circle><path d="M4 21c0-4.5 3.5-7 8-7s8 2.5 8 7" stroke="#8B3415" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              </div>
+              <div style="font-size:14.5px;color:#4F4A40;line-height:21px;flex:1;text-wrap:pretty">Your name, phone or email, and chosen city — so other players can find you and bookings can be confirmed.</div>
+            </div>
+            <div style="display:flex;gap:14px;align-items:flex-start">
+              <div style="width:34px;height:34px;border-radius:11px;background:#D8ECDD;flex-shrink:0;display:flex;align-items:center;justify-content:center">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#174028" stroke-width="1.8"></rect><path d="M3 10h18M8 3v4M16 3v4" stroke="#174028" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              </div>
+              <div style="font-size:14.5px;color:#4F4A40;line-height:21px;flex:1;text-wrap:pretty">Your booking history (which pitch, when, with whom) — so we can show your past games and handle refunds.</div>
+            </div>
+            <div style="display:flex;gap:14px;align-items:flex-start">
+              <div style="width:34px;height:34px;border-radius:11px;background:#D6E8EE;flex-shrink:0;display:flex;align-items:center;justify-content:center">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="2" stroke="#0F3F52" stroke-width="1.8"></rect><path d="M3 10h18" stroke="#0F3F52" stroke-width="1.8"></path></svg>
+              </div>
+              <div style="font-size:14.5px;color:#4F4A40;line-height:21px;flex:1;text-wrap:pretty">Payment references via Stripe (never the card number itself) — so charges and payouts can be reconciled.</div>
+            </div>
+            <div style="display:flex;gap:14px;align-items:flex-start">
+              <div style="width:34px;height:34px;border-radius:11px;background:#F8E8C9;flex-shrink:0;display:flex;align-items:center;justify-content:center">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 18V9M10 18V5M16 18v-6M22 18h-2" stroke="#8A5A0E" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              </div>
+              <div style="font-size:14.5px;color:#4F4A40;line-height:21px;flex:1;text-wrap:pretty">Anonymised crash reports and usage events — so we can fix bugs and make the app better.</div>
+            </div>
+          </div>
+          <div style="padding:24px 24px 0">
+            <div style="font-size:13.5px;color:#6E6758;line-height:20px;text-wrap:pretty">Data is stored in the EU (Frankfurt) and never sold. You can delete your account at any time from the profile screen.</div>
+            <div style="font-size:14.5px;font-weight:600;color:#8B3415;margin-top:14px">Read the full privacy policy →</div>
+          </div>
+          <div style="position:absolute;left:24px;right:24px;bottom:34px">
+            <div style="height:56px;border-radius:999px;background:#C1502E;box-shadow:0 2px 8px rgba(26,24,20,0.08);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:#FFFBF2;letter-spacing:-0.3px">Accept and continue</div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+  </div>
+
+  <div style="font-family:Fraunces,serif;font-size:24px;font-weight:600;color:#1A1814;margin-bottom:6px">Ελληνικά — the real stress test</div>
+  <div style="font-size:14px;color:#4F4A40;margin-bottom:28px;max-width:640px">Greek runs 20–35% longer. "Συνέχεια με Apple" and "Αποδέχομαι και συνέχεια" fit because the buttons wrap instead of truncating, and the pitch meta row drops the distance rather than clipping the format.</div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:48px 40px;align-items:flex-start">
+
+    <div style="display:flex;flex-direction:column;gap:14px;width:402px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Ανακάλυψε · ΕΛ</div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div data-screen-label="Discover EL" style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative">
+          <div style="padding:20px 20px 0;display:flex;flex-direction:column;gap:4px">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Λάρνακα</div>
+            <div style="font-family:Fraunces,serif;font-size:34px;font-weight:600;color:#1A1814;letter-spacing:-0.02em;line-height:1.1;margin-top:2px">Καλησπέρα.</div>
+            <div style="font-size:15px;color:#4F4A40;letter-spacing:-0.2px">Έτοιμος για απόψε;</div>
+          </div>
+          <div style="padding:16px 20px 0;display:flex;gap:8px;flex-wrap:wrap">
+            <div style="padding:7px 12px;border-radius:10px;background:#1A1814;box-shadow:0 1px 3px rgba(26,24,20,0.06);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#FFFBF2;text-transform:uppercase;letter-spacing:0.06em">Απόψε</div>
+            <div style="padding:7px 12px;border-radius:10px;background:#FFFBF2;border:1px solid rgba(26,24,20,0.14);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#4F4A40;text-transform:uppercase;letter-spacing:0.06em">5x5</div>
+            <div style="padding:7px 12px;border-radius:10px;background:#FFFBF2;border:1px solid rgba(26,24,20,0.14);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#4F4A40;text-transform:uppercase;letter-spacing:0.06em">Εσωτερικός</div>
+            <div style="padding:7px 12px;border-radius:10px;background:#FFFBF2;border:1px solid rgba(26,24,20,0.14);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#4F4A40;text-transform:uppercase;letter-spacing:0.06em">&lt; €40</div>
+          </div>
+          <div style="padding:20px;display:flex;flex-direction:column;gap:16px">
+            <div style="background:#FFFBF2;border-radius:20px;border:1px solid rgba(26,24,20,0.08);box-shadow:0 2px 8px rgba(26,24,20,0.08);overflow:hidden">
+              <div style="position:relative;height:170px">
+                <svg width="362" height="170" viewBox="0 0 362 170" style="position:absolute;inset:0">
+                  <rect width="362" height="170" fill="#D6E8EE"></rect>
+                  <g stroke="#FFFBF2" stroke-opacity="0.75" fill="none" stroke-width="2">
+                    <rect x="18" y="16" width="326" height="138" rx="2"></rect>
+                    <line x1="181" y1="16" x2="181" y2="154"></line>
+                    <circle cx="181" cy="85" r="34"></circle>
+                    <rect x="18" y="47" width="42" height="76"></rect>
+                    <rect x="302" y="47" width="42" height="76"></rect>
+                  </g>
+                  <text x="330" y="150" text-anchor="end" font-family="Fraunces, serif" font-size="86" font-weight="600" fill="#1F6F8B" fill-opacity="0.16">5</text>
+                </svg>
+                <div style="position:absolute;top:12px;left:12px;padding:5px 9px;border-radius:8px;background:rgba(255,251,242,0.92);box-shadow:0 1px 3px rgba(26,24,20,0.06);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#2E7D4F;text-transform:uppercase;letter-spacing:0.07em">4 ελεύθερες απόψε</div>
+              </div>
+              <div style="padding:16px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+                <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+                  <div style="font-family:Fraunces,serif;font-size:20px;font-weight:600;color:#1A1814;letter-spacing:-0.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Γήπεδο 2 — Εσωτερικό</div>
+                  <div style="display:flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;text-transform:uppercase;letter-spacing:0.07em">
+                    <span style="width:6px;height:6px;border-radius:3px;background:#1F6F8B;flex-shrink:0"></span>
+                    <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">5x5 · Εσωτερικός</span>
+                  </div>
+                </div>
+                <div style="font-family:Fraunces,serif;font-size:22px;font-weight:600;color:#1A1814;white-space:nowrap">€35<span style="font-family:-apple-system,system-ui,sans-serif;font-size:12px;font-weight:400;color:#6E6758">/ώρα</span></div>
+              </div>
+            </div>
+            <div style="background:#FFFBF2;border-radius:20px;border:1px solid rgba(26,24,20,0.08);box-shadow:0 2px 8px rgba(26,24,20,0.08);overflow:hidden">
+              <div style="position:relative;height:170px">
+                <svg width="362" height="170" viewBox="0 0 362 170" style="position:absolute;inset:0">
+                  <rect width="362" height="170" fill="#F8E8C9"></rect>
+                  <g stroke="#FFFBF2" stroke-opacity="0.8" fill="none" stroke-width="2">
+                    <rect x="18" y="16" width="326" height="138" rx="2"></rect>
+                    <line x1="181" y1="16" x2="181" y2="154"></line>
+                    <circle cx="181" cy="85" r="34"></circle>
+                    <rect x="18" y="47" width="42" height="76"></rect>
+                    <rect x="302" y="47" width="42" height="76"></rect>
+                  </g>
+                  <text x="330" y="150" text-anchor="end" font-family="Fraunces, serif" font-size="86" font-weight="600" fill="#8A5A0E" fill-opacity="0.16">7</text>
+                </svg>
+              </div>
+              <div style="padding:16px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+                <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+                  <div style="font-family:Fraunces,serif;font-size:20px;font-weight:600;color:#1A1814;letter-spacing:-0.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Γήπεδο 1 — Κύριο</div>
+                  <div style="display:flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;text-transform:uppercase;letter-spacing:0.07em">
+                    <span style="width:6px;height:6px;border-radius:3px;background:#D99520;flex-shrink:0"></span>
+                    <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">7x7 · Συνθετικός</span>
+                  </div>
+                </div>
+                <div style="font-family:Fraunces,serif;font-size:22px;font-weight:600;color:#1A1814;white-space:nowrap">€45<span style="font-family:-apple-system,system-ui,sans-serif;font-size:12px;font-weight:400;color:#6E6758">/ώρα</span></div>
+              </div>
+            </div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:0;height:83px;background:#FFFBF2;border-top:1px solid rgba(26,24,20,0.08);box-shadow:0 -6px 20px rgba(26,24,20,0.10);display:flex;align-items:flex-start;padding-top:8px">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 11l8-7 8 7v9a2 2 0 01-2 2h-3v-6h-6v6H6a2 2 0 01-2-2v-9z" stroke="#C1502E" stroke-width="1.8" stroke-linejoin="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#C1502E;text-transform:uppercase;letter-spacing:0.06em">Ανακάλυψε</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22s7-7.5 7-13a7 7 0 10-14 0c0 5.5 7 13 7 13z" stroke="#6E6758" stroke-width="2" stroke-linejoin="round"></path><circle cx="12" cy="9" r="2.5" stroke="#6E6758" stroke-width="2"></circle></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Χάρτης</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#6E6758" stroke-width="1.8"></circle><path d="M12 3l3 4.5-1.5 5h-3L9 7.5 12 3zM3.5 10l5 1M15.5 11l5-1M9 16.5L7 21M15 16.5l2 4.5" stroke="#6E6758" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Αγώνες</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#6E6758" stroke-width="1.8"></rect><path d="M3 10h18M8 3v4M16 3v4" stroke="#6E6758" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Κρατήσεις</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#6E6758" stroke-width="1.8"></circle><path d="M4 21c0-4.5 3.5-7 8-7s8 2.5 8 7" stroke="#6E6758" stroke-width="1.8" stroke-linecap="round"></path></svg>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.06em">Προφίλ</span>
+            </div>
+          </div>
+        </div>
+      </x-import>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;width:402px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">Σύνδεση · ΕΛ</div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div data-screen-label="Sign in EL" style="height:100%;background:#F6F1E8;padding-top:62px;box-sizing:border-box;overflow:hidden;position:relative">
+          <div style="padding:56px 24px 0;display:flex;flex-direction:column;align-items:center">
+            <div style="width:52px;height:52px;border-radius:16px;background:#C1502E;box-shadow:0 2px 8px rgba(26,24,20,0.08);display:flex;align-items:center;justify-content:center">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#FFFBF2" stroke-width="1.8"></circle><path d="M12 3l3 4.5-1.5 5h-3L9 7.5 12 3zM3.5 10l5 1M15.5 11l5-1M9 16.5L7 21M15 16.5l2 4.5" stroke="#FFFBF2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </div>
+            <div style="font-family:Fraunces,serif;font-size:34px;font-weight:600;color:#1A1814;letter-spacing:-0.02em;margin-top:24px">Σύνδεση</div>
+            <div style="font-size:15.5px;color:#4F4A40;margin-top:6px;text-align:center;line-height:22px">Θα σου στείλουμε 6ψήφιο κωδικό με SMS.</div>
+          </div>
+          <div style="padding:32px 24px 0">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px">Αριθμός τηλεφώνου</div>
+            <div style="height:58px;border:1.5px solid rgba(26,24,20,0.14);border-radius:14px;padding:0 18px;background:#FFFBF2;display:flex;align-items:center;gap:10px">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:16px;color:#6E6758">+357</span>
+              <span style="width:1px;height:22px;background:rgba(26,24,20,0.14)"></span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:17px;color:#6E6758;letter-spacing:0.04em">99 000000</span>
+            </div>
+            <div style="height:56px;border-radius:999px;background:#C1502E;box-shadow:0 2px 8px rgba(26,24,20,0.08);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:#FFFBF2;letter-spacing:-0.3px;margin-top:16px">Συνέχεια</div>
+          </div>
+          <div style="padding:28px 24px 0;display:flex;align-items:center;gap:12px">
+            <div style="flex:1;height:1px;background:rgba(26,24,20,0.08)"></div>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#6E6758;text-transform:uppercase;letter-spacing:0.08em">ή</span>
+            <div style="flex:1;height:1px;background:rgba(26,24,20,0.08)"></div>
+          </div>
+          <div style="padding:20px 24px 0;display:flex;flex-direction:column;gap:10px">
+            <div style="min-height:52px;border-radius:999px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);display:flex;align-items:center;justify-content:center;padding:14px 20px;font-size:16px;font-weight:600;color:#1A1814;letter-spacing:-0.2px;text-align:center">Συνέχεια με Apple</div>
+            <div style="min-height:52px;border-radius:999px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);display:flex;align-items:center;justify-content:center;padding:14px 20px;font-size:16px;font-weight:600;color:#1A1814;letter-spacing:-0.2px;text-align:center">Συνέχεια με Google</div>
+            <div style="min-height:52px;border-radius:999px;background:#FFFBF2;box-shadow:0 1px 3px rgba(26,24,20,0.06);display:flex;align-items:center;justify-content:center;padding:14px 20px;font-size:16px;font-weight:600;color:#1A1814;letter-spacing:-0.2px;text-align:center">Συνέχεια με email</div>
+          </div>
+          <div style="position:absolute;left:24px;right:24px;bottom:34px;font-size:13px;color:#6E6758;text-align:center;line-height:19px">Συνεχίζοντας αποδέχεσαι τους όρους και την πολιτική απορρήτου.</div>
+        </div>
+      </x-import>
+    </div>
+  </div>
+
+</section>
+</x-dc>
+</body>
+</html>

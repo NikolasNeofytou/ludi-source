@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="180" height="180">
+  <!-- Ludi mark at micro density. A favicon renders around 16-18px, where only
+       the outer plane, one mid plane and the gold survive as distinct shapes —
+       everything else collapses into mush. Keep in sync with the `micro` ramp
+       in components/ludi-mark.tsx. app/favicon.ico is this file rendered at
+       48/32/16 for browsers that ask for /favicon.ico; re-render it on change:
+       magick -density 384 icon.svg -define icon:auto-resize=48,32,16 favicon.ico -->
+  <rect width="180" height="180" fill="#0A2E3D"/>
+  <path d="M90 28 L178 180 L2 180 Z" fill="#175E77"/>
+  <path d="M90 104 L126 180 L54 180 Z" fill="#DCE9EC"/>
+  <path d="M90 148 L101 180 L79 180 Z" fill="#D99520"/>
+</svg>

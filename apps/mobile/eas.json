@@ -1,0 +1,52 @@
+{
+  "cli": {
+    "version": ">= 21.7.1",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "beta": {
+      "autoIncrement": true,
+      "environment": "production",
+      "env": {
+        "EXPO_PUBLIC_SENTRY_ENVIRONMENT": "beta",
+        "EXPO_PUBLIC_AUTH_METHODS": "phone,apple,google,magic_link"
+      }
+    },
+    "beta-android": {
+      "extends": "beta",
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "environment": "production",
+      "env": {
+        "EXPO_PUBLIC_SENTRY_ENVIRONMENT": "production",
+        "EXPO_PUBLIC_AUTH_METHODS": "phone,apple,google,magic_link"
+      }
+    },
+    "simulator-screenshots": {
+      "extends": "production",
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "ascAppId": "6800232498"
+      }
+    }
+  }
+}

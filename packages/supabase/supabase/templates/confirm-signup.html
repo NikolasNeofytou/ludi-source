@@ -1,0 +1,97 @@
+<!--
+  Confirm signup email -- the magic link for an address signing in to Ludi
+  for the first time (the project has "Confirm email" on, so GoTrue sends
+  this one instead of "Magic link" to a new address).
+
+  Source of truth for Supabase -> Authentication -> Emails -> "Confirm signup".
+  The same link as magic-link.html, which explains every choice in it; keep
+  the two in step and paste both. Subject pasted with it:
+
+      Καλώς ήρθες στο Ludi · welcome to Ludi
+-->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="background:#f2f4f3;margin:0;padding:0;">
+  <tr>
+    <td align="center" style="padding:32px 16px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+             style="max-width:560px;">
+
+        <!-- Wordmark -->
+        <tr>
+          <td style="padding:0 8px 14px;font-family:Georgia,'Times New Roman',serif;
+                     font-size:22px;font-weight:700;letter-spacing:-0.01em;color:#10181c;">
+            Ludi
+          </td>
+        </tr>
+
+        <!-- Card -->
+        <tr>
+          <td style="background:#ffffff;border:1px solid #e3e7e6;border-radius:14px;
+                     padding:32px 28px;font-family:-apple-system,BlinkMacSystemFont,
+                     'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#10181c;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td style="font-family:Georgia,'Times New Roman',serif;font-size:26px;
+                           line-height:1.2;font-weight:700;letter-spacing:-0.01em;
+                           color:#10181c;padding-bottom:6px;">
+                  Καλώς ήρθες στο Ludi
+                </td>
+              </tr>
+              <tr>
+                <td style="font-size:15px;line-height:1.5;color:#5f6e73;padding-bottom:22px;">
+                  Welcome to Ludi
+                </td>
+              </tr>
+
+              <!-- Button -->
+              <tr>
+                <td style="padding:0 0 18px;">
+                  {{ if eq .RedirectTo "ludi://callback" }}
+                  <a href="ludi://callback?token_hash={{ .TokenHash }}&type=email"
+                     style="display:inline-block;background:#175e77;color:#ffffff;
+                            text-decoration:none;font-size:16px;font-weight:600;
+                            padding:14px 28px;border-radius:10px;">
+                    Σύνδεση · Sign in
+                  </a>
+                  {{ else }}
+                  <a href="{{ .RedirectTo }}?token_hash={{ .TokenHash }}&type=email"
+                     style="display:inline-block;background:#175e77;color:#ffffff;
+                            text-decoration:none;font-size:16px;font-weight:600;
+                            padding:14px 28px;border-radius:10px;">
+                    Σύνδεση · Sign in
+                  </a>
+                  {{ end }}
+                </td>
+              </tr>
+
+              <tr>
+                <td style="font-size:14px;line-height:1.55;color:#3f4c51;padding-bottom:10px;">
+                  Αν ζήτησες τον σύνδεσμο από την εφαρμογή Ludi, πάτα τον στο ίδιο
+                  τηλέφωνο, μέσα σε 15 λεπτά. Ισχύει μία φορά.
+                </td>
+              </tr>
+              <tr>
+                <td style="font-size:14px;line-height:1.55;color:#3f4c51;padding-bottom:22px;">
+                  Asked from the Ludi app? Tap it on that same phone, within 15 minutes.
+                  It works once.
+                </td>
+              </tr>
+
+              <!-- Divider -->
+              <tr>
+                <td style="border-top:1px solid #e3e7e6;padding-top:18px;"></td>
+              </tr>
+              <tr>
+                <td style="font-size:12px;line-height:1.5;color:#5f6e73;">
+                  Δεν το ζήτησες εσύ; Αγνόησέ το — χωρίς τον σύνδεσμο δεν συνδέεται κανείς.
+                  Didn&rsquo;t ask for it? Ignore this email; nobody signs in without the link.
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+      </table>
+    </td>
+  </tr>
+</table>

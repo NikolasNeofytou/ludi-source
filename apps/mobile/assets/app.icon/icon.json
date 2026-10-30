@@ -1,0 +1,87 @@
+{
+  "fill": {
+    "solid": "srgb:0.03922,0.18039,0.23922,1.00000"
+  },
+  "groups": [
+    {
+      "name": "gold",
+      "layers": [
+        {
+          "image-name": "gold.svg",
+          "name": "gold",
+          "glass": false
+        }
+      ],
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.5
+      },
+      "translucency": {
+        "enabled": false,
+        "value": 0.5
+      },
+      "specular": true
+    },
+    {
+      "name": "light",
+      "layers": [
+        {
+          "image-name": "plane-6.svg",
+          "name": "plane-6",
+          "glass": false
+        },
+        {
+          "image-name": "plane-5.svg",
+          "name": "plane-5",
+          "glass": false
+        },
+        {
+          "image-name": "plane-4.svg",
+          "name": "plane-4",
+          "glass": false
+        }
+      ],
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.5
+      },
+      "translucency": {
+        "enabled": false,
+        "value": 0.5
+      },
+      "specular": true
+    },
+    {
+      "name": "deep",
+      "layers": [
+        {
+          "image-name": "plane-3.svg",
+          "name": "plane-3",
+          "glass": false
+        },
+        {
+          "image-name": "plane-2.svg",
+          "name": "plane-2",
+          "glass": false
+        },
+        {
+          "image-name": "plane-1.svg",
+          "name": "plane-1",
+          "glass": false
+        }
+      ],
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.5
+      },
+      "translucency": {
+        "enabled": false,
+        "value": 0.5
+      },
+      "specular": true
+    }
+  ],
+  "supported-platforms": {
+    "squares": "shared"
+  }
+}

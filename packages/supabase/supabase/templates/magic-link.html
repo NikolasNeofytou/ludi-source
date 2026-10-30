@@ -1,0 +1,125 @@
+<!--
+  Magic link email -- players (the app) and venue owners (the dashboard).
+
+  Source of truth for Supabase -> Authentication -> Emails -> "Magic link".
+  confirm-signup.html is the same email for an address signing in for the
+  first time ("Confirm signup"); paste both, and re-paste when either changes.
+  Subject pasted with it:
+
+      Ludi — ο σύνδεσμός σου · your sign-in link
+
+  ONE template serves both apps, so the link is built from .RedirectTo, the
+  address the app asked to come back to (it must be on the project's
+  redirect allowlist, or GoTrue substitutes the Site URL):
+
+    the app (from the build after 1.0.0 (38)):
+        https://ludi.football/auth/callback/<nonce>?token_hash=…&type=email
+        A universal link: only the Ludi app can claim that path, and <nonce>
+        ties the link to the phone that asked (apps/mobile/src/lib/
+        pending-sign-in.ts; security audit 2026-10-19, A4).
+    the dashboard:
+        https://ludi-admin.vercel.app/auth/callback?token_hash=…&type=email
+        Exactly the link the hard-coded template sent since 2026-09-01.
+    builds up to 1.0.0 (38), which ask for ludi://callback:
+        a separate branch with the scheme written out. html/template refuses
+        a non-http(s) URL that arrives as data and prints #ZgotmplZ instead,
+        so .RedirectTo cannot carry it. Delete the branch once no
+        supported build asks for ludi://callback.
+
+  token_hash, not .ConfirmationURL: ConfirmationURL points at GoTrue's
+  /verify, which spends the single-use token on a bare GET, so a mail
+  scanner can burn the link before the person taps it (PR #177). type=email
+  matches the token whether the address is new or known.
+
+  Tables and inline styles only, no images. Only the double-brace parts are
+  templated -- do not wrap a whole href in them. GoTrue parses this comment
+  too: a double brace in it that is not a valid action fails the whole
+  template, and GoTrue then silently sends its default email instead
+  (checked against GoTrue 2.197, the version prod runs, 2026-10-20).
+-->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="background:#f2f4f3;margin:0;padding:0;">
+  <tr>
+    <td align="center" style="padding:32px 16px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+             style="max-width:560px;">
+
+        <!-- Wordmark -->
+        <tr>
+          <td style="padding:0 8px 14px;font-family:Georgia,'Times New Roman',serif;
+                     font-size:22px;font-weight:700;letter-spacing:-0.01em;color:#10181c;">
+            Ludi
+          </td>
+        </tr>
+
+        <!-- Card -->
+        <tr>
+          <td style="background:#ffffff;border:1px solid #e3e7e6;border-radius:14px;
+                     padding:32px 28px;font-family:-apple-system,BlinkMacSystemFont,
+                     'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#10181c;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td style="font-family:Georgia,'Times New Roman',serif;font-size:26px;
+                           line-height:1.2;font-weight:700;letter-spacing:-0.01em;
+                           color:#10181c;padding-bottom:6px;">
+                  Σύνδεση στο Ludi
+                </td>
+              </tr>
+              <tr>
+                <td style="font-size:15px;line-height:1.5;color:#5f6e73;padding-bottom:22px;">
+                  Sign in to Ludi
+                </td>
+              </tr>
+
+              <!-- Button -->
+              <tr>
+                <td style="padding:0 0 18px;">
+                  {{ if eq .RedirectTo "ludi://callback" }}
+                  <a href="ludi://callback?token_hash={{ .TokenHash }}&type=email"
+                     style="display:inline-block;background:#175e77;color:#ffffff;
+                            text-decoration:none;font-size:16px;font-weight:600;
+                            padding:14px 28px;border-radius:10px;">
+                    Σύνδεση · Sign in
+                  </a>
+                  {{ else }}
+                  <a href="{{ .RedirectTo }}?token_hash={{ .TokenHash }}&type=email"
+                     style="display:inline-block;background:#175e77;color:#ffffff;
+                            text-decoration:none;font-size:16px;font-weight:600;
+                            padding:14px 28px;border-radius:10px;">
+                    Σύνδεση · Sign in
+                  </a>
+                  {{ end }}
+                </td>
+              </tr>
+
+              <tr>
+                <td style="font-size:14px;line-height:1.55;color:#3f4c51;padding-bottom:10px;">
+                  Αν ζήτησες τον σύνδεσμο από την εφαρμογή Ludi, πάτα τον στο ίδιο
+                  τηλέφωνο, μέσα σε 15 λεπτά. Ισχύει μία φορά.
+                </td>
+              </tr>
+              <tr>
+                <td style="font-size:14px;line-height:1.55;color:#3f4c51;padding-bottom:22px;">
+                  Asked from the Ludi app? Tap it on that same phone, within 15 minutes.
+                  It works once.
+                </td>
+              </tr>
+
+              <!-- Divider -->
+              <tr>
+                <td style="border-top:1px solid #e3e7e6;padding-top:18px;"></td>
+              </tr>
+              <tr>
+                <td style="font-size:12px;line-height:1.5;color:#5f6e73;">
+                  Δεν το ζήτησες εσύ; Αγνόησέ το — χωρίς τον σύνδεσμο δεν συνδέεται κανείς.
+                  Didn&rsquo;t ask for it? Ignore this email; nobody signs in without the link.
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+      </table>
+    </td>
+  </tr>
+</table>

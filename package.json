@@ -1,0 +1,29 @@
+{
+  "name": "ludi",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Ludi — Cyprus football pitch booking & matchmaking",
+  "packageManager": "pnpm@9.12.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "mobile": "pnpm --filter @ludi/mobile",
+    "admin": "pnpm --filter @ludi/admin",
+    "site": "pnpm --filter @ludi/site"
+  },
+  "devDependencies": {
+    "turbo": "^2.1.3",
+    "typescript": "^5.5.4",
+    "prettier": "^3.3.3"
+  }
+}

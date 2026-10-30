@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="1024" height="1024">
+  <!-- Ludi mark for the Android adaptive icon. Launchers show only the middle
+       72 of the 108dp canvas — here y 30..150 — and may mask it to a circle,
+       so a straight copy of mark.svg loses the apex and the gold. This copy
+       is drawn into that window: apex at the top of the circle, gold apex
+       inside the 66dp safe circle, every plane still running off the bottom
+       of the mask to y=180, so the base is never floated. Same ramp as
+       mark.svg; regenerate with scripts/generate-app-icons.mjs. -->
+  <rect width="180" height="180" fill="#0A2E3D"/>
+  <path d="M90 36 L165 180 L15 180 Z" fill="#0F3F52"/>
+  <path d="M90 51 L153 180 L27 180 Z" fill="#175E77"/>
+  <path d="M90 66 L141 180 L39 180 Z" fill="#2B7E96"/>
+  <path d="M90 81 L129 180 L51 180 Z" fill="#63A6B7"/>
+  <path d="M90 96 L115 180 L65 180 Z" fill="#A3C9D3"/>
+  <path d="M90 111 L102 180 L78 180 Z" fill="#DCE9EC"/>
+  <path d="M90 126 L99 180 L81 180 Z" fill="#D99520"/>
+</svg>

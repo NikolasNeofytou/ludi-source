@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #E8E4DB; }
+  a { color: #175E77; text-decoration: none; border-bottom: 1px solid rgba(23,94,119,0.3); }
+  a:hover { color: #0F3F52; }
+  @keyframes stepIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes popIn { 0% { transform: scale(0.86); opacity: 0.4; } 60% { transform: scale(1.06); } 100% { transform: scale(1); opacity: 1; } }
+  @keyframes riseIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes slideUp { from { transform: translateY(120%); } to { transform: translateY(0); } }
+  @keyframes shimmer { 0% { background-position: -280px 0; } 100% { background-position: 280px 0; } }
+  @keyframes drawCheck { from { stroke-dashoffset: 40; } to { stroke-dashoffset: 0; } }
+  @keyframes ringPop { 0% { transform: scale(0.6); opacity: 0; } 55% { transform: scale(1.08); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+  @keyframes caret { 0%, 55% { opacity: 1; } 56%, 100% { opacity: 0; } }
+  @keyframes toastIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</helmet>
+
+<section style="padding:64px 64px 110px;font-family:-apple-system,'SF Pro Text',system-ui,sans-serif">
+
+  <div style="max-width:820px;margin-bottom:44px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#5F6E73;margin-bottom:16px">Turn 5 · working prototype · Chalk &amp; Aegean</div>
+    <h1 style="margin:0 0 16px;font-family:Fraunces,serif;font-size:44px;font-weight:600;letter-spacing:-0.02em;color:#10181C;line-height:1.05">Both sides, actually working</h1>
+    <p style="margin:0 0 10px;font-size:16px;line-height:1.6;color:#3F4C51;text-wrap:pretty">Left: everything a player does on first launch — consent, phone, the six-box code, profile, browse, pick a slot, pay, confirmation. Type on the keypad, pick a time, watch the CTA arrive. Right: what a venue owner sees on Monday morning — today's bookings, verifying a pitch, issuing a refund.</p>
+    <p style="margin:0;font-size:16px;line-height:1.6;color:#3F4C51;text-wrap:pretty">Motion follows the spec: 120ms for press, 200ms for selection, 280ms for screens, 450ms for the confirmation only.</p>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:48px 40px;align-items:flex-start">
+
+    <div style="display:flex;flex-direction:column;gap:16px;width:402px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.08em;background:#175E77;color:#FFFFFF;padding:4px 8px;border-radius:6px">Player</span>
+        <span style="font-family:Fraunces,serif;font-size:19px;font-weight:600;color:#10181C">First launch → first booking</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.07em">{{ stepLabel }}</div>
+        <div style="flex:1;height:3px;border-radius:2px;background:rgba(16,24,28,0.10);overflow:hidden">
+          <div style="{{ flowBarStyle }}"></div>
+        </div>
+        <div onClick="{{ restart }}" style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#175E77;text-transform:uppercase;letter-spacing:0.07em;cursor:pointer;padding:4px 6px" style-hover="color:#0F3F52">Restart</div>
+      </div>
+
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+        <div style="height:100%;background:#F2F4F3;overflow:hidden;position:relative;font-family:-apple-system,'SF Pro Text',system-ui,sans-serif">
+
+          <sc-if value="{{ isConsent }}" hint-placeholder-val="{{ true }}">
+            <div data-screen-label="Consent" style="height:100%;padding:62px 0 0;box-sizing:border-box;animation:stepIn 280ms cubic-bezier(0.2,0,0,1) both">
+              <div style="padding:40px 24px 0">
+                <div style="width:52px;height:52px;border-radius:16px;background:#175E77;box-shadow:0 2px 8px rgba(16,24,28,0.10);display:flex;align-items:center;justify-content:center">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#FFFFFF" stroke-width="1.8"></circle><path d="M12 3l3 4.5-1.5 5h-3L9 7.5 12 3zM3.5 10l5 1M15.5 11l5-1M9 16.5L7 21M15 16.5l2 4.5" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </div>
+                <div style="font-family:Fraunces,serif;font-size:32px;font-weight:600;color:#10181C;letter-spacing:-0.02em;line-height:1.12;margin-top:22px">Welcome to Ludi</div>
+                <div style="font-size:15.5px;color:#3F4C51;line-height:23px;margin-top:12px;text-wrap:pretty">Before we start — the short version of what we collect and why.</div>
+              </div>
+              <div style="padding:24px 24px 0;display:flex;flex-direction:column;gap:16px">
+                <div style="display:flex;gap:14px;align-items:flex-start">
+                  <div style="width:34px;height:34px;border-radius:11px;background:#DCE9EC;flex-shrink:0;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#0F3F52" stroke-width="1.8"></circle><path d="M4 21c0-4.5 3.5-7 8-7s8 2.5 8 7" stroke="#0F3F52" stroke-width="1.8" stroke-linecap="round"></path></svg></div>
+                  <div style="font-size:14.5px;color:#3F4C51;line-height:21px;flex:1">Name, phone and city — so bookings can be confirmed and players can find you.</div>
+                </div>
+                <div style="display:flex;gap:14px;align-items:flex-start">
+                  <div style="width:34px;height:34px;border-radius:11px;background:#DFECE3;flex-shrink:0;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#174028" stroke-width="1.8"></rect><path d="M3 10h18M8 3v4M16 3v4" stroke="#174028" stroke-width="1.8" stroke-linecap="round"></path></svg></div>
+                  <div style="font-size:14.5px;color:#3F4C51;line-height:21px;flex:1">Your booking history — so we can show past games and handle refunds.</div>
+                </div>
+                <div style="display:flex;gap:14px;align-items:flex-start">
+                  <div style="width:34px;height:34px;border-radius:11px;background:#F8E8C9;flex-shrink:0;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="2" stroke="#8A5A0E" stroke-width="1.8"></rect><path d="M3 10h18" stroke="#8A5A0E" stroke-width="1.8"></path></svg></div>
+                  <div style="font-size:14.5px;color:#3F4C51;line-height:21px;flex:1">Payment references via Stripe — never the card number itself.</div>
+                </div>
+              </div>
+              <div style="padding:24px 24px 0">
+                <div style="font-size:13.5px;color:#5F6E73;line-height:20px">Stored in the EU (Frankfurt), never sold. Delete your account any time from your profile.</div>
+                <div style="font-size:14.5px;font-weight:600;color:#175E77;margin-top:14px">Read the full privacy policy →</div>
+              </div>
+              <div style="position:absolute;left:24px;right:24px;bottom:34px">
+                <div onClick="{{ acceptConsent }}" style="height:56px;border-radius:999px;background:#175E77;box-shadow:0 2px 8px rgba(16,24,28,0.10);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:#FFFFFF;letter-spacing:-0.3px;cursor:pointer;transition:transform 120ms ease-out" style-active="transform:scale(0.97)">Accept and continue</div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isPhone }}" hint-placeholder-val="{{ false }}">
+            <div data-screen-label="Phone" style="height:100%;padding:62px 0 0;box-sizing:border-box;animation:stepIn 280ms cubic-bezier(0.2,0,0,1) both">
+              <div style="padding:36px 24px 0">
+                <div style="font-family:Fraunces,serif;font-size:34px;font-weight:600;color:#10181C;letter-spacing:-0.02em;line-height:1.1">Sign in</div>
+                <div style="font-size:15.5px;color:#3F4C51;margin-top:8px">We'll text you a 6-digit code.</div>
+              </div>
+              <div style="padding:32px 24px 0">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;color:#5F6E73;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px">Phone number</div>
+                <div style="{{ phoneFieldStyle }}">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:16px;color:#5F6E73">+357</span>
+                  <span style="width:1px;height:22px;background:rgba(16,24,28,0.12)"></span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:18px;color:#10181C;letter-spacing:0.06em">{{ phoneDisplay }}</span>
+                  <span style="width:2px;height:22px;background:#175E77;animation:caret 1.05s step-end infinite"></span>
+                </div>
+                <div style="font-size:13px;color:#5F6E73;margin-top:10px">{{ phoneHint }}</div>
+              </div>
+              <div style="position:absolute;left:0;right:0;bottom:0;padding:0 12px 22px">
+                <div style="padding:0 12px 16px">
+                  <div onClick="{{ submitPhone }}" style="{{ phoneCtaStyle }}">Continue</div>
+                </div>
+                <sc-for list="{{ keyRows }}" as="row" hint-placeholder-count="4">
+                  <div style="display:flex;gap:8px;margin-bottom:8px">
+                    <sc-for list="{{ row.keys }}" as="k" hint-placeholder-count="3">
+                      <div onClick="{{ k.press }}" style="{{ k.style }}">{{ k.label }}</div>
+                    </sc-for>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isOtp }}" hint-placeholder-val="{{ false }}">
+            <div data-screen-label="OTP" style="height:100%;padding:62px 0 0;box-sizing:border-box;animation:stepIn 280ms cubic-bezier(0.2,0,0,1) both">
+              <div style="padding:20px 20px 0">
+                <div onClick="{{ backToPhone }}" style="width:38px;height:38px;border-radius:999px;background:#FFFFFF;box-shadow:0 1px 3px rgba(16,24,28,0.06);display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#10181C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+              </div>
+              <div style="padding:24px 24px 0">
+                <div style="font-family:Fraunces,serif;font-size:34px;font-weight:600;color:#10181C;letter-spacing:-0.02em;line-height:1.1">Enter code</div>
+                <div style="font-size:15.5px;color:#3F4C51;margin-top:8px">Sent to <span style="font-family:'JetBrains Mono',monospace;font-size:14.5px;color:#10181C">{{ sentTo }}</span></div>
+              </div>
+              <div style="padding:28px 24px 0;display:flex;gap:8px">
+                <sc-for list="{{ codeBoxes }}" as="b" hint-placeholder-count="6">
+                  <div style="{{ b.style }}">{{ b.char }}</div>
+                </sc-for>
+              </div>
+              <div style="padding:20px 24px 0;text-align:center;font-size:14.5px;color:#5F6E73">{{ resendText }}</div>
+              <div style="position:absolute;left:0;right:0;bottom:0;padding:0 12px 22px">
+                <sc-for list="{{ keyRows }}" as="row" hint-placeholder-count="4">
+                  <div style="display:flex;gap:8px;margin-bottom:8px">
+                    <sc-for list="{{ row.keys }}" as="k" hint-placeholder-count="3">
+                      <div onClick="{{ k.press }}" style="{{ k.style }}">{{ k.label }}</div>
+                    </sc-for>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
+            <div data-screen-label="Profile setup" style="height:100%;padding:62px 0 0;box-sizing:border-box;animation:stepIn 280ms cubic-bezier(0.2,0,0,1) both">
+              <div style="padding:36px 24px 0">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;color:#5F6E73;text-transform:uppercase;letter-spacing:0.08em">Step 2 of 2</div>
+                <div style="font-family:Fraunces,serif;font-size:32px;font-weight:600;color:#10181C;letter-spacing:-0.02em;line-height:1.12;margin-top:12px">How do you play?</div>
+                <div style="font-size:15.5px;color:#3F4C51;margin-top:8px;line-height:22px">Two taps now means better matches later. You can change it any time.</div>
+              </div>
+              <div style="padding:32px 24px 0">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;color:#5F6E73;text-transform:uppercase;letter-spacing:0.08em">Level</div>
+                <div style="display:flex;gap:8px;margin-top:12px">
+                  <sc-for list="{{ skills }}" as="s" hint-placeholder-count="5">
+                    <div onClick="{{ s.press }}" style="{{ s.style }}">{{ s.n }}</div>
+                  </sc-for>
+                </div>
+                <div style="font-size:14px;color:#3F4C51;margin-top:12px">{{ skillLabel }}</div>
+              </div>
+              <div style="padding:28px 24px 0">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;color:#5F6E73;text-transform:uppercase;letter-spacing:0.08em">Positions</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+                  <sc-for list="{{ positionChips }}" as="p" hint-placeholder-count="10">
+                    <div onClick="{{ p.press }}" style="{{ p.style }}">{{ p.name }}</div>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="position:absolute;left:24px;right:24px;bottom:34px">
+                <div onClick="{{ finishProfile }}" style="height:56px;border-radius:999px;background:#175E77;box-shadow:0 2px 8px rgba(16,24,28,0.10);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:#FFFFFF;letter-spacing:-0.3px;cursor:pointer;transition:transform 120ms ease-out" style-active="transform:scale(0.97)">{{ profileCta }}</div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isDiscover }}" hint-placeholder-val="{{ false }}">
+            <div data-screen-label="Discover" style="height:100%;padding:62px 0 0;box-sizing:border-box;animation:stepIn 280ms cubic-bezier(0.2,0,0,1) both">
+              <div style="padding:20px 20px 0;display:flex;flex-direction:column;gap:4px">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#5F6E73;text-transform:uppercase;letter-spacing:0.08em">Larnaca</div>
+                <div style="font-family:Fraunces,serif;font-size:34px;font-weight:600;color:#10181C;letter-spacing:-0.02em;line-height:1.1;margin-top:2px">Kalispéra.</div>
+                <div style="font-size:15px;color:#3F4C51;letter-spacing:-0.2px">{{ discoverSub }}</div>
+              </div>
+              <sc-if value="{{ discoverLoading }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:24px 20px 0;display:flex;flex-direction:column;gap:16px">
+                  <div style="background:#FFFFFF;border-radius:20px;border:1px solid rgba(16,24,28,0.07);box-shadow:0 2px 8px rgba(16,24,28,0.08);overflow:hidden">
+                    <div style="height:170px;background:linear-gradient(100deg,rgba(16,24,28,0.05) 30%,rgba(16,24,28,0.11) 50%,rgba(16,24,28,0.05) 70%);background-size:560px 100%;animation:shimmer 1.2s linear infinite"></div>
+                    <div style="padding:16px;display:flex;justify-content:space-between;align-items:flex-end">
+                      <div style="display:flex;flex-direction:column;gap:8px;flex:1"><div style="height:18px;width:60%;border-radius:6px;background:rgba(16,24,28,0.09)"></div><div style="height:11px;width:78%;border-radius:5px;background:rgba(16,24,28,0.06)"></div></div>
+                      <div style="height:22px;width:54px;border-radius:6px;background:rgba(16,24,28,0.09)"></div>
+                    </div>
+                  </div>
+                  <div style="background:#FFFFFF;border-radius:20px;border:1px solid rgba(16,24,28,0.07);box-shadow:0 2px 8px rgba(16,24,28,0.08);overflow:hidden">
+                    <div style="height:170px;background:linear-gradient(100deg,rgba(16,24,28,0.04) 30%,rgba(16,24,28,0.09) 50%,rgba(16,24,28,0.04) 70%);background-size:560px 100%;animation:shimmer 1.2s linear infinite"></div>
+                    <div style="padding:16px;display:flex;justify-content:space-between;align-items:flex-end">
+                      <div style="display:flex;flex-direction:column;gap:8px;flex:1"><div style="height:18px;width:52%;border-radius:6px;background:rgba(16,24,28,0.08)"></div><div style="height:11px;width:70%;border-radius:5px;background:rgba(16,24,28,0.05)"></div></div>
+                      <div style="height:22px;width:54px;border-radius:6px;background:rgba(16,24,28,0.08)"></div>
+                    </div>
+                  </div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ discoverReady }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:24px 20px 0;display:flex;flex-direction:column;gap:16px">
+                  <sc-for list="{{ pitches }}" as="p" hint-placeholder-count="2">
+                    <div onClick="{{ p.open }}" style="{{ p.cardStyle }}">
+                      <div style="position:relative;height:170px">
+                        <svg width="362" height="170" viewBox="0 0 362 170" style="position:absolute;inset:0">
+                          <rect width="362" height="170" fill="{{ p.tint }}"></rect>
+                          <g stroke="#FFFFFF" stroke-opacity="0.9" fill="none" stroke-width="2">
+                            <rect x="18" y="16" width="326" height="138" rx="2"></rect>
+                            <line x1="181" y1="16" x2="181" y2="154"></line>
+                            <circle cx="181" cy="85" r="34"></circle>
+                            <rect x="18" y="47" width="42" height="76"></rect>
+                            <rect x="302" y="47" width="42" height="76"></rect>
+                          </g>
+                          <text x="330" y="150" text-anchor="end" font-family="Fraunces, serif" font-size="86" font-weight="600" fill="{{ p.numeralFill }}" fill-opacity="0.17">{{ p.format }}</text>
+                        </svg>
+                        <div style="position:absolute;top:12px;left:12px;padding:5px 9px;border-radius:8px;background:rgba(255,255,255,0.94);box-shadow:0 1px 3px rgba(16,24,28,0.06);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#1F6640;text-transform:uppercase;letter-spacing:0.07em">{{ p.freeLabel }}</div>
+                      </div>
+                      <div style="padding:16px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+                        <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+                          <div style="font-family:Fraunces,serif;font-size:20px;font-weight:600;color:#10181C;letter-spacing:-0.01em">{{ p.name }}</div>
+                          <div style="display:flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.07em">
+                            <span style="{{ p.dotStyle }}"></span><span>{{ p.meta }}</span>
+                          </div>
+                        </div>
+                        <div style="font-family:Fraunces,serif;font-size:22px;font-weight:600;color:#10181C;white-space:nowrap">{{ p.price }}<span style="font-family:-apple-system,system-ui,sans-serif;font-size:12px;font-weight:400;color:#5F6E73">/hr</span></div>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isPitch }}" hint-placeholder-val="{{ false }}">
+            <div data-screen-label="Pitch detail" style="height:100%;overflow:hidden;position:relative;animation:stepIn 280ms cubic-bezier(0.2,0,0,1) both">
+              <div style="position:relative;height:280px">
+                <svg width="402" height="280" viewBox="0 0 402 280" style="position:absolute;inset:0">
+                  <rect width="402" height="280" fill="{{ activeTint }}"></rect>
+                  <g stroke="#FFFFFF" stroke-opacity="0.92" fill="none" stroke-width="2.4">
+                    <rect x="22" y="26" width="358" height="228" rx="2"></rect>
+                    <line x1="201" y1="26" x2="201" y2="254"></line>
+                    <circle cx="201" cy="140" r="52"></circle>
+                    <rect x="22" y="84" width="52" height="112"></rect>
+                    <rect x="328" y="84" width="52" height="112"></rect>
+                  </g>
+                  <text x="360" y="248" text-anchor="end" font-family="Fraunces, serif" font-size="150" font-weight="600" fill="{{ activeNumeralFill }}" fill-opacity="0.17">{{ activeFormat }}</text>
+                </svg>
+                <div onClick="{{ backToDiscover }}" style="position:absolute;top:56px;left:16px;width:38px;height:38px;border-radius:999px;background:rgba(255,255,255,0.95);box-shadow:0 2px 8px rgba(16,24,28,0.10);display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#10181C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+              </div>
+              <div style="margin:-20px 20px 0;background:#FFFFFF;border-radius:28px;border:1px solid rgba(16,24,28,0.07);box-shadow:0 6px 20px rgba(16,24,28,0.10);padding:20px">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#5F6E73;text-transform:uppercase;letter-spacing:0.08em">Larnaca Sportsplex</div>
+                <div style="font-family:Fraunces,serif;font-size:26px;font-weight:600;color:#10181C;letter-spacing:-0.02em;margin-top:6px;line-height:1.15">{{ activeName }}</div>
+                <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:12px">
+                  <div style="display:flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.07em">
+                    <span style="{{ activeDotStyle }}"></span><span>{{ activeMeta }}</span>
+                  </div>
+                  <div style="font-family:Fraunces,serif;font-size:24px;font-weight:600;color:#10181C">{{ activePrice }}<span style="font-family:-apple-system,system-ui,sans-serif;font-size:12px;font-weight:400;color:#5F6E73">/hr</span></div>
+                </div>
+              </div>
+              <div style="padding:26px 20px 0">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#5F6E73;text-transform:uppercase;letter-spacing:0.08em">Availability</div>
+                <div style="position:relative;margin-top:12px">
+                  <div style="display:flex;gap:8px;overflow:hidden">
+                    <sc-for list="{{ days }}" as="d" hint-placeholder-count="6">
+                      <div onClick="{{ d.press }}" style="{{ d.style }}">
+                        <span style="{{ d.labelStyle }}">{{ d.wd }}</span>
+                        <span style="{{ d.numStyle }}">{{ d.n }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                  <div style="position:absolute;top:0;right:0;bottom:0;width:36px;background:linear-gradient(to right,rgba(242,244,243,0),#F2F4F3);pointer-events:none"></div>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:16px">
+                  <sc-for list="{{ slots }}" as="s" hint-placeholder-count="4">
+                    <div onClick="{{ s.press }}" style="{{ s.style }}">{{ s.time }}</div>
+                  </sc-for>
+                </div>
+                <div style="font-size:13.5px;color:#5F6E73;margin-top:16px;line-height:20px">Bibs and a ball are included on every booking — Cyprus rules.</div>
+              </div>
+              <sc-if value="{{ hasSlot }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;left:0;right:0;bottom:0;background:#FFFFFF;border-top:1px solid rgba(16,24,28,0.07);box-shadow:0 -6px 20px rgba(16,24,28,0.10);padding:16px 20px 34px;animation:slideUp 280ms cubic-bezier(0.2,0,0,1) both">
+                  <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px">
+                    <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;color:#3F4C51">{{ summaryLine }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#10181C">{{ basePrice }}</span></div>
+                    <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;color:#3F4C51">Bibs <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.06em">· required</span></span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#10181C">€5.00</span></div>
+                    <div style="display:flex;justify-content:space-between;align-items:baseline;padding-bottom:9px;border-bottom:1px solid rgba(16,24,28,0.07)"><span style="font-size:14px;color:#3F4C51">Match ball <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.06em">· required</span></span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#10181C">€3.00</span></div>
+                    <div style="display:flex;justify-content:space-between;align-items:baseline;padding-top:2px"><span style="font-size:14px;font-weight:600;color:#10181C">Total</span><span style="font-family:Fraunces,serif;font-size:22px;font-weight:600;color:#10181C">{{ totalPrice }}</span></div>
+                  </div>
+                  <div onClick="{{ book }}" style="height:52px;border-radius:999px;background:#175E77;box-shadow:0 2px 8px rgba(16,24,28,0.10);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:#FFFFFF;letter-spacing:-0.3px;cursor:pointer;transition:transform 120ms ease-out" style-active="transform:scale(0.98)">Book <span style="font-family:Fraunces,serif;font-weight:600;margin-left:6px">{{ totalShort }}</span></div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ noSlot }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;left:0;right:0;bottom:0;background:#FFFFFF;border-top:1px solid rgba(16,24,28,0.07);box-shadow:0 -6px 20px rgba(16,24,28,0.10);padding:16px 20px 34px">
+                  <div style="height:52px;border-radius:999px;background:#F2F4F3;border:1px solid rgba(16,24,28,0.07);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:#5F6E73;letter-spacing:-0.3px">Pick a time</div>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isConfirming }}" hint-placeholder-val="{{ false }}">
+            <div data-screen-label="Confirming" style="height:100%;padding:62px 0 0;box-sizing:border-box;animation:stepIn 280ms cubic-bezier(0.2,0,0,1) both">
+              <div style="padding:20px 20px 0;display:flex;align-items:center;justify-content:space-between">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;color:#5F6E73;text-transform:uppercase;letter-spacing:0.08em">{{ payPhase }}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5F6E73">{{ payTimer }}</span>
+              </div>
+              <div style="padding:12px 20px 0"><div style="height:3px;border-radius:2px;background:rgba(16,24,28,0.10);overflow:hidden"><div style="{{ payBarStyle }}"></div></div></div>
+              <div style="padding:36px 24px 0">
+                <div style="font-family:Fraunces,serif;font-size:30px;font-weight:600;color:#10181C;letter-spacing:-0.02em;line-height:1.15">{{ payTitle }}</div>
+                <div style="font-size:15px;color:#3F4C51;line-height:22px;margin-top:10px">{{ payBody }}</div>
+              </div>
+              <div style="padding:28px 20px 0">
+                <div style="background:#FFFFFF;border-radius:20px;border:1px solid rgba(16,24,28,0.07);box-shadow:0 2px 8px rgba(16,24,28,0.08);padding:20px;display:flex;flex-direction:column;gap:14px">
+                  <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;color:#3F4C51">{{ summaryLine }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#10181C">{{ basePrice }}</span></div>
+                  <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;color:#3F4C51">Bibs · Match ball</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#10181C">€8.00</span></div>
+                  <div style="height:1px;background:rgba(16,24,28,0.07)"></div>
+                  <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:600;color:#10181C">Total</span><span style="font-family:Fraunces,serif;font-size:22px;font-weight:600;color:#10181C">{{ totalPrice }}</span></div>
+                </div>
+              </div>
+              <sc-if value="{{ payEscalated }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:20px 20px 0;animation:riseIn 280ms cubic-bezier(0.2,0,0,1) both">
+                  <div style="background:#F8E8C9;border-radius:20px;padding:18px;display:flex;gap:12px;align-items:flex-start">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="9" stroke="#8A5A0E" stroke-width="2"></circle><path d="M12 7v5l3 2" stroke="#8A5A0E" stroke-width="2" stroke-linecap="round"></path></svg>
+                    <div>
+                      <div style="font-size:14.5px;font-weight:600;color:#8A5A0E">Still confirming with your bank</div>
+                      <div style="font-size:14px;color:#3F4C51;line-height:21px;margin-top:4px">Your card has not been charged twice.</div>
+                    </div>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isConfirmed }}" hint-placeholder-val="{{ false }}">
+            <div data-screen-label="Confirmed" style="height:100%;padding:62px 0 0;box-sizing:border-box">
+              <div style="padding:44px 24px 0;display:flex;flex-direction:column;align-items:center">
+                <div style="width:64px;height:64px;border-radius:999px;background:#1F6640;box-shadow:0 6px 20px rgba(16,24,28,0.12);display:flex;align-items:center;justify-content:center;animation:ringPop 450ms cubic-bezier(0.2,0,0,1) both">
+                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 6" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="40" style="animation:drawCheck 450ms cubic-bezier(0.2,0,0,1) 180ms both"></path></svg>
+                </div>
+                <div style="font-family:Fraunces,serif;font-size:40px;font-weight:600;color:#10181C;letter-spacing:-0.03em;margin-top:24px;animation:riseIn 280ms cubic-bezier(0.2,0,0,1) 260ms both">Booked.</div>
+                <div style="font-size:15.5px;color:#3F4C51;margin-top:6px;text-align:center;animation:riseIn 280ms cubic-bezier(0.2,0,0,1) 320ms both">{{ confirmedWhen }}</div>
+              </div>
+              <div style="padding:28px 20px 0;animation:riseIn 280ms cubic-bezier(0.2,0,0,1) 380ms both">
+                <div style="background:#DCE9EC;border-radius:28px;padding:28px 24px;display:flex;flex-direction:column;align-items:center;box-shadow:0 6px 20px rgba(16,24,28,0.10)">
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;color:#0F3F52;text-transform:uppercase;letter-spacing:0.1em">Booking code</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:#0F3F52;letter-spacing:0.02em;margin-top:12px">{{ bookingCode }}</div>
+                  <div style="width:100%;height:1px;background:rgba(15,63,82,0.16);margin:22px 0"></div>
+                  <div style="width:100%;display:flex;flex-direction:column;gap:10px">
+                    <div style="display:flex;justify-content:space-between"><span style="font-size:14px;color:#0F3F52;opacity:0.75">Pitch</span><span style="font-size:14px;font-weight:600;color:#0F3F52">{{ activeName }}</span></div>
+                    <div style="display:flex;justify-content:space-between"><span style="font-size:14px;color:#0F3F52;opacity:0.75">When</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#0F3F52">{{ confirmedSlot }}</span></div>
+                    <div style="display:flex;justify-content:space-between"><span style="font-size:14px;color:#0F3F52;opacity:0.75">Paid</span><span style="font-family:Fraunces,serif;font-size:18px;font-weight:600;color:#0F3F52">{{ totalPrice }}</span></div>
+                  </div>
+                </div>
+              </div>
+              <div style="padding:20px 20px 0;display:flex;gap:10px;animation:riseIn 280ms cubic-bezier(0.2,0,0,1) 440ms both">
+                <div style="flex:1;height:48px;border-radius:999px;background:#FFFFFF;box-shadow:0 1px 3px rgba(16,24,28,0.06);display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#10181C" stroke-width="1.8"></rect><path d="M3 10h18M8 3v4M16 3v4" stroke="#10181C" stroke-width="1.8" stroke-linecap="round"></path></svg>
+                  <span style="font-size:14.5px;font-weight:600;color:#10181C;letter-spacing:-0.2px">Add to calendar</span>
+                </div>
+                <div style="flex:1;height:48px;border-radius:999px;background:#FFFFFF;box-shadow:0 1px 3px rgba(16,24,28,0.06);display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 3v13M12 3l-4 4M12 3l4 4M5 14v5a2 2 0 002 2h10a2 2 0 002-2v-5" stroke="#10181C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                  <span style="font-size:14.5px;font-weight:600;color:#10181C;letter-spacing:-0.2px">Share</span>
+                </div>
+              </div>
+              <div style="position:absolute;left:0;right:0;bottom:0;padding:16px 20px 34px">
+                <div onClick="{{ backToDiscover }}" style="height:52px;border-radius:999px;background:#10181C;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:#FFFFFF;letter-spacing:-0.3px;cursor:pointer;transition:transform 120ms ease-out" style-active="transform:scale(0.98)">Done</div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isMatches }}" hint-placeholder-val="{{ false }}">
+            <div data-screen-label="Matches" style="height:100%;padding:62px 0 0;box-sizing:border-box;overflow:hidden;animation:stepIn 280ms cubic-bezier(0.2,0,0,1) both">
+              <div style="padding:20px 20px 0">
+                <div style="font-family:Fraunces,serif;font-size:32px;font-weight:600;color:#10181C;letter-spacing:-0.02em">Matches</div>
+                <div style="display:flex;gap:4px;margin-top:20px;padding:4px;border-radius:999px;background:rgba(16,24,28,0.06)">
+                  <sc-for list="{{ matchSegs }}" as="g" hint-placeholder-count="2">
+                    <div onClick="{{ g.press }}" style="{{ g.style }}">{{ g.label }} <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5F6E73">{{ g.count }}</span></div>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="padding:20px 20px 0;display:flex;flex-direction:column;gap:12px">
+                <sc-for list="{{ matches }}" as="m" hint-placeholder-count="2">
+                  <div style="{{ m.cardStyle }}">
+                    <div style="display:flex;align-items:center;justify-content:space-between">
+                      <div style="display:flex;align-items:center;gap:7px">
+                        <span style="{{ m.dotStyle }}"></span>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;color:#5F6E73;text-transform:uppercase;letter-spacing:0.08em">{{ m.when }} · {{ m.fmt }}</span>
+                      </div>
+                      <span style="{{ m.spotsStyle }}">{{ m.spotsLabel }}</span>
+                    </div>
+                    <div style="font-family:Fraunces,serif;font-size:21px;font-weight:600;color:#10181C;letter-spacing:-0.01em;margin-top:10px">{{ m.pitch }}</div>
+                    <div style="font-size:13.5px;color:#3F4C51;margin-top:3px">{{ m.venue }}</div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px">
+                      <div style="display:flex;align-items:center">
+                        <sc-for list="{{ m.avatars }}" as="a" hint-placeholder-count="4">
+                          <div style="{{ a.style }}">{{ a.initial }}</div>
+                        </sc-for>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#5F6E73;margin-left:10px">{{ m.crewLabel }}</span>
+                      </div>
+                      <div style="display:flex;align-items:center;gap:8px">
+                        <div style="display:flex;gap:2px;align-items:flex-end">
+                          <sc-for list="{{ m.bars }}" as="b" hint-placeholder-count="5">
+                            <span style="{{ b.style }}"></span>
+                          </sc-for>
+                        </div>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.06em">{{ m.levelLabel }}</span>
+                      </div>
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:16px;border-top:1px solid rgba(16,24,28,0.07)">
+                      <div><span style="font-family:Fraunces,serif;font-size:22px;font-weight:600;color:#10181C">{{ m.perPlayer }}</span><span style="font-size:12px;color:#5F6E73"> / player</span></div>
+                      <div onClick="{{ m.join }}" style="{{ m.joinStyle }}">{{ m.joinLabel }}</div>
+                    </div>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ matchesEmpty }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding:48px 20px;display:flex;flex-direction:column;align-items:center;text-align:center">
+                    <div style="width:88px;height:88px;border-radius:28px;background:#FFFFFF;border:1px solid rgba(16,24,28,0.07);box-shadow:0 2px 8px rgba(16,24,28,0.08);display:flex;align-items:center;justify-content:center">
+                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#175E77" stroke-width="1.5"></circle><path d="M12 3l3 4.5-1.5 5h-3L9 7.5 12 3zM3.5 10l5 1M15.5 11l5-1M9 16.5L7 21M15 16.5l2 4.5" stroke="#175E77" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </div>
+                    <div style="font-family:Fraunces,serif;font-size:22px;font-weight:600;color:#10181C;margin-top:24px">No matches joined</div>
+                    <div style="font-size:15px;color:#3F4C51;line-height:22px;margin-top:8px;max-width:260px">Three open games need players this week. Joining costs less than booking a whole pitch.</div>
+                  </div>
+                </sc-if>
+              </div>
+              <div style="position:absolute;left:20px;right:20px;bottom:99px">
+                <div style="height:52px;border-radius:999px;background:#10181C;box-shadow:0 6px 20px rgba(16,24,28,0.14);display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:transform 120ms ease-out" style-active="transform:scale(0.98)">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"></path></svg>
+                  <span style="font-size:16px;font-weight:600;color:#FFFFFF;letter-spacing:-0.3px">Organise a match</span>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isBookings }}" hint-placeholder-val="{{ false }}">
+            <div data-screen-label="Bookings" style="height:100%;padding:62px 0 0;box-sizing:border-box;overflow:hidden;animation:stepIn 280ms cubic-bezier(0.2,0,0,1) both">
+              <div style="padding:20px 20px 0">
+                <div style="font-family:Fraunces,serif;font-size:32px;font-weight:600;color:#10181C;letter-spacing:-0.02em">Bookings</div>
+                <div style="display:flex;gap:4px;margin-top:20px;padding:4px;border-radius:999px;background:rgba(16,24,28,0.06)">
+                  <sc-for list="{{ bookingSegs }}" as="g" hint-placeholder-count="2">
+                    <div onClick="{{ g.press }}" style="{{ g.style }}">{{ g.label }} <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5F6E73">{{ g.count }}</span></div>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="padding:20px 20px 0;display:flex;flex-direction:column;gap:12px">
+                <sc-for list="{{ bookings }}" as="b" hint-placeholder-count="2">
+                  <div style="{{ b.cardStyle }}">
+                    <div style="{{ b.railStyle }}"></div>
+                    <div style="flex:1;padding:18px;min-width:0">
+                      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+                        <span style="{{ b.stateStyle }}">{{ b.state }}</span>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5F6E73;letter-spacing:0.04em">{{ b.code }}</span>
+                      </div>
+                      <sc-if value="{{ b.hasHeadline }}" hint-placeholder-val="{{ false }}">
+                        <div style="font-family:Fraunces,serif;font-size:24px;font-weight:600;color:#10181C;letter-spacing:-0.02em;margin-top:10px">{{ b.headline }}</div>
+                      </sc-if>
+                      <div style="font-family:Fraunces,serif;font-size:18px;font-weight:600;color:#10181C;margin-top:8px">{{ b.pitch }}</div>
+                      <div style="font-size:13.5px;color:#3F4C51;margin-top:4px">{{ b.sub }}</div>
+                      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid rgba(16,24,28,0.07)">
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.06em">{{ b.meta }}</span>
+                        <span style="font-family:Fraunces,serif;font-size:20px;font-weight:600;color:#10181C">{{ b.total }}</span>
+                      </div>
+                      <sc-if value="{{ b.cancellable }}" hint-placeholder-val="{{ false }}">
+                        <div onClick="{{ b.cancel }}" style="margin-top:14px;height:42px;border-radius:999px;border:1px solid rgba(16,24,28,0.12);display:flex;align-items:center;justify-content:center;font-size:14.5px;font-weight:600;color:#10181C;cursor:pointer;transition:background 120ms ease-out" style-hover="background:#F2F4F3">Cancel booking</div>
+                      </sc-if>
+                    </div>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ bookingsEmpty }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding:44px 20px;display:flex;flex-direction:column;align-items:center;text-align:center">
+                    <div style="width:88px;height:88px;border-radius:28px;background:#FFFFFF;border:1px solid rgba(16,24,28,0.07);box-shadow:0 2px 8px rgba(16,24,28,0.08);display:flex;align-items:center;justify-content:center">
+                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#175E77" stroke-width="1.5"></rect><path d="M3 10h18M8 3v4M16 3v4" stroke="#175E77" stroke-width="1.5" stroke-linecap="round"></path></svg>
+                    </div>
+                    <div style="font-family:Fraunces,serif;font-size:22px;font-weight:600;color:#10181C;margin-top:24px">{{ bookingsEmptyTitle }}</div>
+                    <div style="font-size:15px;color:#3F4C51;line-height:22px;margin-top:8px;max-width:266px">{{ bookingsEmptyBody }}</div>
+                    <div onClick="{{ goDiscover }}" style="margin-top:24px;height:46px;border-radius:999px;background:#175E77;box-shadow:0 2px 8px rgba(16,24,28,0.10);display:flex;align-items:center;padding:0 26px;font-size:15.5px;font-weight:600;color:#FFFFFF;cursor:pointer">Find a pitch</div>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isPlayerProfile }}" hint-placeholder-val="{{ false }}">
+            <div data-screen-label="Player profile" style="height:100%;padding:62px 0 0;box-sizing:border-box;overflow:hidden;animation:stepIn 280ms cubic-bezier(0.2,0,0,1) both">
+              <div style="padding:20px 20px 0">
+                <div style="font-family:Fraunces,serif;font-size:32px;font-weight:600;color:#10181C;letter-spacing:-0.02em">Your profile</div>
+              </div>
+              <div style="padding:20px 20px 0">
+                <div style="background:#DCE9EC;border-radius:28px;padding:20px;box-shadow:0 2px 8px rgba(16,24,28,0.08);display:flex;align-items:center;gap:16px;cursor:pointer">
+                  <div style="width:56px;height:56px;border-radius:999px;background:#175E77;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#fff;letter-spacing:-0.5px">{{ profileInitial }}</div>
+                  <div style="flex:1;min-width:0">
+                    <div style="font-family:Fraunces,serif;font-size:22px;font-weight:600;color:#10181C;letter-spacing:-0.01em">{{ profileName }}</div>
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#0F3F52;text-transform:uppercase;letter-spacing:0.07em;margin-top:5px">{{ profileMeta }}</div>
+                  </div>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="#0F3F52" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </div>
+              </div>
+              <div style="padding:0 20px">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;color:#5F6E73;text-transform:uppercase;letter-spacing:0.09em;padding:20px 4px 8px">Play style</div>
+                <div style="background:#FFFFFF;border-radius:20px;border:1px solid rgba(16,24,28,0.07);box-shadow:0 1px 3px rgba(16,24,28,0.06);padding:18px">
+                  <div style="font-size:15px;color:#10181C">Level</div>
+                  <div style="display:flex;gap:8px;margin-top:12px">
+                    <sc-for list="{{ skills }}" as="s" hint-placeholder-count="5">
+                      <div onClick="{{ s.press }}" style="{{ s.style }}">{{ s.n }}</div>
+                    </sc-for>
+                  </div>
+                  <div style="font-size:13.5px;color:#3F4C51;margin-top:12px">{{ skillLabel }}</div>
+                  <div style="height:1px;background:rgba(16,24,28,0.07);margin:18px 0"></div>
+                  <div style="font-size:15px;color:#10181C">Positions</div>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+                    <sc-for list="{{ positionChips }}" as="p" hint-placeholder-count="10">
+                      <div onClick="{{ p.press }}" style="{{ p.style }}">{{ p.name }}</div>
+                    </sc-for>
+                  </div>
+                </div>
+              </div>
+              <div style="padding:0 20px">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;color:#5F6E73;text-transform:uppercase;letter-spacing:0.09em;padding:20px 4px 8px">Preferences</div>
+                <div style="background:#FFFFFF;border-radius:20px;border:1px solid rgba(16,24,28,0.07);box-shadow:0 1px 3px rgba(16,24,28,0.06);padding:18px;display:flex;flex-direction:column;gap:16px">
+                  <div style="display:flex;align-items:center;justify-content:space-between">
+                    <span style="font-size:15px;color:#10181C">Language</span>
+                    <div style="display:flex;gap:3px;padding:3px;border-radius:999px;background:rgba(16,24,28,0.06)">
+                      <span onClick="{{ langEn.press }}" style="{{ langEn.style }}">{{ langEn.label }}</span>
+                      <span onClick="{{ langEl.press }}" style="{{ langEl.style }}">{{ langEl.label }}</span>
+                    </div>
+                  </div>
+                  <div style="height:1px;background:rgba(16,24,28,0.07)"></div>
+                  <div style="display:flex;align-items:center;justify-content:space-between">
+                    <span style="font-size:15px;color:#10181C">Home city</span>
+                    <span style="font-size:15px;font-weight:600;color:#10181C">Larnaca</span>
+                  </div>
+                </div>
+              </div>
+              <div style="position:absolute;left:20px;right:20px;bottom:99px">
+                <div onClick="{{ save }}" style="{{ saveStyle }}">
+                  <sc-if value="{{ saved }}" hint-placeholder-val="{{ false }}">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 6" stroke="#174028" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                  </sc-if>
+                  <span>{{ saveLabel }}</span>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ showTabs }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;left:0;right:0;bottom:0;height:83px;background:#FFFFFF;border-top:1px solid rgba(16,24,28,0.07);box-shadow:0 -6px 20px rgba(16,24,28,0.10);display:flex;align-items:flex-start;padding-top:8px;z-index:5">
+              <div onClick="{{ tabDiscover.press }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 11l8-7 8 7v9a2 2 0 01-2 2h-3v-6h-6v6H6a2 2 0 01-2-2v-9z" stroke="{{ tabDiscover.color }}" stroke-width="1.8" stroke-linejoin="round"></path></svg>
+                <span style="{{ tabDiscover.labelStyle }}">Discover</span>
+              </div>
+              <div onClick="{{ tabMap.press }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22s7-7.5 7-13a7 7 0 10-14 0c0 5.5 7 13 7 13z" stroke="{{ tabMap.color }}" stroke-width="2" stroke-linejoin="round"></path><circle cx="12" cy="9" r="2.5" stroke="{{ tabMap.color }}" stroke-width="2"></circle></svg>
+                <span style="{{ tabMap.labelStyle }}">Map</span>
+              </div>
+              <div onClick="{{ tabMatches.press }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="{{ tabMatches.color }}" stroke-width="1.8"></circle><path d="M12 3l3 4.5-1.5 5h-3L9 7.5 12 3zM3.5 10l5 1M15.5 11l5-1M9 16.5L7 21M15 16.5l2 4.5" stroke="{{ tabMatches.color }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                <span style="{{ tabMatches.labelStyle }}">Matches</span>
+              </div>
+              <div onClick="{{ tabBookings.press }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="{{ tabBookings.color }}" stroke-width="1.8"></rect><path d="M3 10h18M8 3v4M16 3v4" stroke="{{ tabBookings.color }}" stroke-width="1.8" stroke-linecap="round"></path></svg>
+                <span style="{{ tabBookings.labelStyle }}">Bookings</span>
+              </div>
+              <div onClick="{{ tabProfile.press }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="{{ tabProfile.color }}" stroke-width="1.8"></circle><path d="M4 21c0-4.5 3.5-7 8-7s8 2.5 8 7" stroke="{{ tabProfile.color }}" stroke-width="1.8" stroke-linecap="round"></path></svg>
+                <span style="{{ tabProfile.labelStyle }}">Profile</span>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ playerModal }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;background:rgba(16,24,28,0.42);display:flex;align-items:flex-end;z-index:10;animation:stepIn 200ms ease-out both">
+              <div style="width:100%;background:#FFFFFF;border-radius:28px 28px 0 0;padding:28px 24px 34px;box-shadow:0 -12px 32px rgba(16,24,28,0.24);animation:slideUp 280ms cubic-bezier(0.2,0,0,1) both">
+                <div style="display:inline-flex;align-items:center;padding:6px 12px;border-radius:999px;background:#F4E1D4">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:#8B3415">{{ modalKicker }}</span>
+                </div>
+                <div style="font-family:Fraunces,serif;font-size:26px;font-weight:600;color:#10181C;letter-spacing:-0.02em;margin-top:16px;line-height:1.2">{{ modalTitle }}</div>
+                <div style="font-size:15px;color:#3F4C51;line-height:23px;margin-top:10px;text-wrap:pretty">{{ modalBody }}</div>
+                <div onClick="{{ confirmModal }}" style="margin-top:24px;height:52px;border-radius:999px;background:#C1502E;display:flex;align-items:center;justify-content:center;font-size:16.5px;font-weight:600;color:#FFFFFF;cursor:pointer;transition:transform 120ms ease-out" style-active="transform:scale(0.98)">{{ modalConfirm }}</div>
+                <div onClick="{{ closeModal }}" style="margin-top:10px;height:52px;border-radius:999px;border:1px solid rgba(16,24,28,0.12);display:flex;align-items:center;justify-content:center;font-size:16.5px;font-weight:600;color:#10181C;cursor:pointer">Keep booking</div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ hasPlayerToast }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;left:20px;right:20px;bottom:99px;background:#10181C;border-radius:16px;padding:14px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 12px 32px rgba(16,24,28,0.24);z-index:20;animation:toastIn 280ms cubic-bezier(0.2,0,0,1) both">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="flex-shrink:0"><path d="M5 12l5 5L20 6" stroke="#8FD5AC" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <span style="font-size:14.5px;color:#FFFFFF;letter-spacing:-0.2px">{{ toastText }}</span>
+            </div>
+          </sc-if>
+
+        </div>
+      </x-import>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:16px;width:1100px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.08em;background:#10181C;color:#FFFFFF;padding:4px 8px;border-radius:6px">Owner</span>
+        <span style="font-family:Fraunces,serif;font-size:19px;font-weight:600;color:#10181C">Monday morning at the venue</span>
+      </div>
+      <p style="margin:0;font-size:13.5px;line-height:1.55;color:#3F4C51;max-width:760px">The console today is an unstyled table. Same data, same actions — verify a pitch, refund a booking — given the app's type and depth. Try the buttons: each opens a confirm step, because both actions move money.</p>
+
+      <x-import component-from-global-scope="ChromeWindow" from="./browser-window.jsx" width="1100" height="720" url="admin.ludi.app/today" hint-size="1100px,720px">
+        <div style="height:100%;background:#F2F4F3;font-family:-apple-system,'SF Pro Text',system-ui,sans-serif;position:relative;overflow:hidden">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 28px;background:#FFFFFF;border-bottom:1px solid rgba(16,24,28,0.07)">
+            <div style="display:flex;align-items:center;gap:28px">
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="width:28px;height:28px;border-radius:9px;background:#175E77;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#FFFFFF" stroke-width="1.8"></circle><path d="M12 3l3 4.5-1.5 5h-3L9 7.5 12 3z" stroke="#FFFFFF" stroke-width="1.8" stroke-linejoin="round"></path></svg></div>
+                <span style="font-family:Fraunces,serif;font-size:18px;font-weight:600;color:#10181C;letter-spacing:-0.01em">Larnaca Sportsplex</span>
+              </div>
+              <div style="display:flex;gap:4px">
+                <sc-for list="{{ ownerTabs }}" as="t" hint-placeholder-count="3">
+                  <div onClick="{{ t.press }}" style="{{ t.style }}">{{ t.label }}</div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:14px">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.07em">Mon 10 Aug</span>
+              <div style="width:32px;height:32px;border-radius:999px;background:#DCE9EC;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#0F3F52">M</div>
+            </div>
+          </div>
+
+          <sc-if value="{{ ownerToday }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:28px;animation:stepIn 200ms ease-out both">
+              <div style="display:flex;gap:16px;margin-bottom:24px">
+                <div style="flex:1;background:#FFFFFF;border-radius:20px;border:1px solid rgba(16,24,28,0.07);box-shadow:0 1px 3px rgba(16,24,28,0.06);padding:20px 22px">
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.09em">Booked today</div>
+                  <div style="font-family:Fraunces,serif;font-size:34px;font-weight:600;color:#10181C;letter-spacing:-0.02em;margin-top:10px">{{ ownerBookedCount }}</div>
+                </div>
+                <div style="flex:1;background:#FFFFFF;border-radius:20px;border:1px solid rgba(16,24,28,0.07);box-shadow:0 1px 3px rgba(16,24,28,0.06);padding:20px 22px">
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.09em">Gross today</div>
+                  <div style="font-family:Fraunces,serif;font-size:34px;font-weight:600;color:#10181C;letter-spacing:-0.02em;margin-top:10px">{{ ownerGross }}</div>
+                </div>
+                <div style="flex:1;background:#FFFFFF;border-radius:20px;border:1px solid rgba(16,24,28,0.07);box-shadow:0 1px 3px rgba(16,24,28,0.06);padding:20px 22px">
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.09em">Your payout</div>
+                  <div style="font-family:Fraunces,serif;font-size:34px;font-weight:600;color:#1F6640;letter-spacing:-0.02em;margin-top:10px">{{ ownerPayout }}</div>
+                </div>
+                <div style="flex:1;background:#FFFFFF;border-radius:20px;border:1px solid rgba(16,24,28,0.07);box-shadow:0 1px 3px rgba(16,24,28,0.06);padding:20px 22px">
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.09em">Free tonight</div>
+                  <div style="font-family:Fraunces,serif;font-size:34px;font-weight:600;color:#10181C;letter-spacing:-0.02em;margin-top:10px">{{ ownerFree }}</div>
+                </div>
+              </div>
+
+              <div style="background:#FFFFFF;border-radius:20px;border:1px solid rgba(16,24,28,0.07);box-shadow:0 2px 8px rgba(16,24,28,0.08);overflow:hidden">
+                <div style="display:flex;align-items:center;padding:16px 22px;border-bottom:1px solid rgba(16,24,28,0.07)">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.09em;width:110px">Time</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.09em;flex:1">Pitch</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.09em;width:180px">Player</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.09em;width:150px">Code</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.09em;width:130px">State</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.09em;width:100px;text-align:right">Total</span>
+                  <span style="width:120px"></span>
+                </div>
+                <sc-for list="{{ ownerBookings }}" as="b" hint-placeholder-count="4">
+                  <div style="{{ b.rowStyle }}">
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:14px;color:#10181C;width:110px">{{ b.time }}</span>
+                    <span style="font-size:14.5px;color:#10181C;flex:1;font-weight:500">{{ b.pitch }}</span>
+                    <span style="font-size:14px;color:#3F4C51;width:180px">{{ b.player }}</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#5F6E73;width:150px">{{ b.code }}</span>
+                    <span style="width:130px"><span style="{{ b.chipStyle }}">{{ b.state }}</span></span>
+                    <span style="font-family:Fraunces,serif;font-size:17px;font-weight:600;color:#10181C;width:100px;text-align:right">{{ b.total }}</span>
+                    <span style="width:120px;display:flex;justify-content:flex-end">
+                      <sc-if value="{{ b.refundable }}" hint-placeholder-val="{{ false }}">
+                        <span onClick="{{ b.refund }}" style="padding:7px 14px;border-radius:999px;border:1px solid rgba(16,24,28,0.12);font-size:13px;font-weight:600;color:#10181C;cursor:pointer;transition:background 120ms ease-out" style-hover="background:#F2F4F3">Refund</span>
+                      </sc-if>
+                    </span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ ownerPitchesTab }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:28px;animation:stepIn 200ms ease-out both">
+              <div style="background:#FFFFFF;border-radius:20px;border:1px solid rgba(16,24,28,0.07);box-shadow:0 2px 8px rgba(16,24,28,0.08);overflow:hidden">
+                <div style="display:flex;align-items:center;padding:16px 22px;border-bottom:1px solid rgba(16,24,28,0.07)">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.09em;flex:1">Pitch</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.09em;width:200px">Type · Surface</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.09em;width:120px;text-align:right">Price/hr</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.09em;width:200px;padding-left:24px">Status</span>
+                  <span style="width:220px"></span>
+                </div>
+                <sc-for list="{{ ownerPitches }}" as="p" hint-placeholder-count="3">
+                  <div style="display:flex;align-items:center;padding:18px 22px;border-bottom:1px solid rgba(16,24,28,0.07)">
+                    <span style="font-size:15px;color:#10181C;flex:1;font-weight:500">{{ p.name }}</span>
+                    <span style="font-size:14px;color:#3F4C51;width:200px">{{ p.meta }}</span>
+                    <span style="font-family:Fraunces,serif;font-size:17px;font-weight:600;color:#10181C;width:120px;text-align:right">{{ p.price }}</span>
+                    <span style="width:200px;padding-left:24px;display:flex;gap:6px">
+                      <span style="{{ p.verifyChipStyle }}">{{ p.verifyLabel }}</span>
+                      <span style="{{ p.activeChipStyle }}">{{ p.activeLabel }}</span>
+                    </span>
+                    <span style="width:220px;display:flex;gap:8px;justify-content:flex-end">
+                      <sc-if value="{{ p.canVerify }}" hint-placeholder-val="{{ false }}">
+                        <span onClick="{{ p.verify }}" style="padding:8px 16px;border-radius:999px;background:#175E77;font-size:13px;font-weight:600;color:#FFFFFF;cursor:pointer;transition:transform 120ms ease-out" style-active="transform:scale(0.97)">Verify</span>
+                      </sc-if>
+                      <span onClick="{{ p.toggle }}" style="padding:8px 16px;border-radius:999px;border:1px solid rgba(16,24,28,0.12);font-size:13px;font-weight:600;color:#10181C;cursor:pointer;transition:background 120ms ease-out" style-hover="background:#F2F4F3">{{ p.toggleLabel }}</span>
+                    </span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="font-size:13.5px;color:#5F6E73;margin-top:16px;line-height:20px">Deactivating hides a pitch from Discover immediately. Existing bookings are unaffected — cancel those individually from Today.</div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ ownerPayoutsTab }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:28px;animation:stepIn 200ms ease-out both">
+              <div style="display:flex;gap:16px">
+                <div style="flex:1;background:#FFFFFF;border-radius:20px;border:1px solid rgba(16,24,28,0.07);box-shadow:0 2px 8px rgba(16,24,28,0.08);padding:24px">
+                  <div style="display:flex;align-items:baseline;justify-content:space-between">
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.09em">Last 7 days</div>
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.09em">Gross · after 12% fee</div>
+                  </div>
+                  <div style="display:flex;align-items:flex-end;gap:14px;height:190px;margin-top:26px">
+                    <sc-for list="{{ payoutBars }}" as="bar" hint-placeholder-count="7">
+                      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:10px">
+                        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#10181C">{{ bar.value }}</div>
+                        <div style="{{ bar.style }}"></div>
+                        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.06em">{{ bar.day }}</div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+                <div style="width:320px;background:#FFFFFF;border-radius:20px;border:1px solid rgba(16,24,28,0.07);box-shadow:0 2px 8px rgba(16,24,28,0.08);padding:24px">
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5F6E73;text-transform:uppercase;letter-spacing:0.09em">Next payout</div>
+                  <div style="font-family:Fraunces,serif;font-size:40px;font-weight:600;color:#1F6640;letter-spacing:-0.03em;margin-top:12px">€1,284.80</div>
+                  <div style="font-size:14px;color:#3F4C51;margin-top:8px">Arrives Wed 12 Aug, to ····4417</div>
+                  <div style="height:1px;background:rgba(16,24,28,0.07);margin:20px 0"></div>
+                  <div style="display:flex;flex-direction:column;gap:12px">
+                    <div style="display:flex;justify-content:space-between"><span style="font-size:14px;color:#3F4C51">Gross</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#10181C">€1,460.00</span></div>
+                    <div style="display:flex;justify-content:space-between"><span style="font-size:14px;color:#3F4C51">Ludi fee · 12%</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#10181C">−€175.20</span></div>
+                    <div style="display:flex;justify-content:space-between"><span style="font-size:14px;color:#3F4C51">Refunds</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#10181C">{{ ownerRefundTotal }}</span></div>
+                  </div>
+                  <div style="margin-top:24px;height:46px;border-radius:999px;border:1px solid rgba(16,24,28,0.12);display:flex;align-items:center;justify-content:center;font-size:14.5px;font-weight:600;color:#10181C;cursor:pointer" style-hover="background:#F2F4F3">Download statement</div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ hasModal }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;background:rgba(16,24,28,0.42);display:flex;align-items:center;justify-content:center;animation:stepIn 200ms ease-out both">
+              <div style="width:460px;background:#FFFFFF;border-radius:28px;box-shadow:0 12px 32px rgba(16,24,28,0.24);padding:32px;animation:riseIn 280ms cubic-bezier(0.2,0,0,1) both">
+                <div style="{{ modalIconStyle }}">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:{{ modalIconFg }}">{{ modalKicker }}</span>
+                </div>
+                <div style="font-family:Fraunces,serif;font-size:26px;font-weight:600;color:#10181C;letter-spacing:-0.02em;margin-top:18px;line-height:1.2">{{ modalTitle }}</div>
+                <div style="font-size:15px;color:#3F4C51;line-height:23px;margin-top:12px;text-wrap:pretty">{{ modalBody }}</div>
+                <div style="display:flex;gap:10px;margin-top:28px">
+                  <div onClick="{{ closeModal }}" style="flex:1;height:48px;border-radius:999px;border:1px solid rgba(16,24,28,0.12);display:flex;align-items:center;justify-content:center;font-size:15.5px;font-weight:600;color:#10181C;cursor:pointer" style-hover="background:#F2F4F3">Keep as is</div>
+                  <div onClick="{{ confirmModal }}" style="{{ modalConfirmStyle }}">{{ modalConfirm }}</div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;left:28px;bottom:28px;background:#10181C;border-radius:16px;padding:14px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 12px 32px rgba(16,24,28,0.24);animation:toastIn 280ms cubic-bezier(0.2,0,0,1) both">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 6" stroke="#8FD5AC" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <span style="font-size:14.5px;color:#FFFFFF;letter-spacing:-0.2px">{{ toastText }}</span>
+            </div>
+          </sc-if>
+        </div>
+      </x-import>
+    </div>
+
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const NAV = { primary: '#175E77', deep: '#0F3F52', ink: '#10181C', ink2: '#3F4C51', ink3: '#5F6E73', surface: '#FFFFFF', bg: '#F2F4F3', line: 'rgba(16,24,28,0.07)', lineBold: 'rgba(16,24,28,0.12)', ok: '#1F6640', okSoft: '#DFECE3', sun: '#D99520', sunSoft: '#F8E8C9', warn: '#8A5A0E', err: '#C1502E', errSoft: '#F4E1D4', errDeep: '#8B3415' };
+
+const PITCHES = [
+  { id: 'p2', name: 'Pitch 2 — Indoor', meta: '5-a-side · Indoor', format: '5', price: 3500, tint: '#DCE9EC', numeralFill: '#0F3F52', dot: NAV.primary, free: 4 },
+  { id: 'p1', name: 'Pitch 1 — Main turf', meta: '7-a-side · Turf', format: '7', price: 4500, tint: '#DFECE3', numeralFill: '#174028', dot: NAV.ok, free: 2 }
+];
+
+const DAYS = [
+  { wd: 'Mon', n: 10 }, { wd: 'Tue', n: 11 }, { wd: 'Wed', n: 12 },
+  { wd: 'Thu', n: 13 }, { wd: 'Fri', n: 14 }, { wd: 'Sat', n: 15 }
+];
+
+const SLOTS = [
+  { time: '18:00', open: false }, { time: '19:00', open: true },
+  { time: '20:00', open: true }, { time: '21:00', open: true }
+];
+
+const POSITIONS = ['GK', 'CB', 'LB', 'RB', 'CDM', 'CM', 'CAM', 'LW', 'RW', 'ST'];
+const SKILL_LABELS = [
+  'New to organised football',
+  'Casual — the occasional kickabout',
+  'Regular — plays local pickup often',
+  'Experienced — league or competitive background',
+  'Advanced — high-level competitive play'
+];
+const STEPS = ['consent', 'phone', 'otp', 'profile', 'discover', 'pitch', 'confirming', 'confirmed'];
+const STEP_NAMES = ['Consent', 'Phone', 'Code', 'Profile', 'Discover', 'Pitch', 'Paying', 'Booked'];
+
+class Component extends DCLogic {
+  state = {
+    step: 0, phone: '', code: '', skill: 3, positions: ['CDM'],
+    discoverLoading: false, pitchIdx: 0, day: 0, slot: null,
+    resend: 30, payPct: 0, payElapsed: 0,
+    tab: 'discover', joined: {}, seg: 'upcoming', mseg: 'open', cancelled: {},
+    myBookings: [], saveState: 'idle', lang: 'en',
+    ownerTab: 'today', modal: null, toast: null,
+    refunded: {}, pitchState: { p1: { verified: true, active: true }, p2: { verified: true, active: true }, p3: { verified: false, active: true } }
+  };
+
+  timers = [];
+  after(ms, fn) { const t = setTimeout(fn, ms); this.timers.push(t); return t; }
+  every(ms, fn) { const t = setInterval(fn, ms); this.timers.push(t); return t; }
+  clearTimers() { this.timers.forEach((t) => { clearTimeout(t); clearInterval(t); }); this.timers = []; }
+  componentWillUnmount() { this.clearTimers(); }
+
+  go(step) {
+    this.clearTimers();
+    this.setState({ step });
+    if (STEPS[step] === 'otp') {
+      this.setState({ resend: 30 });
+      this.every(1000, () => this.setState((s) => ({ resend: Math.max(0, s.resend - 1) })));
+    }
+    if (STEPS[step] === 'discover') {
+      this.setState({ discoverLoading: true });
+      this.after(900, () => this.setState({ discoverLoading: false }));
+    }
+    if (STEPS[step] === 'confirmed') {
+      const s0 = this.state;
+      const p = PITCHES[s0.pitchIdx];
+      const t = this.eur(p.price + 800);
+      if (!s0.myBookings.length) {
+        this.setState((st) => ({
+          myBookings: [{
+            id: 'k-new', live: true, code: 'LAR-2026-0048',
+            headline: 'Tonight · ' + (st.slot || '20:00'), headlineShort: 'tonight at ' + (st.slot || '20:00'),
+            pitch: p.name, sub: 'Larnaca Sportsplex · Larnaca',
+            meta: '1 hr · ' + p.meta.split(' · ')[0], total: t,
+            tone: ['Confirmed', '#174028', NAV.ok]
+          }]
+        }));
+      }
+    }
+    if (STEPS[step] === 'confirming') {
+      this.setState({ payPct: 0, payElapsed: 0 });
+      this.every(120, () => this.setState((s) => {
+        const pct = Math.min(100, s.payPct + 4.6);
+        if (pct >= 100) { this.after(260, () => this.go(7)); }
+        return { payPct: pct, payElapsed: s.payElapsed + 0.12 };
+      }));
+    }
+  }
+
+  key(v) {
+    const s = this.state;
+    if (STEPS[s.step] === 'phone') {
+      if (v === 'del') return this.setState({ phone: s.phone.slice(0, -1) });
+      if (s.phone.length >= 8) return;
+      return this.setState({ phone: s.phone + v });
+    }
+    if (STEPS[s.step] === 'otp') {
+      if (v === 'del') return this.setState({ code: s.code.slice(0, -1) });
+      if (s.code.length >= 6) return;
+      const code = s.code + v;
+      this.setState({ code });
+      if (code.length === 6) this.after(750, () => this.go(3));
+    }
+  }
+
+  chip(bg, fg) {
+    return 'display:inline-block;padding:4px 10px;border-radius:999px;background:' + bg + ";font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;color:" + fg;
+  }
+
+  eur(cents) { return '€' + (cents / 100).toFixed(2); }
+
+  renderVals() {
+    const s = this.state;
+    const name = STEPS[s.step];
+    const pitch = PITCHES[s.pitchIdx];
+    const total = pitch.price + 800;
+
+    const keyStyle = (dark) =>
+      'flex:1;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;' +
+      "font-family:'JetBrains Mono',monospace;font-size:22px;color:" + NAV.ink + ';cursor:pointer;user-select:none;' +
+      'background:' + (dark ? 'transparent' : NAV.surface) + ';' +
+      (dark ? '' : 'box-shadow:0 1px 3px rgba(16,24,28,0.06);') +
+      'transition:transform 120ms ease-out,background 120ms ease-out';
+
+    const mkKey = (label, val, dark) => ({
+      label, style: keyStyle(dark), press: () => this.key(val)
+    });
+    const keyRows = [
+      { keys: [mkKey('1', '1'), mkKey('2', '2'), mkKey('3', '3')] },
+      { keys: [mkKey('4', '4'), mkKey('5', '5'), mkKey('6', '6')] },
+      { keys: [mkKey('7', '7'), mkKey('8', '8'), mkKey('9', '9')] },
+      { keys: [mkKey('', 'noop', true), mkKey('0', '0'), mkKey('⌫', 'del', true)] }
+    ];
+
+    const phoneReady = s.phone.length === 8;
+    const codeBoxes = Array.from({ length: 6 }, (_, i) => {
+      const filled = i < s.code.length;
+      const active = i === s.code.length;
+      return {
+        char: filled ? s.code[i] : '',
+        style: 'flex:1;height:64px;border-radius:14px;display:flex;align-items:center;justify-content:center;' +
+          "font-family:'JetBrains Mono',monospace;font-size:24px;color:" + NAV.ink + ';' +
+          (filled ? 'background:' + NAV.surface + ';box-shadow:0 1px 3px rgba(16,24,28,0.06);animation:popIn 200ms cubic-bezier(0.2,0,0,1) both;'
+            : active ? 'background:' + NAV.surface + ';border:1.5px solid ' + NAV.primary + ';box-shadow:0 1px 3px rgba(16,24,28,0.06);'
+              : 'background:' + NAV.bg + ';border:1px solid ' + NAV.line + ';')
+      };
+    });
+
+    const skills = [1, 2, 3, 4, 5].map((n) => ({
+      n: String(n),
+      press: () => this.setState({ skill: n }),
+      style: 'flex:1;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;' +
+        "font-family:'JetBrains Mono',monospace;font-size:17px;cursor:pointer;transition:all 200ms cubic-bezier(0.2,0,0,1);" +
+        (s.skill === n
+          ? 'background:' + NAV.primary + ';color:#FFFFFF;box-shadow:0 2px 8px rgba(16,24,28,0.10);'
+          : 'background:' + NAV.surface + ';color:' + NAV.ink + ';box-shadow:0 1px 3px rgba(16,24,28,0.06);')
+    }));
+
+    const positionChips = POSITIONS.map((p) => {
+      const on = s.positions.indexOf(p) >= 0;
+      return {
+        name: p,
+        press: () => this.setState((st) => ({
+          positions: st.positions.indexOf(p) >= 0 ? st.positions.filter((x) => x !== p) : st.positions.concat([p])
+        })),
+        style: "padding:10px 15px;border-radius:12px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:0.04em;cursor:pointer;transition:all 200ms cubic-bezier(0.2,0,0,1);" +
+          (on ? 'background:' + NAV.ink + ';color:#FFFFFF;' : 'background:' + NAV.surface + ';color:' + NAV.ink2 + ';box-shadow:0 1px 3px rgba(16,24,28,0.06);')
+      };
+    });
+
+    const pitches = PITCHES.map((p, i) => ({
+      name: p.name, meta: p.meta, format: p.format, tint: p.tint, numeralFill: p.numeralFill,
+      price: '€' + Math.round(p.price / 100),
+      freeLabel: p.free + ' free tonight',
+      dotStyle: 'width:6px;height:6px;border-radius:3px;flex-shrink:0;background:' + p.dot,
+      cardStyle: 'background:' + NAV.surface + ';border-radius:20px;border:1px solid ' + NAV.line +
+        ';box-shadow:0 2px 8px rgba(16,24,28,0.08);overflow:hidden;cursor:pointer;transition:transform 200ms cubic-bezier(0.2,0,0,1);' +
+        'animation:riseIn 280ms cubic-bezier(0.2,0,0,1) ' + (i * 60) + 'ms both',
+      open: () => { this.setState({ pitchIdx: i, slot: null, day: 0 }); this.go(5); }
+    }));
+
+    const days = DAYS.map((d, i) => ({
+      wd: d.wd, n: String(d.n),
+      press: () => this.setState({ day: i, slot: null }),
+      style: 'min-width:56px;padding:10px 0;border-radius:14px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;transition:all 200ms cubic-bezier(0.2,0,0,1);' +
+        (s.day === i ? 'background:' + NAV.primary + ';box-shadow:0 2px 8px rgba(16,24,28,0.10);' : 'background:' + NAV.surface + ';box-shadow:0 1px 3px rgba(16,24,28,0.06);'),
+      labelStyle: "font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;color:" + (s.day === i ? '#FFFFFF' : NAV.ink3),
+      numStyle: "font-family:Fraunces,serif;font-size:19px;font-weight:600;color:" + (s.day === i ? '#FFFFFF' : NAV.ink)
+    }));
+
+    const slots = SLOTS.map((sl) => {
+      const sel = s.slot === sl.time;
+      return {
+        time: sl.time,
+        press: sl.open ? () => this.setState({ slot: sel ? null : sl.time }) : () => {},
+        style: 'width:79px;padding:11px 0;text-align:center;border-radius:14px;' +
+          "font-family:'JetBrains Mono',monospace;font-size:13px;transition:all 200ms cubic-bezier(0.2,0,0,1);" +
+          (!sl.open ? 'background:' + NAV.bg + ';color:' + NAV.ink3 + ';text-decoration:line-through;'
+            : sel ? 'background:' + NAV.primary + ';color:#FFFFFF;font-weight:500;box-shadow:0 2px 8px rgba(16,24,28,0.10);transform:scale(1.04);cursor:pointer;'
+              : 'background:' + NAV.surface + ';color:' + NAV.ink + ';box-shadow:0 1px 3px rgba(16,24,28,0.06);cursor:pointer;')
+      };
+    });
+
+    const elapsed = s.payElapsed;
+    const ownerBookings = [
+      { id: 'b1', time: '18:00', pitch: 'Pitch 1 — Main turf', player: 'Andreas G.', code: 'LAR-2026-0044', state: 'Played', total: 5300, tone: 'done', refundable: false },
+      { id: 'b2', time: '19:00', pitch: 'Pitch 2 — Indoor', player: 'Marios K.', code: 'LAR-2026-0045', state: 'Confirmed', total: 4300, tone: 'ok', refundable: true },
+      { id: 'b3', time: '20:00', pitch: 'Pitch 1 — Main turf', player: 'Elena P.', code: 'LAR-2026-0046', state: 'Confirmed', total: 5300, tone: 'ok', refundable: true },
+      { id: 'b4', time: '21:00', pitch: 'Pitch 2 — Indoor', player: 'Nikos S.', code: 'LAR-2026-0047', state: 'Pending', total: 4300, tone: 'pending', refundable: false }
+    ].map((b) => {
+      const isRef = !!s.refunded[b.id];
+      const tone = isRef ? 'ref' : b.tone;
+      const chips = {
+        ok: [NAV.okSoft, '#174028'], done: ['rgba(16,24,28,0.07)', NAV.ink2],
+        pending: [NAV.sunSoft, NAV.warn], ref: [NAV.errSoft, NAV.errDeep]
+      }[tone];
+      return {
+        time: b.time, pitch: b.pitch, player: b.player, code: b.code,
+        state: isRef ? 'Refunded' : b.state,
+        total: this.eur(b.total),
+        refundable: b.refundable && !isRef,
+        chipStyle: this.chip(chips[0], chips[1]),
+        rowStyle: 'display:flex;align-items:center;padding:16px 22px;border-bottom:1px solid ' + NAV.line +
+          ';transition:background 120ms ease-out;' + (isRef ? 'opacity:0.72;' : ''),
+        refund: () => this.setState({ modal: { kind: 'refund', id: b.id, title: 'Refund ' + b.player + '?', body: 'This returns ' + this.eur(b.total) + ' to the card used and releases ' + b.time + ' back to Discover. Refunds reach the player in 5–10 business days and cannot be undone.', confirm: 'Refund ' + this.eur(b.total), kicker: 'Moves money', danger: true } })
+      };
+    });
+
+    const ownerPitchDefs = [
+      { id: 'p1', name: 'Pitch 1 — Main turf', meta: '7-a-side · Turf', price: 4500 },
+      { id: 'p2', name: 'Pitch 2 — Indoor', meta: '5-a-side · Indoor', price: 3500 },
+      { id: 'p3', name: 'Pitch 3 — Grass', meta: '11-a-side · Grass', price: 6000 }
+    ];
+    const ownerPitches = ownerPitchDefs.map((p) => {
+      const st = s.pitchState[p.id];
+      return {
+        name: p.name, meta: p.meta, price: this.eur(p.price),
+        verifyLabel: st.verified ? 'verified' : 'unverified',
+        activeLabel: st.active ? 'live' : 'hidden',
+        verifyChipStyle: this.chip(st.verified ? NAV.okSoft : NAV.sunSoft, st.verified ? '#174028' : NAV.warn),
+        activeChipStyle: this.chip(st.active ? '#DCE9EC' : 'rgba(16,24,28,0.07)', st.active ? NAV.deep : NAV.ink3),
+        canVerify: !st.verified,
+        toggleLabel: st.active ? 'Hide' : 'Show',
+        verify: () => this.setState({ modal: { kind: 'verify', id: p.id, title: 'Verify ' + p.name + '?', body: 'Verified pitches appear in Discover and can take bookings straight away. Only verify once the venue has completed Stripe onboarding — payouts fail otherwise.', confirm: 'Verify pitch', kicker: 'Goes live now', danger: false } }),
+        toggle: () => this.setState({ modal: { kind: 'toggle', id: p.id, title: (st.active ? 'Hide ' : 'Show ') + p.name + '?', body: st.active ? 'It disappears from Discover immediately. Bookings already made are kept — cancel those individually from Today.' : 'It returns to Discover immediately and can take bookings for any open slot.', confirm: st.active ? 'Hide pitch' : 'Show pitch', kicker: st.active ? 'Removes from Discover' : 'Returns to Discover', danger: st.active } })
+      };
+    });
+
+    const barVals = [180, 240, 210, 150, 320, 410, 380];
+    const payoutBars = barVals.map((v, i) => ({
+      value: '€' + v,
+      day: ['Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon'][i],
+      style: 'width:100%;border-radius:8px 8px 2px 2px;height:' + Math.round((v / 410) * 130) + 'px;background:' +
+        (i === 6 ? NAV.primary : '#DCE9EC') + ';transition:height 280ms cubic-bezier(0.2,0,0,1)'
+    }));
+
+    const allBookings = SEED_BOOKINGS.concat(s.myBookings).map((b) => {
+      const cancelled = !!s.cancelled[b.id];
+      const live = b.live && !cancelled;
+      const tone = cancelled ? ['Cancelled · refunded', NAV.errDeep, NAV.err] : b.tone;
+      return {
+        id: b.id, code: b.code, pitch: b.pitch, sub: b.sub, total: b.total, meta: b.meta,
+        headline: live ? b.headline : '', headlineShort: b.headlineShort,
+        live, stateLabel: tone[0], stateFg: tone[1], rail: tone[2]
+      };
+    });
+
+    const m = s.modal;
+    const refundCount = Object.keys(s.refunded).length;
+
+    const mkTab = (id, label) => ({
+      label,
+      press: () => this.setState({ ownerTab: id }),
+      style: "padding:8px 16px;border-radius:999px;font-size:14px;font-weight:600;letter-spacing:-0.2px;cursor:pointer;transition:all 200ms cubic-bezier(0.2,0,0,1);" +
+        (s.ownerTab === id ? 'background:' + NAV.ink + ';color:#FFFFFF;' : 'color:' + NAV.ink3 + ';')
+    });
+
+    return {
+      stepLabel: STEP_NAMES[s.step],
+      flowBarStyle: 'height:100%;background:' + NAV.primary + ';border-radius:2px;transition:width 280ms cubic-bezier(0.2,0,0,1);width:' + Math.round(((s.step + 1) / STEPS.length) * 100) + '%',
+      restart: () => { this.clearTimers(); this.setState({ step: 0, phone: '', code: '', slot: null, positions: ['CDM'], skill: 3 }); },
+
+      isConsent: name === 'consent', isPhone: name === 'phone', isOtp: name === 'otp',
+      isProfile: name === 'profile', isDiscover: name === 'discover' && s.tab === 'discover', isPitch: name === 'pitch',
+      isConfirming: name === 'confirming', isConfirmed: name === 'confirmed',
+
+      acceptConsent: () => this.go(1),
+      keyRows,
+      phoneDisplay: s.phone.replace(/(\d{2})(\d+)/, '$1 $2') || '',
+      phoneHint: phoneReady ? 'Looks like a Cyprus mobile.' : 'Cyprus mobile — 8 digits.',
+      phoneFieldStyle: 'height:58px;border-radius:14px;padding:0 18px;background:' + NAV.surface +
+        ';display:flex;align-items:center;gap:10px;transition:border-color 120ms ease-out;box-shadow:0 1px 3px rgba(16,24,28,0.06);border:1.5px solid ' +
+        (s.phone.length ? NAV.primary : NAV.lineBold),
+      phoneCtaStyle: 'height:52px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;letter-spacing:-0.3px;transition:all 200ms cubic-bezier(0.2,0,0,1);' +
+        (phoneReady ? 'background:' + NAV.primary + ';color:#FFFFFF;box-shadow:0 2px 8px rgba(16,24,28,0.10);cursor:pointer;'
+          : 'background:' + NAV.bg + ';color:' + NAV.ink3 + ';border:1px solid ' + NAV.line + ';'),
+      submitPhone: () => { if (phoneReady) this.go(2); },
+
+      sentTo: '+357 ' + (s.phone.replace(/(\d{2})(\d+)/, '$1 $2') || '99 123456'),
+      codeBoxes,
+      resendText: s.resend > 0 ? 'Resend code in 0:' + String(s.resend).padStart(2, '0') : 'Resend code',
+      backToPhone: () => this.go(1),
+
+      skills, skillLabel: SKILL_LABELS[s.skill - 1], positionChips,
+      profileCta: s.positions.length ? 'Find me a pitch' : 'Skip for now',
+      finishProfile: () => this.go(4),
+
+      discoverLoading: s.discoverLoading,
+      discoverReady: !s.discoverLoading,
+      discoverSub: 'Six slots free tonight from 19:00.',
+      pitches,
+
+      activeName: pitch.name, activeMeta: pitch.meta, activeFormat: pitch.format,
+      activeTint: pitch.tint, activeNumeralFill: pitch.numeralFill,
+      activePrice: '€' + Math.round(pitch.price / 100),
+      activeDotStyle: 'width:6px;height:6px;border-radius:3px;background:' + pitch.dot,
+      days, slots,
+      hasSlot: !!s.slot, noSlot: !s.slot,
+      summaryLine: 'Pitch · ' + DAYS[s.day].wd + ' ' + (s.slot || '20:00'),
+      basePrice: this.eur(pitch.price),
+      totalPrice: this.eur(total),
+      totalShort: '€' + Math.round(total / 100),
+      backToDiscover: () => { this.setState({ slot: null }); this.go(4); },
+      book: () => this.go(6),
+
+      payPhase: elapsed > 6 ? 'Step 3 of 3 · Confirming' : 'Step 2 of 3 · Paying',
+      payTimer: '00:' + String(Math.floor(elapsed)).padStart(2, '0'),
+      payBarStyle: 'height:100%;background:' + NAV.primary + ';border-radius:2px;width:' + s.payPct + '%;transition:width 200ms linear',
+      payTitle: elapsed > 6 ? 'Confirming with the venue…' : 'Holding your slot…',
+      payBody: DAYS[s.day].wd + ' ' + (s.slot || '20:00') + ' at ' + pitch.name + '. This usually takes a few seconds.',
+      payEscalated: elapsed > 6,
+
+      bookingCode: 'LAR-2026-0048',
+      confirmedWhen: 'Tonight at ' + (s.slot || '20:00') + '. Show this code at the gate.',
+      confirmedSlot: 'Mon 10 Aug · ' + (s.slot || '20:00'),
+
+      showTabs: name === 'discover',
+      isMatches: name === 'discover' && s.tab === 'matches',
+      isBookings: name === 'discover' && s.tab === 'bookings',
+      isPlayerProfile: name === 'discover' && s.tab === 'profile',
+      tabDiscover: mkNavTab.call(this, 'discover'),
+      tabMap: mkNavTab.call(this, 'map'),
+      tabMatches: mkNavTab.call(this, 'matches'),
+      tabBookings: mkNavTab.call(this, 'bookings'),
+      tabProfile: mkNavTab.call(this, 'profile'),
+
+      matchSegs: [
+        mkSeg.call(this, 'mseg', 'open', 'Open', String(MATCHES.filter((mm) => !s.joined[mm.id]).length)),
+        mkSeg.call(this, 'mseg', 'mine', 'Mine', String(Object.keys(s.joined).length))
+      ],
+      matches: MATCHES.filter((mm) => (s.mseg === 'mine' ? s.joined[mm.id] : !s.joined[mm.id])).map((mm, i) => ({
+        when: mm.when, fmt: mm.fmt, pitch: mm.pitch, venue: mm.venue,
+        spotsLabel: s.joined[mm.id] ? "You're in" : mm.spots + (mm.spots === 1 ? ' spot' : ' spots'),
+        spotsStyle: "font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;color:" + (s.joined[mm.id] ? '#174028' : mm.spots <= 1 ? NAV.warn : NAV.deep),
+        dotStyle: 'width:6px;height:6px;border-radius:3px;flex-shrink:0;background:' + mm.dot,
+        perPlayer: mm.per,
+        levelLabel: 'Level ' + mm.level,
+        bars: [1, 2, 3, 4, 5].map((n) => ({ style: 'width:4px;border-radius:1px;height:' + (5 + n * 2) + 'px;background:' + (n <= mm.level ? NAV.ok : 'rgba(16,24,28,0.14)') })),
+        avatars: mm.crew.map((c, j) => ({ initial: c.i, style: 'width:28px;height:28px;border-radius:999px;background:' + c.c + ';border:2px solid #FFFFFF;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;' + (j ? 'margin-left:-8px;' : '') })),
+        crewLabel: (mm.of - mm.spots) + ' / ' + mm.of,
+        joined: !!s.joined[mm.id],
+        cardStyle: 'background:' + NAV.surface + ';border-radius:20px;border:1px solid ' + NAV.line + ';box-shadow:0 2px 8px rgba(16,24,28,0.08);padding:18px;animation:riseIn 280ms cubic-bezier(0.2,0,0,1) ' + (i * 60) + 'ms both',
+        joinStyle: 'height:40px;border-radius:999px;display:flex;align-items:center;padding:0 22px;font-size:15px;font-weight:600;cursor:pointer;transition:all 200ms cubic-bezier(0.2,0,0,1);' +
+          (s.joined[mm.id] ? 'background:' + NAV.okSoft + ';color:#174028;' : 'background:' + NAV.primary + ';color:#FFFFFF;'),
+        joinLabel: s.joined[mm.id] ? 'Leave' : 'Join',
+        join: () => {
+          const on = !!s.joined[mm.id];
+          this.setState((st) => {
+            const nx = Object.assign({}, st.joined);
+            if (on) { delete nx[mm.id]; } else { nx[mm.id] = true; }
+            return { joined: nx, toastSide: 'player', toast: on ? 'Left the match — spot released' : "You're in · " + mm.per + ' due at the pitch' };
+          });
+          this.after(2600, () => this.setState({ toast: null }));
+        }
+      })),
+      matchesEmpty: s.mseg === 'mine' && Object.keys(s.joined).length === 0,
+
+      bookingSegs: [
+        mkSeg.call(this, 'seg', 'upcoming', 'Upcoming', String(allBookings.filter((b) => b.live).length)),
+        mkSeg.call(this, 'seg', 'history', 'History', '')
+      ],
+      bookings: allBookings.filter((b) => (s.seg === 'upcoming' ? b.live : !b.live)).map((b, i) => ({
+        state: b.stateLabel, code: b.code, headline: b.headline, pitch: b.pitch, sub: b.sub, total: b.total, meta: b.meta,
+        hasHeadline: !!b.headline,
+        railStyle: 'width:4px;flex-shrink:0;background:' + b.rail,
+        stateStyle: "font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:" + b.stateFg,
+        cardStyle: 'display:flex;background:' + NAV.surface + ';border-radius:20px;border:1px solid ' + NAV.line + ';box-shadow:0 ' + (b.live ? '2px 8px rgba(16,24,28,0.08)' : '1px 3px rgba(16,24,28,0.06)') + ';overflow:hidden;animation:riseIn 280ms cubic-bezier(0.2,0,0,1) ' + (i * 60) + 'ms both;' + (b.live ? '' : 'opacity:0.78;'),
+        cancellable: b.live,
+        cancel: () => this.setState({ modal: { kind: 'cancel', id: b.id, title: 'Cancel ' + b.headlineShort + '?', body: 'You booked ' + b.total + '. Cancelling more than 24 hours ahead refunds the full amount in 5–10 business days, and the slot goes back to Discover straight away.', confirm: 'Cancel and refund', kicker: 'Moves money', danger: true } })
+      })),
+      bookingsEmpty: s.seg === 'upcoming' ? allBookings.filter((b) => b.live).length === 0 : allBookings.filter((b) => !b.live).length === 0,
+      bookingsEmptyTitle: s.seg === 'upcoming' ? 'Nothing booked yet' : 'No past bookings',
+      bookingsEmptyBody: s.seg === 'upcoming' ? 'Six slots are free in Larnaca tonight, from 19:00. Bibs and a ball come with every booking.' : 'Games you play show up here with the code you used.',
+      goDiscover: () => this.setState({ tab: 'discover' }),
+
+      profileName: 'Andreas Georgiou',
+      profileMeta: 'Level ' + s.skill + ' · ' + (s.positions[0] || 'Any') + ' · Larnaca',
+      profileInitial: 'A',
+      langEn: mkLang.call(this, 'en', 'English'),
+      langEl: mkLang.call(this, 'gr', 'Ελληνικά'),
+      saveLabel: s.saveState === 'saving' ? 'Saving…' : s.saveState === 'saved' ? 'Saved' : 'Save changes',
+      saveStyle: 'height:52px;border-radius:999px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:16px;font-weight:600;letter-spacing:-0.3px;cursor:pointer;transition:all 200ms cubic-bezier(0.2,0,0,1);' +
+        (s.saveState === 'saved' ? 'background:' + NAV.okSoft + ';color:#174028;' : 'background:' + NAV.primary + ';color:#FFFFFF;box-shadow:0 2px 8px rgba(16,24,28,0.10);'),
+      saved: s.saveState === 'saved',
+      save: () => {
+        this.setState({ saveState: 'saving' });
+        this.after(700, () => this.setState({ saveState: 'saved' }));
+        this.after(3000, () => this.setState({ saveState: 'idle' }));
+      },
+
+      playerModal: !!s.modal && s.modal.kind === 'cancel',
+      ownerTabs: [mkTab('today', 'Today'), mkTab('pitches', 'Pitches'), mkTab('payouts', 'Payouts')],
+      ownerToday: s.ownerTab === 'today',
+      ownerPitchesTab: s.ownerTab === 'pitches',
+      ownerPayoutsTab: s.ownerTab === 'payouts',
+      ownerBookings, ownerPitches, payoutBars,
+      ownerBookedCount: String(4 - refundCount),
+      ownerGross: '€196.00',
+      ownerPayout: '€172.48',
+      ownerFree: '3 slots',
+      ownerRefundTotal: refundCount ? '−' + this.eur(refundCount * 4300) : '€0.00',
+
+      hasModal: !!m && m.kind !== 'cancel',
+      modalKicker: m ? m.kicker : '',
+      modalTitle: m ? m.title : '',
+      modalBody: m ? m.body : '',
+      modalConfirm: m ? m.confirm : '',
+      modalIconFg: m && m.danger ? NAV.errDeep : NAV.deep,
+      modalIconStyle: 'display:inline-flex;align-items:center;padding:6px 12px;border-radius:999px;background:' + (m && m.danger ? NAV.errSoft : '#DCE9EC'),
+      modalConfirmStyle: 'flex:1;height:48px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:15.5px;font-weight:600;color:#FFFFFF;cursor:pointer;transition:transform 120ms ease-out;background:' + (m && m.danger ? NAV.err : NAV.primary),
+      closeModal: () => this.setState({ modal: null }),
+      confirmModal: () => {
+        if (!m) return;
+        if (m.kind === 'cancel') {
+          this.setState((st) => ({ cancelled: Object.assign({}, st.cancelled, { [m.id]: true }), modal: null, seg: 'history', toastSide: 'player', toast: 'Booking cancelled — refund on its way' }));
+        } else if (m.kind === 'refund') {
+          this.setState((st) => ({ refunded: Object.assign({}, st.refunded, { [m.id]: true }), modal: null, toastSide: 'owner', toast: 'Refund sent — slot released' }));
+        } else if (m.kind === 'verify') {
+          this.setState((st) => ({ pitchState: Object.assign({}, st.pitchState, { [m.id]: { verified: true, active: true } }), modal: null, toastSide: 'owner', toast: 'Pitch verified and live in Discover' }));
+        } else {
+          const cur = s.pitchState[m.id];
+          this.setState((st) => ({ pitchState: Object.assign({}, st.pitchState, { [m.id]: { verified: cur.verified, active: !cur.active } }), modal: null, toastSide: 'owner', toast: cur.active ? 'Pitch hidden from Discover' : 'Pitch is live again' }));
+        }
+        this.after(2600, () => this.setState({ toast: null }));
+      },
+      hasToast: !!s.toast && s.toastSide === 'owner',
+      hasPlayerToast: !!s.toast && s.toastSide === 'player',
+      toastText: s.toast || ''
+    };
+  }
+}
+
+
+const MATCHES = [
+  { id: 'm1', when: 'Tonight 20:00', fmt: '5-a-side', pitch: 'Pitch 2 — Indoor', venue: 'Larnaca Sportsplex · 1.2 km', spots: 3, of: 10, level: 3, per: '€6.20', dot: '#175E77', crew: [{ i: 'A', c: '#175E77' }, { i: 'M', c: '#1F6640' }, { i: 'K', c: '#D99520' }, { i: 'S', c: '#0F3F52' }] },
+  { id: 'm2', when: 'Tomorrow 19:00', fmt: '7-a-side', pitch: 'Pitch 1 — Main turf', venue: 'Larnaca Sportsplex · 1.2 km', spots: 1, of: 14, level: 4, per: '€4.40', dot: '#1F6640', crew: [{ i: 'P', c: '#1F6640' }, { i: 'C', c: '#175E77' }, { i: 'D', c: '#8A5A0E' }] },
+  { id: 'm3', when: 'Sat 15 · 10:00', fmt: '11-a-side', pitch: 'Pitch 3 — Grass', venue: 'Larnaca Sportsplex · 2.6 km', spots: 6, of: 22, level: 2, per: '€3.10', dot: '#D99520', crew: [{ i: 'G', c: '#D99520' }, { i: 'T', c: '#175E77' }] }
+];
+
+const SEED_BOOKINGS = [
+  { id: 'k1', live: true, code: 'LAR-2026-0031', headline: 'Sat 15 Aug · 19:00', headlineShort: 'Saturday at 19:00', pitch: 'Pitch 2 — Indoor', sub: 'Larnaca Sportsplex · Larnaca', meta: '1 hr · 5-a-side', total: '€43.00', tone: ['Confirmed', '#174028', '#1F6640'] },
+  { id: 'k2', live: false, code: 'LAR-2026-0018', headline: '', headlineShort: 'Mon 3 Aug', pitch: 'Pitch 1 — Main turf', sub: 'Larnaca Sportsplex · Larnaca', meta: 'Mon 3 Aug · 20:00', total: '€53.00', tone: ['Played', '#3F4C51', 'rgba(16,24,28,0.18)'] }
+];
+
+function mkNavTab(id) {
+  const on = this.state.tab === id;
+  return {
+    color: on ? '#175E77' : '#5F6E73',
+    labelStyle: "font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;color:" + (on ? '#175E77' : '#5F6E73'),
+    press: id === 'map'
+      ? () => { window.open('ludi-map-screen.html', '_blank'); }
+      : () => this.setState({ tab: id })
+  };
+}
+
+function mkSeg(field, id, label, count) {
+  const on = this.state[field] === id;
+  return {
+    label, count,
+    hasCount: !!count,
+    press: () => this.setState({ [field]: id }),
+    style: 'flex:1;text-align:center;padding:9px 0;border-radius:999px;font-size:14px;font-weight:600;letter-spacing:-0.2px;cursor:pointer;transition:all 200ms cubic-bezier(0.2,0,0,1);' +
+      (on ? 'background:#FFFFFF;box-shadow:0 1px 3px rgba(16,24,28,0.06);color:#10181C;' : 'color:#5F6E73;')
+  };
+}
+
+function mkLang(code, label) {
+  const on = this.state.lang === code;
+  return {
+    label,
+    press: () => this.setState({ lang: code, saveState: 'idle' }),
+    style: 'padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;transition:all 200ms cubic-bezier(0.2,0,0,1);' +
+      (on ? 'background:#FFFFFF;box-shadow:0 1px 3px rgba(16,24,28,0.06);color:#10181C;' : 'color:#5F6E73;')
+  };
+}</script>
+</body>
+</html>

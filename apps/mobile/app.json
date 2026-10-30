@@ -1,0 +1,83 @@
+{
+  "expo": {
+    "name": "Ludi",
+    "slug": "ludi",
+    "scheme": "ludi",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "bundleIdentifier": "com.nikolasneofytou.ludi",
+      "icon": "./assets/app.icon",
+      "usesAppleSignIn": true,
+      "supportsTablet": false,
+      "associatedDomains": ["applinks:ludi.football"],
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSCameraUsageDescription": "Ludi uses your camera to let you scan your payment card during checkout."
+      }
+    },
+    "android": {
+      "package": "com.nikolasneofytou.ludi",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0A2E3D"
+      },
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "ludi.football",
+              "pathPrefix": "/auth/callback"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "backgroundColor": "#0A2E3D",
+          "imageWidth": 180
+        }
+      ],
+      "expo-font",
+      "expo-status-bar",
+      "expo-localization",
+      "expo-secure-store",
+      "expo-web-browser",
+      [
+        "expo-notifications",
+        {
+          "color": "#0A2E3D"
+        }
+      ],
+      [
+        "@stripe/stripe-react-native",
+        {
+          "enableGooglePay": false
+        }
+      ],
+      "./plugins/withStripeVersionPin.js",
+      "@sentry/react-native"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "3314c1da-fe9b-405c-9fd4-b0ae9ce28374"
+      }
+    },
+    "owner": "neofytounikolas"
+  }
+}

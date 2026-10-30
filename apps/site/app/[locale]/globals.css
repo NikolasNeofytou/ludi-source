@@ -1,0 +1,1771 @@
+/* Ludi site — v2 foundation.
+ *
+ * Colour values are mirrored from lib/tokens.ts ("Chalk & Aegean"). They're
+ * literal here because CSS can't import the TS module; if you change one,
+ * change it there too (and in packages/ui + apps/admin, per that file's note).
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light;
+}
+
+/* ---------------------------------------------------------------------------
+ * Aegean paper
+ *
+ * Not flat grey: bg #F2F4F3 washed with primarySoft #DCE9EC at 65%, then a
+ * fractal-noise layer at `overlay`. Overlay modulates lightness only, so the
+ * Aegean hue survives — `multiply` would grey it out. The noise is one inline
+ * SVG data URI, so there's no image asset and no new colour.
+ */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #f2f4f3; /* tokens.bg */
+  background-image: linear-gradient(rgba(220, 233, 236, 0.65), rgba(220, 233, 236, 0.65));
+  color: #10181c; /* tokens.ink */
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  opacity: 0.5;
+  background-size: 180px 180px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Page content sits above the grain. */
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+a {
+  color: inherit;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display), Georgia, serif;
+  margin: 0;
+}
+
+.mono {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
+/* ---------------------------------------------------------------------------
+ * Type scale
+ *
+ * Fluid rather than fixed. design-handoff-site-v1.md logged "no responsive type
+ * scale" as a real gap — the old 40px owners hero wrapped to three lines on a
+ * 375px phone. These clamp between the design's mobile and desktop sizes.
+ */
+.t-hero {
+  font-size: clamp(2.75rem, 1.6rem + 4.9vw, 4.25rem); /* 44px → 68px */
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+}
+
+.t-page {
+  font-size: clamp(2rem, 1.5rem + 2.1vw, 2.5rem); /* 32px → 40px */
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+}
+
+.t-section {
+  font-size: clamp(1.375rem, 1.2rem + 0.75vw, 1.625rem); /* 22px → 26px */
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* Greek is not a translation layer.
+ *
+ * It sets ~18–20% longer, has no small-caps tradition, and its diacritics need
+ * the leading. Per the type spec: Greek headings step DOWN one size and UP one
+ * line-height, with a touch of positive tracking — at a 40px English hero that
+ * is 30/1.18/+0.01em, i.e. ~0.75× the size and a looser line.
+ *
+ * Never uppercase a Greek sentence: the accents get dropped and it reads as
+ * shouting. That is why `.eyebrow` / `.tag` uppercase only ever wraps short
+ * mono labels, never body copy. */
+html[lang='el'] .t-hero {
+  font-size: clamp(2.0625rem, 1.2rem + 3.7vw, 3.1875rem); /* 33px → 51px */
+  line-height: 1.18;
+  letter-spacing: 0.01em;
+}
+
+html[lang='el'] .t-page {
+  font-size: clamp(1.5rem, 1.15rem + 1.5vw, 1.875rem); /* 24px → 30px */
+  line-height: 1.22;
+  letter-spacing: 0.01em;
+}
+
+html[lang='el'] .t-section {
+  line-height: 1.32;
+  letter-spacing: 0.005em;
+}
+
+/* ---------------------------------------------------------------------------
+ * Unboxed tags (design option 6c)
+ *
+ * No containers — mono caps separated by hairline rules, the way a pitch-side
+ * sign lists specifications. Facts are plain, state carries a dot, audience
+ * carries a leading rule.
+ */
+.tag {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 0.656rem; /* 10.5px */
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4375rem;
+  color: #5f6e73; /* tokens.ink3 */
+}
+
+.tag--strong {
+  font-weight: 700;
+  color: #10181c;
+}
+
+.tag__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  flex: none;
+}
+
+.tag__sep {
+  width: 1px;
+  height: 11px;
+  background: rgba(16, 24, 28, 0.16);
+  flex: none;
+}
+
+.eyebrow {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 0.6875rem; /* 11px */
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.eyebrow__rule {
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+  flex: none;
+}
+
+/* ---------------------------------------------------------------------------
+ * Motion — docs/motion-spec-site.md
+ *
+ * Reveals fire on load only, never on scroll: the page holds still once it has
+ * arrived, so reading, screenshotting and fast scrolling are never fought.
+ * Stagger comes from inline animation-delay (hero 0ms, next group 60ms).
+ */
+@keyframes ldload {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+[data-load] .reveal {
+  animation: ldload 200ms ease-out both;
+}
+
+/* Ambient loops. Artwork only — never type, cards, or anything clickable —
+ * and only on the home hero. 9–18s: faster distracts next to a headline,
+ * slower is invisible and burns battery. */
+@keyframes ldbeam {
+  0%,
+  100% {
+    opacity: 0.14;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+@keyframes ldglow {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes ldpass {
+  0%,
+  5% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  50% {
+    transform: translate(112px, -104px) scale(0.72);
+  }
+  90% {
+    transform: translate(228px, -4px) scale(1);
+    opacity: 1;
+  }
+  97%,
+  100% {
+    transform: translate(228px, -4px) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes ldpassm {
+  0%,
+  5% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  50% {
+    transform: translate(66px, -56px) scale(0.72);
+  }
+  90% {
+    transform: translate(140px, -2px) scale(1);
+    opacity: 1;
+  }
+  97%,
+  100% {
+    transform: translate(140px, -2px) scale(1);
+    opacity: 0;
+  }
+}
+
+.amb-beam {
+  animation: ldbeam 9s ease-in-out infinite;
+}
+
+.amb-glow {
+  animation: ldglow 9s ease-in-out infinite;
+}
+
+.amb-pass {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ldpass 14s cubic-bezier(0.4, 0, 0.5, 1) infinite;
+}
+
+.amb-pass--m {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ldpassm 14s cubic-bezier(0.4, 0, 0.5, 1) infinite;
+}
+
+/* Hover/press, all on motion-instant (120ms) per the spec. Cards change
+ * elevation only — no transform, so nothing shifts under the cursor. */
+.lift {
+  box-shadow: 0 1px 3px rgba(16, 24, 28, 0.06);
+  transition: box-shadow 120ms ease-out;
+}
+
+.lift:hover {
+  box-shadow: 0 6px 20px rgba(16, 24, 28, 0.1);
+}
+
+.press {
+  transition:
+    background-color 120ms ease-out,
+    box-shadow 120ms ease-out;
+}
+
+.press:active {
+  transform: scale(0.97);
+}
+
+:where(a, button, input):focus-visible {
+  outline: 2px solid #175e77; /* tokens.primary */
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Under reduced motion every loop stops dead rather than slowing — matching
+ * the app's AccessibilityInfo.isReduceMotionEnabled() convention — and reveals
+ * become simple presence. */
+@media (prefers-reduced-motion: reduce) {
+  [data-motion] * {
+    animation: none !important;
+  }
+
+  [data-load] .reveal {
+    animation-name: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .press:active {
+    transform: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Layout
+ *
+ * Real CSS rather than inline styles, because the two gaps logged in
+ * design-handoff-site-v1.md — no responsive type scale, no mobile header
+ * treatment — both need media queries, which the style prop can't express.
+ */
+.shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 0.6rem + 2.6vw, 2.5rem);
+}
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 0;
+}
+
+.site-header__mark {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.375rem;
+  font-weight: 600;
+  text-decoration: none;
+  flex: none;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 0.3rem + 1.4vw, 1.25rem);
+  font-size: 0.875rem;
+}
+
+.site-nav__link {
+  color: #3f4c51; /* tokens.ink2 */
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 120ms ease-out;
+  white-space: nowrap;
+}
+
+.site-nav__link:hover,
+.site-nav__link[aria-current='page'] {
+  color: #175e77; /* tokens.primary */
+}
+
+/* Locale switcher — a segmented pill. Switching is deliberately instant:
+ * no transition, per docs/motion-spec-site.md. */
+.lang {
+  display: flex;
+  align-items: center;
+  background: rgba(16, 24, 28, 0.06);
+  border-radius: 999px;
+  padding: 3px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  flex: none;
+}
+
+.lang__opt {
+  padding: 4px 10px;
+  border-radius: 999px;
+  text-decoration: none;
+  color: #5f6e73;
+}
+
+.lang__opt[aria-current='true'] {
+  background: #ffffff;
+  color: #175e77;
+}
+
+/* Below 720px the four nav links plus the switcher no longer fit on one line
+ * with the wordmark. The links wrap to their own full-width row and the
+ * switcher stays up top, which keeps every target ≥44px without a hamburger. */
+@media (max-width: 719px) {
+  .site-header {
+    flex-wrap: wrap;
+    row-gap: 0.75rem;
+  }
+
+  .site-nav {
+    order: 3;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.125rem;
+    border-top: 1px solid rgba(16, 24, 28, 0.07);
+    padding-top: 0.75rem;
+  }
+
+  .lang__opt {
+    padding: 8px 14px;
+  }
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 560px);
+  gap: clamp(1.5rem, 0.5rem + 3vw, 3rem);
+  align-items: center;
+  padding: clamp(1.5rem, 0.5rem + 3vw, 2.5rem) 0 clamp(2rem, 1rem + 3vw, 3.5rem);
+}
+
+@media (max-width: 899px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Artwork above the words on a phone — it's the thing that says "football"
+   * before a single line is read. */
+  .hero__art {
+    order: -1;
+  }
+}
+
+/* Stat rail — hairline-ruled figures under the hero. */
+.rail {
+  display: flex;
+  margin-top: 2rem;
+  border-top: 1px solid rgba(16, 24, 28, 0.12);
+  border-bottom: 1px solid rgba(16, 24, 28, 0.12);
+  max-width: 30rem;
+}
+
+.rail__cell {
+  flex: 1;
+  padding: 0.875rem 0;
+  min-width: 0;
+}
+
+.rail__cell + .rail__cell {
+  border-left: 1px solid rgba(16, 24, 28, 0.12);
+  padding-left: 1.25rem;
+}
+
+.rail__value {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: clamp(1.05rem, 0.9rem + 0.6vw, 1.375rem);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.rail__label {
+  font-size: 0.75rem;
+  color: #5f6e73;
+  margin-top: 0.2rem;
+  line-height: 1.3;
+}
+
+/* Fork rows on the home page. */
+.fork {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr) auto;
+  gap: 2rem;
+  align-items: center;
+  border-radius: 28px;
+  padding: 2rem 2.25rem;
+}
+
+@media (max-width: 767px) {
+  .fork {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+    padding: 1.375rem;
+    border-radius: 24px;
+  }
+
+  .fork__art {
+    height: 84px;
+  }
+}
+
+/* Numbered process with a spine, so four claims read as a sequence. */
+.process {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.process__item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3.25rem minmax(0, 1fr);
+  gap: 0.25rem;
+  padding-bottom: 2rem;
+}
+
+.process__item::before {
+  content: '';
+  position: absolute;
+  left: 1.05rem;
+  top: 1.9rem;
+  bottom: 0;
+  width: 1px;
+  background: rgba(16, 24, 28, 0.14);
+}
+
+.process__item:last-child {
+  padding-bottom: 0;
+}
+
+.process__item:last-child::before {
+  display: none;
+}
+
+.process__num {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #175e77;
+  background: #f2f4f3;
+  border: 1px solid rgba(16, 24, 28, 0.12);
+  border-radius: 999px;
+  width: 2.125rem;
+  height: 2.125rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 599px) {
+  .process__item {
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+  }
+
+  .process__item::before {
+    left: 0.94rem;
+  }
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 28px;
+  padding: clamp(1.375rem, 0.9rem + 2vw, 2rem);
+}
+
+/* Buttons. Full-width tap target on a phone — the owners contact CTA is the
+ * one action that page exists for. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  padding: 0.8125rem 1.5rem;
+  border-radius: 999px;
+  text-decoration: none;
+  border: 0;
+  cursor: pointer;
+  background: #175e77;
+  color: #ffffff;
+}
+
+.btn:hover {
+  background: #0f3f52;
+}
+
+.btn--onDark {
+  background: #ffffff;
+  color: #0f3f52;
+}
+
+.btn--onDark:hover {
+  background: #dce9ec;
+}
+
+@media (max-width: 599px) {
+  .btn--wide {
+    display: flex;
+    width: 100%;
+  }
+}
+
+/* ✎ / "not open yet" notices keep a container — they are warnings, not tags,
+ * and they should keep shouting. */
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  background: #f8e8c9; /* tokens.sunSoft */
+  color: #8a5a0e; /* tokens.sunDeep */
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+.prose {
+  color: #3f4c51;
+  line-height: 1.65;
+}
+
+/* Two hero compositions: the tall crop beside the headline on desktop, the
+ * wide band above it on a phone. Only one is ever in the DOM's flow. */
+.art-d {
+  display: block;
+}
+
+.art-m {
+  display: none;
+}
+
+@media (max-width: 899px) {
+  .art-d {
+    display: none;
+  }
+
+  .art-m {
+    display: block;
+  }
+}
+
+/* Horizontal lockup: mark + wordmark, clear space equal to the mark's base. */
+.site-header__mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ---------------------------------------------------------------------------
+ * The six rooms (home page)
+ *
+ * Ground rhythm: floodlit · chalk · chalk · ink · chalk · ink. The two ink rooms
+ * are the two asks — owners, and the close. Colour marks intent, not variety.
+ *
+ * Snap is desktop-only and deliberate. Below 900px it goes off entirely:
+ * full-height snapping on a phone fights the URL bar and the keyboard, and the
+ * same content reads fine as ordinary sections.
+ *
+ * The real constraint here is not the animation — it is that each room holds
+ * one heading, one paragraph and one widget. Mandatory snap takes scroll away
+ * from the user, so a room whose content exceeds the viewport becomes a trap.
+ */
+.room {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4.5rem clamp(1.25rem, 0.6rem + 2.6vw, 4.375rem);
+}
+
+.room--ink {
+  background: #0f3f52;
+  color: #f2f4f3;
+}
+
+.room--deep {
+  background: #0a2e3d;
+  color: #f2f4f3;
+}
+
+.room--centred {
+  align-items: center;
+  text-align: center;
+}
+
+@media (min-width: 900px) {
+  .rooms {
+    height: 100vh;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+  }
+
+  .room {
+    height: 100vh;
+    scroll-snap-align: start;
+  }
+}
+
+/* Floodlit hero (components/floodlit-hero.tsx) — room 01 as a scroll-scrubbed
+ * scene. The room is taller than the viewport and its stage is sticky, so the
+ * scene plays while the copy holds still. That keeps the one-viewport cap
+ * above: the reader never sees more than one screen of content, and under
+ * mandatory snap an oversized room scrolls freely inside itself before the
+ * next room snaps. `overflow: clip` rather than `.room`'s `hidden`, because
+ * `hidden` makes the room a scroll container and kills `position: sticky`. */
+.room.room--floodlit {
+  display: block;
+  height: 240vh;
+  height: 240svh;
+  padding: 0;
+  overflow: clip;
+  background: #0a2e3d;
+  color: #f2f4f3;
+}
+
+@media (min-width: 900px) {
+  .room.room--floodlit {
+    height: 300vh;
+  }
+}
+
+.floodlit__stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.floodlit__poster img,
+.floodlit__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.floodlit__poster img {
+  object-fit: cover;
+  object-position: 70% 50%;
+}
+
+/* The scrim is the copy's ground: deep Aegean, strongest under the words and
+ * gone by the pitch. */
+.floodlit__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(10, 46, 61, 0.88) 0%,
+    rgba(10, 46, 61, 0.6) 34%,
+    rgba(10, 46, 61, 0) 64%
+  );
+}
+
+.floodlit__copy {
+  position: relative;
+  height: 100%;
+  max-width: 40rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4.5rem clamp(1.25rem, 0.6rem + 2.6vw, 4.375rem);
+}
+
+@media (max-width: 899px) {
+  .floodlit__poster img {
+    object-position: 50% 50%;
+  }
+
+  /* The phone crop is sky over pitch, so the copy sits on the sky and the
+   * scene plays in the lower half. Top-aligned also keeps the copy clear of
+   * the in-flow header, which pushes the stage's bottom off the first
+   * screen until the stage sticks. */
+  .floodlit__scrim {
+    background: linear-gradient(
+      180deg,
+      rgba(10, 46, 61, 0.94) 0%,
+      rgba(10, 46, 61, 0.8) 42%,
+      rgba(10, 46, 61, 0) 70%
+    );
+  }
+
+  .floodlit__copy {
+    justify-content: flex-start;
+    padding-top: 2rem;
+  }
+}
+
+/* A phone has room for the claim or the stats over the scene, not both. The
+ * stats stay on every larger screen. */
+@media (max-width: 599px) {
+  .floodlit__stats {
+    display: none;
+  }
+}
+
+/* No scrub without motion: one screen, the poster as a still. */
+@media (prefers-reduced-motion: reduce) {
+  .room.room--floodlit {
+    height: 100vh;
+    height: 100svh;
+  }
+}
+
+/* Rise — contents enter bottom-up, 28px, staggered 80ms in reading order: the
+ * plane-landing gesture at page scale. Runs once per room; scrolling back up
+ * does not replay it.
+ *
+ * Scoped to `.is-armed`, which components/rooms.tsx adds before first paint.
+ * Content is therefore visible by default: if the bundle is blocked, slow or
+ * broken, the page reads as a plain document instead of going white. The
+ * curtain must never gate the paint. */
+.rooms.is-armed .rise {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.55s cubic-bezier(0.2, 0.7, 0.3, 1),
+    transform 0.65s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.rooms.is-armed .rise.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Sweep — ink rooms only. One Λ outline expands from the room's centre as you
+ * land, then never again. Chalk rooms get no sweep. */
+@keyframes ludiSectionSweep {
+  0% {
+    transform: scale(0.28);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(6);
+    opacity: 0;
+  }
+}
+
+.sweep {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -130px;
+  margin-top: -130px;
+  overflow: visible;
+  transform-origin: 50% 94%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sweep.is-in {
+  animation: ludiSectionSweep 1.5s cubic-bezier(0.2, 0.7, 0.3, 1) 1 both;
+}
+
+/* App story — one phone on the night stage, the five steps beside it
+ * (components/app-story.tsx). Apple's AirPods Pro page, two ways: "Take a
+ * closer look" on desktop (pills beside one big product; the open pill reads
+ * as one sentence) and "Get the highlights" on a phone (a caption under the
+ * picture, a pill paginator with the clock in it, a round pause button).
+ *
+ * Sizing runs off one number, --phone-w. A phone is 2.086 widths tall (the
+ * 393 × 852 screen plus a 3.5% bezel each side). On desktop the width comes
+ * from the viewport height: the stage is the phone plus ~90px of pad and
+ * controls, the room has 144px of padding, so (100vh − 270px) / 2.086 keeps
+ * the room inside one viewport under the snap, clear of the fixed header,
+ * down to a 720px-tall laptop.
+ *
+ * The backdrop is cropped just below its touchline and pinned by its bottom
+ * edge at 90% of the phone's height, so the phone always stands on the line;
+ * the turf below is plain colour sampled from the art. */
+.showcase {
+  --phone-w: min(64vw, 250px);
+  --phone-h: calc(var(--phone-w) * 2.086);
+  --stage-pad: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* On a phone the DOM order is the reading order: heading, phone, download.
+ * On desktop the download moves under the steps; the stage spans both rows,
+ * and the copy and the download meet in the middle of it. */
+@media (min-width: 900px) {
+  .showcase {
+    --phone-w: clamp(190px, calc((100vh - 270px) / 2.086), 300px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'copy stage'
+      'action stage';
+    column-gap: clamp(2rem, 4vw, 4rem);
+    row-gap: 1.5rem;
+  }
+
+  .showcase__copy {
+    grid-area: copy;
+    align-self: end;
+  }
+
+  .showcase__stage {
+    grid-area: stage;
+    align-self: center;
+  }
+
+  .showcase__action {
+    grid-area: action;
+    align-self: start;
+  }
+}
+
+/* No word left alone on the heading's or the paragraph's last line. */
+.showcase__copy .t-page {
+  text-wrap: balance;
+}
+
+.showcase__copy .prose {
+  text-wrap: pretty;
+}
+
+/* Steps — desktop only. A pill per step; the chosen one opens into a card
+ * that reads as one sentence, with the clock running along its foot. */
+.showcase__steps {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .showcase__steps {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-top: 1.75rem;
+  }
+}
+
+.step {
+  /* Lets width animate between fit-content and 100% where supported; elsewhere
+   * the pill simply snaps open. */
+  interpolate-size: allow-keywords;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: fit-content;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 7px 18px 7px 7px;
+  border: 0;
+  border-radius: 22px;
+  background: rgba(16, 24, 28, 0.06);
+  color: #10181c;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    background-color 0.25s ease,
+    box-shadow 0.35s ease,
+    width 0.35s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.step:hover {
+  background: rgba(16, 24, 28, 0.1);
+}
+
+.step:focus-visible {
+  outline: 2px solid #175e77;
+  outline-offset: 2px;
+}
+
+.step[aria-selected='true'] {
+  width: 100%;
+  align-items: flex-start;
+  padding: 14px 20px 20px 7px;
+  background: #ffffff;
+  box-shadow:
+    0 1px 0 rgba(16, 24, 28, 0.04),
+    0 10px 28px rgba(16, 24, 28, 0.08);
+  cursor: default;
+}
+
+.step__num {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(16, 24, 28, 0.08);
+  font-size: 10.5px;
+  color: #3f4c51;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.step[aria-selected='true'] .step__num {
+  background: #175e77;
+  color: #f2f4f3;
+}
+
+.step__text {
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.step[aria-selected='true'] .step__text {
+  padding-top: 4px;
+}
+
+.step__title {
+  font-weight: 600;
+}
+
+.step__stop,
+.step__body {
+  display: none;
+}
+
+.step[aria-selected='true'] .step__stop,
+.step[aria-selected='true'] .step__body {
+  display: inline;
+}
+
+.step__body {
+  color: #3f4c51;
+  animation: ludiStepIn 0.4s ease both;
+}
+
+@keyframes ludiStepIn {
+  from {
+    opacity: 0;
+  }
+}
+
+.step__track {
+  position: absolute;
+  left: 49px;
+  right: 20px;
+  bottom: 9px;
+  height: 2px;
+  border-radius: 1px;
+  background: rgba(16, 24, 28, 0.08);
+  overflow: hidden;
+}
+
+/* The clock. Its own animationend moves the story on (app-story.tsx). */
+.step__bar,
+.dot__bar {
+  display: block;
+  height: 100%;
+  background: #175e77;
+  transform-origin: left;
+  animation: ludiStoryClock 5s linear both;
+}
+
+@keyframes ludiStoryClock {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.showcase__stage {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--stage-pad) 1.25rem 1.25rem;
+  border-radius: 28px;
+  overflow: hidden;
+  background: #143e28;
+  box-shadow: 0 12px 32px rgba(16, 24, 28, 0.14);
+  /* Vertical drags still scroll the page; horizontal ones are a swipe. */
+  touch-action: pan-y;
+}
+
+.showcase__stage::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: -1;
+  height: calc(var(--stage-pad) + var(--phone-h) * 0.9);
+  background: #0a2e3d url('/home/app-stage.webp') 62% bottom / cover no-repeat;
+}
+
+@media (min-width: 900px) {
+  .showcase__stage {
+    width: calc(var(--phone-w) * 1.62);
+    padding-bottom: 0.875rem;
+  }
+}
+
+.showcase .phone {
+  width: var(--phone-w);
+}
+
+.phone {
+  padding: calc(var(--phone-w) * 0.035);
+  border-radius: calc(var(--phone-w) * 0.165);
+  background: #10181c;
+  box-shadow:
+    0 0 0 1px rgba(242, 244, 243, 0.12),
+    0 24px 48px rgba(0, 0, 0, 0.4);
+}
+
+.phone__screen {
+  border-radius: calc(var(--phone-w) * 0.13);
+  overflow: hidden;
+  transition: background-color 0.45s ease;
+}
+
+/* What the capture cut off: 54 of the screen's 852 pt. */
+.phone__status {
+  position: relative;
+  aspect-ratio: 393 / 54;
+}
+
+.phone__time {
+  position: absolute;
+  left: 11%;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: calc(var(--phone-w) * 0.062);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #10181c;
+}
+
+.phone__island {
+  position: absolute;
+  left: 50%;
+  top: 16%;
+  width: 32%;
+  height: 68%;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: #10181c;
+}
+
+.phone__battery {
+  position: absolute;
+  right: 9%;
+  top: 50%;
+  width: 6.8%;
+  height: 34%;
+  transform: translateY(-50%);
+  padding: 1px;
+  border: 1.5px solid rgba(16, 24, 28, 0.8);
+  border-radius: 3px;
+  background: #10181c;
+  background-clip: content-box;
+}
+
+/* All five screens are stacked and cross-fade, so changing step never waits
+ * on a download. */
+.phone__stack {
+  position: relative;
+  aspect-ratio: 640 / 1307;
+}
+
+.phone__img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+
+.phone__img[data-on='true'] {
+  opacity: 1;
+}
+
+/* Caption — phone only; on desktop the open step is the caption. Two lines
+ * held open so the controls below don't jump as captions change length. */
+.showcase__caption {
+  max-width: 34ch;
+  min-height: 2.9em;
+  margin: 1.1rem 0 0;
+  font-size: 14.5px;
+  line-height: 1.45;
+  text-align: center;
+  color: rgba(242, 244, 243, 0.74);
+}
+
+.showcase__caption strong {
+  font-weight: 600;
+  color: #f2f4f3;
+}
+
+.showcase__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  margin-top: 0.9rem;
+}
+
+.showcase__dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 18px;
+  background: rgba(242, 244, 243, 0.14);
+  backdrop-filter: blur(8px);
+}
+
+.dot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: rgba(242, 244, 243, 0.45);
+  overflow: hidden;
+  cursor: pointer;
+  transition:
+    width 0.35s cubic-bezier(0.2, 0.7, 0.3, 1),
+    background-color 0.25s ease;
+}
+
+/* A finger-sized target around an 8px dot. */
+.dot::after {
+  content: '';
+  position: absolute;
+  inset: -14px -4px;
+}
+
+.dot[aria-current='true'] {
+  width: 40px;
+  background: rgba(242, 244, 243, 0.3);
+}
+
+.dot__bar {
+  background: #f2f4f3;
+}
+
+.showcase__toggle {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(242, 244, 243, 0.14);
+  backdrop-filter: blur(8px);
+  color: #f2f4f3;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+.showcase__toggle:hover {
+  background: rgba(242, 244, 243, 0.24);
+}
+
+.dot:focus-visible,
+.showcase__toggle:focus-visible {
+  outline: 2px solid #f2f4f3;
+  outline-offset: 2px;
+}
+
+/* Desktop: the open step is the caption and the pills are the paginator, so
+ * only the pause button stays, in the stage's corner. */
+@media (min-width: 900px) {
+  .showcase__caption,
+  .showcase__dots {
+    display: none;
+  }
+
+  .showcase__controls {
+    align-self: flex-end;
+    margin-top: 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step,
+  .dot,
+  .phone__img,
+  .phone__screen {
+    transition: none;
+  }
+
+  .step__body {
+    animation: none;
+  }
+}
+
+/* Venue cards — the proof room names the venues in HOME_VENUES, each card
+ * opening that venue's own page (app/[locale]/page.tsx). */
+.venue-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  max-width: 40rem;
+  margin: 28px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.venue-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  height: 100%;
+  padding: 20px 22px;
+  border-radius: 16px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.venue-card__city {
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #1f6640;
+}
+
+.venue-card__name {
+  margin: 6px 0 4px;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #10181c;
+}
+
+.venue-card__line {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #3f4c51;
+}
+
+.venue-card__open {
+  margin-top: 12px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #175e77;
+}
+
+/* Dot rail — the one element that keeps reacting after the rise has run. */
+.rail-dots {
+  position: fixed;
+  right: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  display: none;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .rail-dots {
+    display: flex;
+  }
+}
+
+.rail-dots__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 4px;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  background: rgba(16, 24, 28, 0.28);
+  transition:
+    background 0.3s ease-out,
+    height 0.3s ease-out;
+}
+
+.rail-dots__dot[aria-current='true'] {
+  height: 20px;
+  background: #d99520;
+}
+
+/* prefers-reduced-motion kills the sweeps and the rise — content is simply
+ * there. If anything is invisible or misplaced with this on, the animation was
+ * doing layout work it should not have been. */
+@media (prefers-reduced-motion: reduce) {
+  .rooms.is-armed .rise {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .sweep,
+  .sweep.is-in {
+    animation: none;
+    opacity: 0;
+  }
+
+  .rooms {
+    scroll-behavior: auto;
+  }
+}
+
+/* On desktop the rooms scroller owns the viewport, so the header has to float
+ * over it — left in flow it pushes the scroller down, the document scrolls as
+ * well as the scroller, and you get two scrollbars with the nav sliding away.
+ * Room 05 closes the page, so the standalone footer would be a sixth scroll
+ * target nobody asked for. */
+@media (min-width: 900px) {
+  .home-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 6;
+    background: rgba(242, 244, 243, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(16, 24, 28, 0.07);
+  }
+
+  .home-footer {
+    display: none;
+  }
+}
+
+.room__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.625rem;
+  font-size: 0.656rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(242, 244, 243, 0.45);
+}
+
+.room__links a {
+  text-decoration: none;
+}
+
+.room__links a:hover {
+  color: rgba(242, 244, 243, 0.85);
+}
+
+/* ---------------------------------------------------------------------------
+ * The overture
+ *
+ * Curtain lifts, mark flies into the header lockup, header fades in behind it.
+ *
+ * The whole layer is `position: fixed` and sits ABOVE a fully rendered page —
+ * it never wraps content. If the component never mounts, none of this exists
+ * and the site is simply already there. The curtain must never gate the paint.
+ *
+ * `--dx`, `--dy` and `--s` are measured at runtime from the real header mark
+ * (components/overture.tsx); the fallbacks only matter if that lookup fails.
+ */
+.overture {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overture__curtain {
+  position: absolute;
+  inset: 0;
+  background: #0a2e3d; /* the mark's own ground */
+  animation: ludiOverCurtain var(--overture, 2600ms) both;
+}
+
+.overture__mark {
+  position: relative;
+  animation: ludiOverMark var(--overture, 2600ms) both;
+}
+
+.overture__ring {
+  position: absolute;
+  animation: ludiOverRing var(--overture, 2600ms) both;
+}
+
+@keyframes ludiOverCurtain {
+  0%,
+  37% {
+    opacity: 1;
+  }
+  68%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes ludiOverMark {
+  /* The flight uses the system's standard curve, not the design's
+   * cubic-bezier(0.66, 0, 0.24, 1). Those control points are reversed in x
+   * (x2 0.24 < x1 0.66), which makes the mark crawl, snap, then crawl — it
+   * reads as a stop partway to the header rather than one continuous move.
+   * docs/motion-spec-site.md defines one standard curve; this is it. */
+  0%,
+  34% {
+    opacity: 1;
+    transform: none;
+    animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+  }
+  78% {
+    opacity: 1;
+    transform: translate(var(--dx, -380px), var(--dy, -270px)) scale(var(--s, 0.156));
+  }
+  /* Arrive, hold a beat, then go. The old tail sat invisible for a fifth of
+   * the sequence with nothing happening. */
+  88%,
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx, -380px), var(--dy, -270px)) scale(var(--s, 0.156));
+  }
+}
+
+@keyframes ludiOverRing {
+  0% {
+    transform: scale(0.32);
+    opacity: 0.55;
+  }
+  55% {
+    opacity: 0.22;
+  }
+  100% {
+    transform: scale(8);
+    opacity: 0;
+  }
+}
+
+/* The header resolves as the mark lands in it. Scoped to `.is-overture`, which
+ * the component adds and always removes — so the header is plainly visible if
+ * the overture never runs. */
+@keyframes ludiHeaderIn {
+  0%,
+  73% {
+    opacity: 0;
+  }
+  80%,
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Sibling, not an html class: the curtain is in the server HTML now, so this
+ * has to match on first paint rather than after hydration. When JS removes the
+ * overture the selector stops matching and the header simply stays visible. */
+.overture ~ .home-header {
+  animation: ludiHeaderIn var(--overture, 2600ms) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overture {
+    display: none;
+  }
+
+  .overture ~ .home-header {
+    animation: none;
+  }
+}
+
+/* The overture animates a seven-path SVG down to ~15% scale. Without an
+ * explicit layer the browser re-rasterises the vector every frame, which is
+ * what makes the flight stutter. Promote the moving parts and let the
+ * compositor scale a texture instead.
+ *
+ * `will-change` is scoped to `.is-overture` so these layers exist for the
+ * ~2.6s the sequence runs and are dropped afterwards — a permanent
+ * will-change costs memory for an animation that plays once. */
+.overture__mark,
+.overture__ring,
+.overture__curtain {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+.overture__mark svg,
+.overture__ring svg {
+  /* Hint that the raster can be reused across scales rather than redrawn. */
+  shape-rendering: optimizeSpeed;
+}
+
+/* ---------------------------------------------------------------------------
+ * Keeper signup — the only form on the site.
+ *
+ * It has no backend. The controls compose a message and hand it to the
+ * keeper's own WhatsApp; nothing is posted anywhere. See
+ * components/keeper-signup.tsx and docs/plans/site.md §Explicit decision.
+ *
+ * Controls sit on white inside the pitch-soft card, so the card reads as the
+ * page's one working surface rather than another block of prose.
+ */
+.field {
+  margin: 0 0 20px;
+  padding: 0;
+  border: 0;
+}
+
+/* Fieldsets size to min-content by default, which stops the chip row wrapping. */
+.field--group {
+  min-width: 0;
+}
+
+.field__label {
+  display: block;
+  margin: 0 0 8px;
+  padding: 0;
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #174028; /* tokens.pitchDeep */
+}
+
+.field__hint {
+  margin: -2px 0 10px;
+  font-size: 0.8125rem;
+  color: #5f6e73; /* tokens.ink3 */
+}
+
+.field__input {
+  display: block;
+  width: 100%;
+  padding: 0.6875rem 0.875rem;
+  font: inherit;
+  font-size: 0.9375rem;
+  color: #10181c;
+  background: #ffffff;
+  border: 1px solid rgba(16, 24, 28, 0.12);
+  border-radius: 14px;
+  resize: vertical;
+}
+
+.field__input::placeholder {
+  color: #8a969a;
+}
+
+.field__input:hover {
+  border-color: rgba(16, 24, 28, 0.24);
+}
+
+.choices {
+  display: grid;
+  gap: 8px;
+}
+
+.choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  padding: 0.6875rem 0.875rem;
+  font-size: 0.9375rem;
+  color: #3f4c51;
+  background: #ffffff;
+  border: 1px solid rgba(16, 24, 28, 0.12);
+  border-radius: 14px;
+  cursor: pointer;
+}
+
+.choice:has(input:checked) {
+  color: #10181c;
+  border-color: #1f6640; /* tokens.pitch */
+  box-shadow: inset 0 0 0 1px #1f6640;
+}
+
+.choice input {
+  margin-top: 0.15rem;
+  accent-color: #1f6640;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* The night toggles hide their checkbox rather than restyling it, so the ring
+ * has to be re-hung on the label — otherwise keyboard users lose it entirely. */
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4375rem 0.8125rem;
+  font-size: 0.875rem;
+  color: #3f4c51;
+  background: #ffffff;
+  border: 1px solid rgba(16, 24, 28, 0.12);
+  border-radius: 999px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.chip input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+.chip:has(input:checked) {
+  color: #ffffff;
+  background: #1f6640;
+  border-color: #1f6640;
+}
+
+.chip:has(input:focus-visible) {
+  outline: 2px solid #175e77;
+  outline-offset: 2px;
+}
+
+/* The message, shown back before it is sent. This is the privacy claim made
+ * checkable: what is in this box is all that ever leaves the page. */
+.preview {
+  margin: 0;
+  padding: 0.875rem 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: #3f4c51;
+  background: #ffffff;
+  border: 1px dashed rgba(16, 24, 28, 0.22);
+  border-radius: 14px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Not a real <button>, so it cannot be :disabled — the send control is an
+ * anchor that only exists once there is a name to send. */
+.btn--off {
+  color: #5f6e73;
+  background: rgba(16, 24, 28, 0.1);
+  cursor: not-allowed;
+}
+
+.btn--off:hover {
+  background: rgba(16, 24, 28, 0.1);
+}

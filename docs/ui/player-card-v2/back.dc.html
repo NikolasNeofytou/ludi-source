@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Player card back, position, record and QR</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&amp;family=Literata:opsz,wght@7..72,500..600&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div lang="{{lang}}" style="width: 362px; height: 644px; box-sizing: border-box; border-radius: 20px; overflow: hidden; background: #0A2E3D; border: 1px solid rgba(16,24,28,0.12); padding: 16px 16px 18px; display: flex; flex-direction: column; justify-content: space-between; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif; color: #FBF8F0">
+
+<div style="display: flex; justify-content: space-between; align-items: flex-start; padding: 0 2px">
+<div style="display: flex; align-items: center; gap: 9px; padding-top: 4px">
+<svg width="28" height="28" viewBox="0 0 180 180" aria-hidden="true"><path d="M90 28 L178 180 L2 180 Z" fill="#175E77"></path><path d="M90 74 L146 180 L34 180 Z" fill="#63A6B7"></path><path d="M90 120 L110 180 L70 180 Z" fill="#DCE9EC"></path><path d="M90 150 L99 180 L81 180 Z" fill="#D99520"></path></svg>
+<div style="font-family: 'Fraunces', 'Literata', Georgia, serif; font-weight: 600; font-size: 20px; letter-spacing: 2px; color: #FBF8F0">LUDI</div>
+</div>
+<sc-if value="{{memberNo}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; align-items: flex-end">
+<div style="font-size: 9px; letter-spacing: 2px; font-weight: 700; color: rgba(251,248,240,0.78)">{{Lu.member}}</div>
+<div style="font-family: 'Fraunces', 'Literata', Georgia, serif; font-weight: 600; font-size: 30px; line-height: 32px; color: #D99520">{{memberNo}}</div>
+</div>
+</sc-if>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 12px; height: 330px">
+
+<div style="box-sizing: border-box; background: #113B4D; border: 1px solid rgba(251,248,240,0.08); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px">
+<div style="font-size: 10px; letter-spacing: 1.6px; font-weight: 700; color: rgba(251,248,240,0.78)">{{Lu.position}}</div>
+<div role="img" aria-label="{{pitchLabel}}" style="position: relative; width: 133px; height: 216px; align-self: center">
+<svg width="133" height="216" viewBox="0 0 133 216" aria-hidden="true" style="position: absolute; left: 0; top: 0">
+<rect x="0" y="0" width="133" height="27" fill="rgba(251,248,240,0.03)"></rect>
+<rect x="0" y="54" width="133" height="27" fill="rgba(251,248,240,0.03)"></rect>
+<rect x="0" y="108" width="133" height="27" fill="rgba(251,248,240,0.03)"></rect>
+<rect x="0" y="162" width="133" height="27" fill="rgba(251,248,240,0.03)"></rect>
+<g fill="none" stroke="rgba(251,248,240,0.2)" stroke-width="1">
+<rect x="0.5" y="0.5" width="132" height="215" rx="4"></rect>
+<path d="M0 108 H133"></path>
+<circle cx="66.5" cy="108" r="18"></circle>
+<rect x="26.5" y="0.5" width="80" height="32"></rect>
+<rect x="47.5" y="0.5" width="38" height="12"></rect>
+<path d="M51.3 32.5 A18 18 0 0 0 81.7 32.5"></path>
+<rect x="26.5" y="183.5" width="80" height="32"></rect>
+<rect x="47.5" y="203.5" width="38" height="12"></rect>
+<path d="M51.3 183.5 A18 18 0 0 1 81.7 183.5"></path>
+</g>
+<circle cx="66.5" cy="108" r="1.6" fill="rgba(251,248,240,0.35)"></circle>
+</svg>
+<sc-if value="{{hasPrimary}}" hint-placeholder-val="{{true}}">
+<div style="position: absolute; box-sizing: border-box; left: {{echo.outerLeft}}px; top: {{echo.outerTop}}px; width: 54px; height: 54px; border-radius: 50%; border: 1.5px solid {{echo.color}}; opacity: 0.4"></div>
+<div style="position: absolute; box-sizing: border-box; left: {{echo.innerLeft}}px; top: {{echo.innerTop}}px; width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid {{echo.color}}; opacity: 0.8"></div>
+</sc-if>
+<sc-for list="{{nodes}}" as="n" hint-placeholder-count="10">
+<div style="position: absolute; box-sizing: border-box; left: {{n.left}}px; top: {{n.top}}px; width: {{n.size}}px; height: {{n.size}}px; border-radius: 50%; background: {{n.bg}}; border: {{n.border}}; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: {{n.fs}}px; font-weight: 700; letter-spacing: 0.2px; color: {{n.color}}">{{n.code}}</div>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<div style="font-family: 'Fraunces', 'Literata', Georgia, serif; font-weight: 600; font-size: 16px; line-height: 20px; color: {{posNameColor}}">{{posName}}</div>
+<sc-if value="{{also}}" hint-placeholder-val="{{true}}">
+<div style="font-size: 11.5px; line-height: 15px; color: rgba(251,248,240,0.78)">{{also}}</div>
+</sc-if>
+</div>
+</div>
+
+<div style="box-sizing: border-box; background: #113B4D; border: 1px solid rgba(251,248,240,0.08); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 10px; letter-spacing: 1.6px; font-weight: 700; color: rgba(251,248,240,0.78)">{{Lu.recordTitle}}</div>
+<sc-if value="{{showRecord}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column">
+<sc-for list="{{record}}" as="r" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; gap: 1px; padding: {{r.pad}}; border-top: {{r.divider}}">
+<div style="font-family: 'Fraunces', 'Literata', Georgia, serif; font-weight: 600; font-size: 30px; line-height: 34px; color: #FBF8F0">{{r.v}}</div>
+<div style="font-size: 10px; letter-spacing: 0.9px; font-weight: 700; color: rgba(251,248,240,0.78)">{{r.k}}</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{firstMatch}}" hint-placeholder-val="{{false}}">
+<div style="font-family: 'Fraunces', 'Literata', Georgia, serif; font-style: italic; font-weight: 500; font-size: 21px; line-height: 27px; color: #FBF8F0">{{L.firstMatch}}</div>
+</sc-if>
+<sc-if value="{{privateRecord}}" hint-placeholder-val="{{false}}">
+<div style="font-size: 13.5px; line-height: 19px; color: rgba(251,248,240,0.85)">{{L.privateRecord}}</div>
+</sc-if>
+</div>
+<div style="border: 1.5px dashed rgba(251,248,240,0.32); border-radius: 10px; padding: 8px 10px; display: flex; flex-direction: column; gap: 2px">
+<div style="font-size: 9.5px; letter-spacing: 1px; font-weight: 700; color: rgba(251,248,240,0.78)">{{Lu.locked}}</div>
+<div style="font-size: 12px; line-height: 16px; color: rgba(251,248,240,0.9)">{{L.earned}}</div>
+</div>
+</div>
+
+</div>
+
+<div style="box-sizing: border-box; height: 150px; background: #113B4D; border: 1px solid rgba(251,248,240,0.08); border-radius: 16px; padding: 12px; display: flex; align-items: center; gap: 16px">
+<div style="flex: none; width: 126px; height: 126px; box-sizing: border-box; border-radius: 12px; background: #FFFFFF; padding: 9px">
+<svg width="108" height="108" viewBox="-2 -2 33 33" role="img" aria-label="{{L.qr}}" shape-rendering="crispEdges"><rect x="-2" y="-2" width="33" height="33" fill="#FFFFFF"></rect><path fill="#10181C" d="{{qr}}"></path></svg>
+</div>
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px">
+<div style="font-family: 'Fraunces', 'Literata', Georgia, serif; font-weight: 500; font-size: 19px; line-height: 24px; color: #FBF8F0">{{scanLine}}</div>
+<div style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.6px; color: rgba(251,248,240,0.78)">ludi.football</div>
+</div>
+</div>
+
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; padding: 0 2px">
+<div style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
+<div style="font-family: 'Fraunces', 'Literata', Georgia, serif; font-weight: 600; font-size: 17px; line-height: 21px; color: #FBF8F0">{{name}}</div>
+<div style="font-size: 12px; line-height: 16px; color: rgba(251,248,240,0.78)">{{subLine}}</div>
+</div>
+<div style="font-size: 10px; letter-spacing: 1.6px; font-weight: 700; color: rgba(251,248,240,0.78); padding-bottom: 2px; flex: none">{{factioTag}}</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"player":{"editor":"enum","options":["full","new","greek"],"default":"full"},"$preview":{"width":362,"height":644}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const PRESETS = {
+      full: { lang: 'en', first: 'Andreas', last: 'Georgiou', memberNo: 27, city: 'Larnaca', since: 'June 2026', positions: ['ST', 'RW'], record: { m: 14, t: 23, v: 4 } },
+      new: { lang: 'en', first: 'Maria', last: 'Ioannou', memberNo: 412, city: 'Nicosia', since: 'October 2026', positions: [], record: { m: 0, t: 0, v: 0 } },
+      greek: { lang: 'el', first: 'Χαράλαμπος', last: 'Παπαχριστοφόρου', memberNo: 3, city: 'Λεμεσός', since: 'Μάιο 2026', positions: ['GK'], record: null }
+    };
+    const QR = {
+      27: 'M0 0h7v1h-7zM8 0h1v1h-1zM10 0h4v1h-4zM17 0h1v1h-1zM20 0h1v1h-1zM22 0h7v1h-7zM0 1h1v1h-1zM6 1h1v1h-1zM8 1h1v1h-1zM10 1h1v1h-1zM12 1h1v1h-1zM16 1h1v1h-1zM20 1h1v1h-1zM22 1h1v1h-1zM28 1h1v1h-1zM0 2h1v1h-1zM2 2h3v1h-3zM6 2h1v1h-1zM11 2h1v1h-1zM13 2h2v1h-2zM18 2h1v1h-1zM20 2h1v1h-1zM22 2h1v1h-1zM24 2h3v1h-3zM28 2h1v1h-1zM0 3h1v1h-1zM2 3h3v1h-3zM6 3h1v1h-1zM14 3h1v1h-1zM17 3h1v1h-1zM19 3h2v1h-2zM22 3h1v1h-1zM24 3h3v1h-3zM28 3h1v1h-1zM0 4h1v1h-1zM2 4h3v1h-3zM6 4h1v1h-1zM10 4h1v1h-1zM12 4h1v1h-1zM14 4h1v1h-1zM16 4h5v1h-5zM22 4h1v1h-1zM24 4h3v1h-3zM28 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM10 5h4v1h-4zM15 5h1v1h-1zM20 5h1v1h-1zM22 5h1v1h-1zM28 5h1v1h-1zM0 6h7v1h-7zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM22 6h7v1h-7zM9 7h2v1h-2zM13 7h1v1h-1zM16 7h1v1h-1zM20 7h1v1h-1zM1 8h1v1h-1zM6 8h3v1h-3zM11 8h1v1h-1zM17 8h2v1h-2zM21 8h1v1h-1zM27 8h2v1h-2zM2 9h4v1h-4zM13 9h1v1h-1zM16 9h2v1h-2zM19 9h1v1h-1zM23 9h2v1h-2zM26 9h2v1h-2zM0 10h3v1h-3zM4 10h3v1h-3zM8 10h2v1h-2zM11 10h6v1h-6zM18 10h1v1h-1zM20 10h4v1h-4zM26 10h1v1h-1zM0 11h1v1h-1zM3 11h3v1h-3zM8 11h2v1h-2zM13 11h1v1h-1zM15 11h2v1h-2zM19 11h2v1h-2zM22 11h2v1h-2zM25 11h1v1h-1zM0 12h1v1h-1zM2 12h2v1h-2zM6 12h3v1h-3zM10 12h1v1h-1zM15 12h1v1h-1zM18 12h1v1h-1zM21 12h2v1h-2zM25 12h1v1h-1zM27 12h1v1h-1zM0 13h2v1h-2zM3 13h1v1h-1zM5 13h1v1h-1zM9 13h1v1h-1zM11 13h1v1h-1zM14 13h1v1h-1zM18 13h3v1h-3zM22 13h1v1h-1zM24 13h2v1h-2zM28 13h1v1h-1zM0 14h1v1h-1zM2 14h2v1h-2zM6 14h2v1h-2zM11 14h1v1h-1zM13 14h2v1h-2zM17 14h2v1h-2zM23 14h1v1h-1zM1 15h4v1h-4zM7 15h2v1h-2zM12 15h1v1h-1zM14 15h1v1h-1zM18 15h1v1h-1zM21 15h1v1h-1zM24 15h3v1h-3zM28 15h1v1h-1zM1 16h1v1h-1zM4 16h3v1h-3zM8 16h1v1h-1zM10 16h1v1h-1zM14 16h1v1h-1zM17 16h4v1h-4zM25 16h2v1h-2zM0 17h1v1h-1zM3 17h1v1h-1zM5 17h1v1h-1zM7 17h1v1h-1zM9 17h2v1h-2zM12 17h2v1h-2zM16 17h2v1h-2zM19 17h1v1h-1zM22 17h1v1h-1zM24 17h1v1h-1zM28 17h1v1h-1zM0 18h2v1h-2zM3 18h6v1h-6zM10 18h3v1h-3zM14 18h1v1h-1zM16 18h1v1h-1zM19 18h2v1h-2zM23 18h2v1h-2zM26 18h1v1h-1zM28 18h1v1h-1zM0 19h1v1h-1zM2 19h4v1h-4zM8 19h2v1h-2zM11 19h2v1h-2zM14 19h3v1h-3zM18 19h1v1h-1zM20 19h4v1h-4zM25 19h1v1h-1zM28 19h1v1h-1zM0 20h1v1h-1zM2 20h6v1h-6zM9 20h1v1h-1zM12 20h3v1h-3zM17 20h1v1h-1zM20 20h5v1h-5zM26 20h1v1h-1zM28 20h1v1h-1zM8 21h2v1h-2zM12 21h1v1h-1zM15 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM24 21h4v1h-4zM0 22h7v1h-7zM8 22h1v1h-1zM11 22h1v1h-1zM13 22h5v1h-5zM19 22h2v1h-2zM22 22h1v1h-1zM24 22h1v1h-1zM0 23h1v1h-1zM6 23h1v1h-1zM11 23h3v1h-3zM15 23h2v1h-2zM19 23h2v1h-2zM24 23h2v1h-2zM27 23h2v1h-2zM0 24h1v1h-1zM2 24h3v1h-3zM6 24h1v1h-1zM9 24h2v1h-2zM14 24h1v1h-1zM16 24h9v1h-9zM0 25h1v1h-1zM2 25h3v1h-3zM6 25h1v1h-1zM9 25h3v1h-3zM13 25h1v1h-1zM18 25h3v1h-3zM23 25h1v1h-1zM25 25h3v1h-3zM0 26h1v1h-1zM2 26h3v1h-3zM6 26h1v1h-1zM9 26h2v1h-2zM12 26h1v1h-1zM14 26h2v1h-2zM17 26h1v1h-1zM19 26h6v1h-6zM27 26h1v1h-1zM0 27h1v1h-1zM6 27h1v1h-1zM8 27h1v1h-1zM10 27h1v1h-1zM14 27h1v1h-1zM16 27h1v1h-1zM18 27h2v1h-2zM21 27h2v1h-2zM24 27h3v1h-3zM28 27h1v1h-1zM0 28h7v1h-7zM9 28h2v1h-2zM12 28h2v1h-2zM15 28h1v1h-1zM17 28h1v1h-1zM19 28h1v1h-1zM24 28h1v1h-1zM26 28h1v1h-1z',
+      412: 'M0 0h7v1h-7zM10 0h2v1h-2zM15 0h1v1h-1zM19 0h1v1h-1zM22 0h7v1h-7zM0 1h1v1h-1zM6 1h1v1h-1zM8 1h6v1h-6zM15 1h4v1h-4zM22 1h1v1h-1zM28 1h1v1h-1zM0 2h1v1h-1zM2 2h3v1h-3zM6 2h1v1h-1zM8 2h4v1h-4zM15 2h2v1h-2zM19 2h2v1h-2zM22 2h1v1h-1zM24 2h3v1h-3zM28 2h1v1h-1zM0 3h1v1h-1zM2 3h3v1h-3zM6 3h1v1h-1zM9 3h1v1h-1zM12 3h2v1h-2zM15 3h1v1h-1zM17 3h1v1h-1zM19 3h1v1h-1zM22 3h1v1h-1zM24 3h3v1h-3zM28 3h1v1h-1zM0 4h1v1h-1zM2 4h3v1h-3zM6 4h1v1h-1zM10 4h1v1h-1zM14 4h1v1h-1zM16 4h1v1h-1zM19 4h1v1h-1zM22 4h1v1h-1zM24 4h3v1h-3zM28 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM9 5h1v1h-1zM13 5h2v1h-2zM18 5h3v1h-3zM22 5h1v1h-1zM28 5h1v1h-1zM0 6h7v1h-7zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM22 6h7v1h-7zM9 7h2v1h-2zM12 7h1v1h-1zM15 7h1v1h-1zM17 7h2v1h-2zM1 8h3v1h-3zM5 8h2v1h-2zM11 8h1v1h-1zM13 8h1v1h-1zM17 8h1v1h-1zM19 8h1v1h-1zM26 8h2v1h-2zM1 9h1v1h-1zM4 9h1v1h-1zM10 9h1v1h-1zM12 9h4v1h-4zM17 9h1v1h-1zM19 9h6v1h-6zM28 9h1v1h-1zM1 10h1v1h-1zM3 10h1v1h-1zM5 10h2v1h-2zM8 10h1v1h-1zM15 10h3v1h-3zM22 10h1v1h-1zM24 10h1v1h-1zM27 10h1v1h-1zM3 11h3v1h-3zM7 11h1v1h-1zM11 11h1v1h-1zM13 11h3v1h-3zM18 11h1v1h-1zM20 11h1v1h-1zM23 11h2v1h-2zM28 11h1v1h-1zM0 12h1v1h-1zM2 12h1v1h-1zM4 12h4v1h-4zM9 12h1v1h-1zM14 12h2v1h-2zM17 12h5v1h-5zM23 12h1v1h-1zM26 12h3v1h-3zM0 13h1v1h-1zM2 13h2v1h-2zM5 13h1v1h-1zM10 13h8v1h-8zM19 13h1v1h-1zM22 13h2v1h-2zM25 13h2v1h-2zM28 13h1v1h-1zM5 14h3v1h-3zM9 14h1v1h-1zM11 14h2v1h-2zM14 14h1v1h-1zM18 14h2v1h-2zM21 14h5v1h-5zM27 14h2v1h-2zM1 15h2v1h-2zM5 15h1v1h-1zM12 15h1v1h-1zM14 15h3v1h-3zM18 15h1v1h-1zM20 15h1v1h-1zM22 15h1v1h-1zM24 15h2v1h-2zM27 15h1v1h-1zM1 16h2v1h-2zM5 16h2v1h-2zM9 16h1v1h-1zM12 16h1v1h-1zM15 16h1v1h-1zM19 16h1v1h-1zM21 16h1v1h-1zM23 16h3v1h-3zM27 16h1v1h-1zM1 17h2v1h-2zM7 17h5v1h-5zM16 17h3v1h-3zM25 17h1v1h-1zM0 18h1v1h-1zM2 18h2v1h-2zM5 18h3v1h-3zM10 18h1v1h-1zM12 18h1v1h-1zM14 18h2v1h-2zM17 18h1v1h-1zM22 18h1v1h-1zM24 18h2v1h-2zM3 19h2v1h-2zM7 19h1v1h-1zM9 19h2v1h-2zM14 19h1v1h-1zM17 19h1v1h-1zM21 19h2v1h-2zM24 19h5v1h-5zM1 20h6v1h-6zM8 20h2v1h-2zM11 20h3v1h-3zM16 20h12v1h-12zM8 21h2v1h-2zM11 21h1v1h-1zM16 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM24 21h2v1h-2zM28 21h1v1h-1zM0 22h7v1h-7zM9 22h2v1h-2zM12 22h1v1h-1zM14 22h1v1h-1zM16 22h2v1h-2zM19 22h2v1h-2zM22 22h1v1h-1zM24 22h1v1h-1zM26 22h2v1h-2zM0 23h1v1h-1zM6 23h1v1h-1zM8 23h1v1h-1zM11 23h1v1h-1zM14 23h2v1h-2zM18 23h1v1h-1zM20 23h1v1h-1zM24 23h1v1h-1zM27 23h1v1h-1zM0 24h1v1h-1zM2 24h3v1h-3zM6 24h1v1h-1zM10 24h1v1h-1zM12 24h1v1h-1zM14 24h1v1h-1zM17 24h2v1h-2zM20 24h7v1h-7zM28 24h1v1h-1zM0 25h1v1h-1zM2 25h3v1h-3zM6 25h1v1h-1zM8 25h1v1h-1zM11 25h2v1h-2zM14 25h1v1h-1zM17 25h3v1h-3zM24 25h2v1h-2zM27 25h1v1h-1zM0 26h1v1h-1zM2 26h3v1h-3zM6 26h1v1h-1zM8 26h3v1h-3zM13 26h1v1h-1zM16 26h3v1h-3zM20 26h1v1h-1zM23 26h1v1h-1zM25 26h1v1h-1zM28 26h1v1h-1zM0 27h1v1h-1zM6 27h1v1h-1zM8 27h2v1h-2zM14 27h1v1h-1zM18 27h3v1h-3zM24 27h2v1h-2zM27 27h1v1h-1zM0 28h7v1h-7zM9 28h3v1h-3zM13 28h1v1h-1zM18 28h4v1h-4zM23 28h1v1h-1zM27 28h1v1h-1z',
+      3: 'M0 0h7v1h-7zM8 0h1v1h-1zM11 0h2v1h-2zM17 0h1v1h-1zM20 0h1v1h-1zM22 0h7v1h-7zM0 1h1v1h-1zM6 1h1v1h-1zM8 1h2v1h-2zM12 1h1v1h-1zM20 1h1v1h-1zM22 1h1v1h-1zM28 1h1v1h-1zM0 2h1v1h-1zM2 2h3v1h-3zM6 2h1v1h-1zM9 2h1v1h-1zM11 2h3v1h-3zM16 2h1v1h-1zM18 2h1v1h-1zM20 2h1v1h-1zM22 2h1v1h-1zM24 2h3v1h-3zM28 2h1v1h-1zM0 3h1v1h-1zM2 3h3v1h-3zM6 3h1v1h-1zM10 3h3v1h-3zM17 3h1v1h-1zM19 3h2v1h-2zM22 3h1v1h-1zM24 3h3v1h-3zM28 3h1v1h-1zM0 4h1v1h-1zM2 4h3v1h-3zM6 4h1v1h-1zM9 4h2v1h-2zM13 4h1v1h-1zM16 4h5v1h-5zM22 4h1v1h-1zM24 4h3v1h-3zM28 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM9 5h1v1h-1zM13 5h4v1h-4zM20 5h1v1h-1zM22 5h1v1h-1zM28 5h1v1h-1zM0 6h7v1h-7zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM22 6h7v1h-7zM10 7h5v1h-5zM16 7h1v1h-1zM20 7h1v1h-1zM1 8h1v1h-1zM6 8h3v1h-3zM11 8h1v1h-1zM13 8h2v1h-2zM16 8h3v1h-3zM21 8h1v1h-1zM27 8h2v1h-2zM1 9h1v1h-1zM4 9h2v1h-2zM7 9h1v1h-1zM9 9h2v1h-2zM12 9h3v1h-3zM17 9h1v1h-1zM19 9h1v1h-1zM23 9h2v1h-2zM26 9h2v1h-2zM1 10h1v1h-1zM5 10h2v1h-2zM8 10h1v1h-1zM11 10h3v1h-3zM15 10h1v1h-1zM18 10h1v1h-1zM20 10h4v1h-4zM26 10h1v1h-1zM1 11h1v1h-1zM3 11h3v1h-3zM9 11h2v1h-2zM12 11h1v1h-1zM16 11h1v1h-1zM19 11h2v1h-2zM22 11h2v1h-2zM25 11h1v1h-1zM1 12h2v1h-2zM4 12h3v1h-3zM8 12h1v1h-1zM10 12h3v1h-3zM14 12h3v1h-3zM18 12h1v1h-1zM21 12h2v1h-2zM25 12h1v1h-1zM27 12h1v1h-1zM0 13h1v1h-1zM2 13h2v1h-2zM5 13h1v1h-1zM8 13h1v1h-1zM13 13h1v1h-1zM18 13h3v1h-3zM22 13h1v1h-1zM24 13h2v1h-2zM28 13h1v1h-1zM6 14h3v1h-3zM12 14h1v1h-1zM14 14h1v1h-1zM17 14h2v1h-2zM23 14h1v1h-1zM1 15h1v1h-1zM12 15h4v1h-4zM21 15h1v1h-1zM24 15h3v1h-3zM28 15h1v1h-1zM1 16h1v1h-1zM4 16h1v1h-1zM6 16h1v1h-1zM10 16h2v1h-2zM13 16h1v1h-1zM16 16h1v1h-1zM18 16h3v1h-3zM25 16h2v1h-2zM0 17h2v1h-2zM5 17h1v1h-1zM7 17h2v1h-2zM11 17h1v1h-1zM14 17h1v1h-1zM17 17h3v1h-3zM22 17h1v1h-1zM24 17h1v1h-1zM28 17h1v1h-1zM0 18h2v1h-2zM3 18h2v1h-2zM6 18h1v1h-1zM9 18h1v1h-1zM11 18h2v1h-2zM14 18h2v1h-2zM19 18h2v1h-2zM23 18h2v1h-2zM26 18h1v1h-1zM28 18h1v1h-1zM0 19h1v1h-1zM2 19h1v1h-1zM8 19h1v1h-1zM10 19h4v1h-4zM18 19h1v1h-1zM20 19h4v1h-4zM25 19h1v1h-1zM27 19h1v1h-1zM0 20h1v1h-1zM3 20h5v1h-5zM9 20h1v1h-1zM11 20h5v1h-5zM17 20h1v1h-1zM20 20h5v1h-5zM26 20h1v1h-1zM28 20h1v1h-1zM8 21h1v1h-1zM10 21h1v1h-1zM13 21h3v1h-3zM18 21h1v1h-1zM20 21h1v1h-1zM24 21h4v1h-4zM0 22h7v1h-7zM8 22h2v1h-2zM11 22h3v1h-3zM15 22h2v1h-2zM18 22h3v1h-3zM22 22h1v1h-1zM24 22h1v1h-1zM0 23h1v1h-1zM6 23h1v1h-1zM11 23h2v1h-2zM15 23h2v1h-2zM18 23h3v1h-3zM24 23h2v1h-2zM27 23h2v1h-2zM0 24h1v1h-1zM2 24h3v1h-3zM6 24h1v1h-1zM9 24h1v1h-1zM11 24h2v1h-2zM16 24h9v1h-9zM0 25h1v1h-1zM2 25h3v1h-3zM6 25h1v1h-1zM9 25h5v1h-5zM16 25h1v1h-1zM18 25h3v1h-3zM23 25h1v1h-1zM25 25h3v1h-3zM0 26h1v1h-1zM2 26h3v1h-3zM6 26h1v1h-1zM10 26h1v1h-1zM13 26h1v1h-1zM17 26h1v1h-1zM19 26h6v1h-6zM27 26h1v1h-1zM0 27h1v1h-1zM6 27h1v1h-1zM8 27h2v1h-2zM12 27h1v1h-1zM14 27h2v1h-2zM18 27h2v1h-2zM21 27h2v1h-2zM24 27h3v1h-3zM28 27h1v1h-1zM0 28h7v1h-7zM9 28h3v1h-3zM13 28h1v1h-1zM17 28h1v1h-1zM19 28h1v1h-1zM24 28h1v1h-1zM26 28h1v1h-1z'
+    };
+    const COPY = {
+      en: {
+        member: 'Member', position: 'Position', recordTitle: 'The record', matches: 'Matches', teammates: 'Teammates', pitches: 'Pitches',
+        firstMatch: 'First match ahead', privateRecord: 'Match record is private for now.',
+        locked: 'Reliability · Ratings', earned: 'Earned as you play',
+        noPosition: 'Position not set', also: 'Also plays', since: 'since',
+        scan: (n) => 'Scan to join ' + n + ' on Ludi', qr: 'QR code linking to ludi.football', pitchOf: 'Plays {p}',
+        pos: { GK: 'Goalkeeper', CB: 'Centre-back', LB: 'Left-back', RB: 'Right-back', CDM: 'Defensive mid', CM: 'Central mid', CAM: 'Attacking mid', LW: 'Left wing', RW: 'Right wing', ST: 'Striker' }
+      },
+      el: {
+        member: 'Μέλος', position: 'Θέση', recordTitle: 'Το ιστορικό', matches: 'Παιχνίδια', teammates: 'Συμπαίκτες', pitches: 'Γήπεδα',
+        firstMatch: 'Το πρώτο ματς έρχεται', privateRecord: 'Το ιστορικό αγώνων είναι ιδιωτικό προς το παρόν.',
+        locked: 'Αξιοπιστία · Βαθμολογίες', earned: 'Χτίζονται καθώς παίζεις',
+        noPosition: 'Χωρίς θέση', also: 'Παίζει και', since: 'από',
+        scan: (n) => 'Σκάναρε και έλα στο Ludi', qr: 'Κωδικός QR προς το ludi.football', pitchOf: 'Παίζει {p}',
+        pos: { GK: 'Τερματοφύλακας', CB: 'Κεντρικός αμυντικός', LB: 'Αριστερός μπακ', RB: 'Δεξιός μπακ', CDM: 'Αμυντικός μέσος', CM: 'Κεντρικός μέσος', CAM: 'Επιθετικός μέσος', LW: 'Αριστερό εξτρέμ', RW: 'Δεξί εξτρέμ', ST: 'Επιθετικός' }
+      }
+    };
+    const FACTIONS = {
+      aurata: { latin: 'AVRATA', light: '#D99520' },
+      veneta: { latin: 'VENETA', light: '#5BA9C6' },
+      prasina: { latin: 'PRASINA', light: '#5DB585' },
+      russata: { latin: 'RVSSATA', light: '#E8735A' },
+      albata: { latin: 'ALBATA', light: '#DCE9EC' }
+    };
+    const p = PRESETS[this.props.player] || PRESETS.full;
+    const L = COPY[p.lang];
+    const up = (s) => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase();
+    const Lu = {};
+    Object.keys(L).forEach((k) => { if (typeof L[k] === 'string') Lu[k] = up(L[k]); });
+    const p0 = p.positions[0];
+    const others = p.positions.slice(1);
+    const fk = !p0 ? 'albata' : p0 === 'GK' ? 'aurata' : ['CB', 'LB', 'RB'].indexOf(p0) >= 0 ? 'veneta' : ['CDM', 'CM', 'CAM'].indexOf(p0) >= 0 ? 'prasina' : 'russata';
+    const f = FACTIONS[fk];
+    const rec = p.record;
+
+    const W = 133;
+    const H = 216;
+    const SPOTS = { ST: [0.5, 0.09], LW: [0.15, 0.22], RW: [0.85, 0.22], CAM: [0.5, 0.33], CM: [0.5, 0.47], CDM: [0.5, 0.61], LB: [0.13, 0.7], RB: [0.87, 0.7], CB: [0.5, 0.77], GK: [0.5, 0.9] };
+    const nodes = Object.keys(SPOTS).map((code) => {
+      const state = code === p0 ? 'primary' : others.indexOf(code) >= 0 ? 'secondary' : 'off';
+      const size = state === 'primary' ? 30 : state === 'secondary' ? 22 : 6;
+      const s = SPOTS[code];
+      return {
+        code: state === 'off' ? '' : code,
+        size: size,
+        left: Math.round(s[0] * W - size / 2),
+        top: Math.round(s[1] * H - size / 2),
+        bg: state === 'primary' ? '#FBF8F0' : state === 'secondary' ? '#113B4D' : 'rgba(251,248,240,0.38)',
+        border: state === 'secondary' ? '1.5px solid #FBF8F0' : '0',
+        color: state === 'primary' ? '#10181C' : '#FBF8F0',
+        fs: state === 'primary' ? 10.5 : 8.5
+      };
+    });
+    const ps = p0 ? SPOTS[p0] : [0.5, 0.5];
+    const pcx = ps[0] * W;
+    const pcy = ps[1] * H;
+
+    const recList = rec ? [{ k: Lu.matches, v: rec.m }, { k: Lu.teammates, v: rec.t }, { k: Lu.pitches, v: rec.v }] : [];
+    return {
+      lang: p.lang, L: L, Lu: Lu,
+      memberNo: p.memberNo == null ? '' : String(p.memberNo),
+      nodes: nodes,
+      hasPrimary: !!p0,
+      echo: {
+        color: f.light,
+        innerLeft: Math.round(pcx - 21), innerTop: Math.round(pcy - 21),
+        outerLeft: Math.round(pcx - 27), outerTop: Math.round(pcy - 27)
+      },
+      pitchLabel: p0 ? L.pitchOf.replace('{p}', p.positions.join(', ')) : L.noPosition,
+      posName: p0 ? L.pos[p0] : L.noPosition,
+      posNameColor: p0 ? '#FBF8F0' : 'rgba(251,248,240,0.78)',
+      also: others.length ? L.also + ' ' + others.join(', ') : '',
+      showRecord: !!(rec && rec.m > 0),
+      firstMatch: !!(rec && rec.m === 0),
+      privateRecord: !rec,
+      record: recList.map((x, i) => ({ k: x.k, v: String(x.v), pad: i === 0 ? '0 0 8px' : '8px 0', divider: i === 0 ? '0' : '1px solid rgba(251,248,240,0.12)' })),
+      qr: QR[p.memberNo] || QR[27],
+      scanLine: L.scan(p.first),
+      name: (p.first + ' ' + p.last).trim(),
+      subLine: [p.city, p.since ? L.since + ' ' + p.since : ''].filter(Boolean).join(' · '),
+      factioTag: 'FACTIO · ' + f.latin
+    };
+  }
+}
+</script>
+</body>
+</html>

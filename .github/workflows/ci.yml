@@ -1,0 +1,418 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  # Deliberately NO `branches:` filter here.
+  #
+  # It used to be `branches: [main]`, which meant a pull request targeting
+  # anything other than main ran no CI at all. That is silent rather than
+  # loud: the PR page shows only whatever external checks are installed
+  # (Vercel, in our case) and looks perfectly healthy.
+  #
+  # It bit us on the M6 #41 stack — six PRs deep, three of them targeting a
+  # sibling feature branch, none of which had run a single migration,
+  # typecheck or lint job by the time they were opened. Stacked PRs are the
+  # normal shape for a solo dev splitting a large change into reviewable
+  # pieces, and they are exactly the ones that most need checking, because
+  # each is written against a base that is not yet on main.
+  #
+  # `push` stays pinned to main so a feature branch is tested once via its
+  # pull request rather than twice.
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  install:
+    name: Install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+  lint:
+    name: Lint
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm turbo lint
+
+  sql-lint:
+    name: SQL lint (sqlfluff)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install sqlfluff
+        run: pip install sqlfluff==4.1.0
+      - name: Lint migrations + seed + RLS tests
+        # Config lives at packages/supabase/.sqlfluff and only enforces
+        # the rules CONVENTIONS.md commits to (CP01/CP02/CP04/CP05).
+        # Other style choices (alignment, line length, alias form) are
+        # intentionally not gated — add to CONVENTIONS.md first if we
+        # ever want them enforced.
+        working-directory: packages/supabase
+        run: sqlfluff lint supabase/migrations/ supabase/seed.sql tests/
+
+  typecheck:
+    name: Typecheck
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm turbo typecheck
+
+  build:
+    name: Build site
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Nothing else in CI compiles apps/site. Without this a broken build —
+      # a bad import, a failed prerender, a missing env var — reaches
+      # production and is only caught by the deploy going red, or worse, not.
+      - run: pnpm --filter @ludi/site build
+
+  postgres-image:
+    # Keeps prod's Postgres image in GHCR so the dry-run never pulls it from
+    # ECR Public. Anonymous ECR pulls are metered per IP, GitHub's runners
+    # share their IPs, and from 2026-10-19 the dry-run's service container
+    # died on `toomanyrequests: Data limit exceeded` before a single step ran,
+    # on main and on docs-only PRs alike. Docker Hub, the other public home of
+    # supabase/postgres, has failed the same way before (#270).
+    #
+    # The copy happens once per tag: every later run finds it in GHCR and
+    # stops after one lookup. So bumping TAG is the whole upgrade — the first
+    # run after the bump mirrors the new image, from ECR or else Docker Hub,
+    # byte for byte (the linux/amd64 manifest keeps its digest).
+    name: Postgres image (GHCR mirror)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    env:
+      # The image production runs — `supabase projects list -o json` reports
+      # ludi-prod on 17.6.1.155. Bump this when prod's version moves; the two
+      # must agree or the dry-run proves the wrong thing.
+      TAG: 17.6.1.155
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    outputs:
+      image: ${{ steps.mirror.outputs.image }}
+    steps:
+      - name: Mirror supabase/postgres to GHCR if missing
+        id: mirror
+        run: |
+          mirror="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/supabase-postgres:$TAG"
+          echo "image=$mirror" >> "$GITHUB_OUTPUT"
+          command -v skopeo >/dev/null \
+            || { sudo apt-get update -qq && sudo apt-get install -y -qq skopeo >/dev/null; }
+          echo "$GH_TOKEN" | skopeo login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+          if skopeo inspect --raw "docker://$mirror" >/dev/null 2>&1; then
+            echo "$mirror is in GHCR already."
+            exit 0
+          fi
+          # Each round tries both sources: a runner whose IP ECR has cut off
+          # stays cut off for the whole job (#337's first run lost seven
+          # minutes to it), so Docker Hub gets its turn straight after.
+          for round in 1 2 3; do
+            for src in "public.ecr.aws/supabase/postgres:$TAG" "docker.io/supabase/postgres:$TAG"; do
+              if skopeo copy --retry-times 2 --override-os linux --override-arch amd64 \
+                  "docker://$src" "docker://$mirror"; then
+                echo "Copied $src to $mirror:"
+                skopeo inspect --format '{{.Digest}}' "docker://$mirror"
+                exit 0
+              fi
+            done
+            sleep $((round * 20))
+          done
+          echo "::error::Could not copy supabase/postgres:$TAG from ECR Public or Docker Hub. Re-run this job."
+          exit 1
+
+  migrations:
+    name: Migration dry-run
+    needs: postgres-image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    # Hoisted from the ten steps that each repeated it. Beyond the
+    # repetition, every new step that talked to the database had to
+    # remember to re-add it — and each fresh copy trips secret scanning,
+    # which flagged three M6 #41 pull requests for adding a line identical
+    # to nine already in this file. It is the throwaway password of an
+    # ephemeral service container, declared right below as
+    # POSTGRES_PASSWORD; job-level env merges with (rather than clobbers)
+    # any step's own env, so the load test keeps its PGURL.
+    env:
+      PGPASSWORD: postgres
+    services:
+      postgres:
+        # The image production runs (supabase/postgres, the tag lives in the
+        # postgres-image job above, which mirrors it into GHCR) — not a
+        # vanilla Postgres with extensions bolted on. It ships pgtap, PostGIS,
+        # pg_cron (preloaded), citext and btree_gist, the real `auth` schema,
+        # and the anon / authenticated / service_role roles, so the apt step
+        # that used to install pgtap into a Debian 11 container is gone with
+        # the Debian 11 PGDG repo that killed it (see the court-cameras PR,
+        # #270). Until 2026-10-12 this job ran postgis/postgis:15-3.4:
+        # Postgres 15 while prod was already on 17.
+        image: ${{ needs.postgres-image.outputs.image }}
+        credentials:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Verify required extensions are available
+        run: |
+          psql -h localhost -U postgres -d postgres -c "CREATE EXTENSION IF NOT EXISTS pgcrypto;"
+          psql -h localhost -U postgres -d postgres -c "CREATE EXTENSION IF NOT EXISTS citext;"
+          psql -h localhost -U postgres -d postgres -c "CREATE EXTENSION IF NOT EXISTS btree_gist;"
+          psql -h localhost -U postgres -d postgres -c "CREATE EXTENSION IF NOT EXISTS postgis;"
+      - name: Apply migrations in order
+        run: |
+          # Reset to clean slate to simulate fresh install
+          psql -h localhost -U postgres -d postgres -c "DROP SCHEMA IF EXISTS public CASCADE; CREATE SCHEMA public;"
+          # The DROP takes Supabase's default privileges for `public` with it
+          # (pg_default_acl rows hang off the schema). Prod and the local
+          # stack have them: every function, table and sequence a migration
+          # creates is granted to anon, authenticated and service_role at
+          # CREATE time, unless the migration revokes it. Restore them, or
+          # the dry-run cannot see a function left open to anon — and the
+          # RLS suite, which no longer blanket-grants functions, would run
+          # on grants prod does not have (2026-10-20, tests/rls/59).
+          psql -h localhost -U postgres -d postgres -v ON_ERROR_STOP=1 -c "
+            GRANT USAGE ON SCHEMA public TO anon, authenticated, service_role;
+            ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON TABLES    TO anon, authenticated, service_role;
+            ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON FUNCTIONS TO anon, authenticated, service_role;
+            ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON SEQUENCES TO anon, authenticated, service_role;"
+          # The roles our RLS policies reference (`TO anon, authenticated`)
+          # and the `auth` schema (auth.users with its real columns,
+          # auth.uid()) come with the Supabase image, exactly as on prod.
+          # The vanilla-Postgres stubs this step used to create are gone:
+          # `postgres` is not a superuser on this image and has no CREATE on
+          # `auth` (it belongs to supabase_auth_admin), so even an IF NOT
+          # EXISTS stub fails with "permission denied for schema auth". The
+          # role loop stays as a guard: it is a no-op where the roles exist.
+          for role in anon authenticated service_role; do
+            psql -h localhost -U postgres -d postgres -tAc \
+              "SELECT 1 FROM pg_roles WHERE rolname = '$role'" | grep -q 1 \
+              || psql -h localhost -U postgres -d postgres -c "CREATE ROLE $role NOLOGIN;"
+          done
+          # One gap between this image and prod: the image carries the base
+          # auth.users; GoTrue adds the rest of its columns when it boots,
+          # and CI never boots GoTrue. The views in 20260828000001 read
+          # au.phone at CREATE time and fail without it, so add what GoTrue
+          # would have — the same idempotent lines the RLS bootstrap carries
+          # — as supabase_admin, the only role that may touch `auth` here.
+          for col in "phone text" "email text" "created_at timestamptz DEFAULT now()" "invited_at timestamptz" "last_sign_in_at timestamptz"; do
+            psql -h localhost -U supabase_admin -d postgres -v ON_ERROR_STOP=1 \
+              -c "ALTER TABLE auth.users ADD COLUMN IF NOT EXISTS $col;"
+          done
+          # Apply every migration in lexicographic order
+          for f in packages/supabase/supabase/migrations/*.sql; do
+            echo "::group::$f"
+            psql -h localhost -U postgres -d postgres -v ON_ERROR_STOP=1 -f "$f"
+            echo "::endgroup::"
+          done
+          # Apply seed
+          psql -h localhost -U postgres -d postgres -v ON_ERROR_STOP=1 -f packages/supabase/supabase/seed.sql
+      - name: Sanity-check schema
+        run: |
+          # Assert expected tables exist
+          for table in cities users venues venue_owners pitches pitch_schedules pitch_schedule_overrides bookings booking_addons booking_participants payments admin_actions booking_codes_seq idempotency_keys stripe_events; do
+            psql -h localhost -U postgres -d postgres -tAc "SELECT to_regclass('public.$table')::text" | grep -q "^$table$" || (echo "Missing table: $table" && exit 1)
+          done
+          echo "All expected tables present."
+      - name: Assert bookings EXCLUDE covers pending state
+        run: |
+          # The create-booking Edge Function relies on pending bookings blocking
+          # overlaps. If this predicate regresses, concurrent checkout races
+          # silently become refund-on-settle bugs.
+          psql -h localhost -U postgres -d postgres -tAc \
+            "SELECT pg_get_constraintdef(oid) FROM pg_constraint WHERE conname = 'bookings_pitch_id_time_range_excl'" \
+            | grep -q "'pending'" \
+            || (echo "EXCLUDE predicate missing 'pending' — migration regression" && exit 1)
+          echo "EXCLUDE predicate includes pending state."
+      - name: Assert expected functions exist
+        run: |
+          for fn in cleanup_stale_pending_bookings cleanup_expired_idempotency_keys cleanup_old_stripe_events generate_booking_code get_available_slots tg_venues_cascade_stripe_status; do
+            count=$(psql -h localhost -U postgres -d postgres -tAc "SELECT count(*) FROM pg_proc WHERE proname = '$fn' AND pronamespace = 'public'::regnamespace")
+            if [ "$count" = "0" ]; then echo "Missing function: $fn"; exit 1; fi
+          done
+          echo "All expected functions present."
+      - name: Smoke test - get_available_slots
+        run: |
+          psql -h localhost -U postgres -d postgres -v ON_ERROR_STOP=1 \
+            -f packages/supabase/tests/get_available_slots.sql
+      - name: Schema test - schedule overlap constraints
+        run: |
+          psql -h localhost -U postgres -d postgres -v ON_ERROR_STOP=1 \
+            -f packages/supabase/tests/schedule_constraints.sql
+      - name: Schema test - schedule change collisions
+        run: |
+          psql -h localhost -U postgres -d postgres -v ON_ERROR_STOP=1 \
+            -f packages/supabase/tests/schedule_collisions.sql
+      - name: Smoke test - pg_cron schedules (skip-if-absent)
+        run: |
+          # pg_cron isn't in the vanilla postgis container; the test self-skips.
+          # When run locally via `supabase start` or against a real Supabase,
+          # this asserts the 3 cleanup jobs are registered.
+          psql -h localhost -U postgres -d postgres -v ON_ERROR_STOP=1 \
+            -f packages/supabase/tests/pg_cron_schedules.sql
+      - name: Assert seed fixtures landed
+        run: |
+          # Regression guard on the local-dev fixture. If anyone removes the
+          # Larnaca Sportsplex seed or changes the fixture ids, Discover
+          # breaks silently after `supabase db reset`.
+          count=$(psql -h localhost -U postgres -d postgres -tAc \
+            "SELECT count(*) FROM public.pitches WHERE venue_id = '00000000-0000-4000-8000-000000000100'")
+          if [ "$count" != "3" ]; then
+            echo "Expected 3 seed pitches for fixture venue, got $count"
+            exit 1
+          fi
+          schedules=$(psql -h localhost -U postgres -d postgres -tAc \
+            "SELECT count(*) FROM public.pitch_schedules WHERE pitch_id IN (
+              '00000000-0000-4000-8000-000000000101',
+              '00000000-0000-4000-8000-000000000102',
+              '00000000-0000-4000-8000-000000000103')")
+          if [ "$schedules" -lt "20" ]; then
+            echo "Expected at least 20 seed pitch_schedules, got $schedules"
+            exit 1
+          fi
+          echo "Seed fixtures present: $count pitches, $schedules schedule rows."
+      - name: Concurrent double-book load test
+        env:
+          PGURL: postgresql://postgres:postgres@localhost:5432/postgres
+          # Stage 2 exit criterion: 100 parallel attempts, exactly 1 success.
+          NUM_ATTEMPTS: 100
+        run: |
+          bash packages/supabase/tests/load/double_book.sh
+      - name: Install pg_prove on the runner
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libtap-parser-sourcehandler-pgtap-perl >/dev/null
+      - name: Apply RLS test bootstrap
+        run: |
+          psql -h localhost -U postgres -d postgres -v ON_ERROR_STOP=1 \
+            -c "CREATE EXTENSION IF NOT EXISTS pgtap;"
+          # As supabase_admin, the image's superuser (POSTGRES_PASSWORD is
+          # its password too): the bootstrap replaces auth.uid() with the
+          # GUC-reading test version, and auth.uid() belongs to
+          # supabase_auth_admin — `postgres` gets "permission denied for
+          # schema auth". The suite itself still runs as postgres below, the
+          # role the app's own SQL runs as.
+          psql -h localhost -U supabase_admin -d postgres -v ON_ERROR_STOP=1 \
+            -f packages/supabase/tests/rls/_bootstrap.sql
+      - name: Run RLS pgtap suite
+        run: |
+          # Glob excludes _bootstrap.sql; per-table files are 01_…13_.
+          pg_prove -h localhost -U postgres -d postgres --verbose \
+            packages/supabase/tests/rls/[0-9]*.sql
+      - name: Security test - venue owner column privileges
+        env:
+          PGPASSWORD: postgres
+        run: |
+          # Must run AFTER the RLS bootstrap: it does `SET LOCAL ROLE
+          # authenticated`, and in CI only the bootstrap's auth.uid()
+          # reads the identity it sets.
+          psql -h localhost -U postgres -d postgres -v ON_ERROR_STOP=1 \
+            -f packages/supabase/tests/owner_column_privileges.sql
+
+  edge-functions:
+    name: Edge Function tests (Deno)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Cache Deno deps
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/deno
+          key: deno-${{ hashFiles('packages/supabase/supabase/functions/import_map.json', 'packages/supabase/supabase/functions/deno.jsonc') }}
+      - name: Typecheck
+        working-directory: packages/supabase/supabase/functions
+        run: deno check create-booking/index.ts cancel-booking/index.ts stripe-webhook/index.ts admin-refund-booking/index.ts anonymize-me/index.ts take-seat/index.ts leave-share/index.ts expire-collecting/index.ts whatsapp-inbound/index.ts whatsapp-reply/index.ts recorder/index.ts recording/index.ts recordings-sweep/index.ts wallet-pass/index.ts
+      - name: Lint
+        working-directory: packages/supabase/supabase/functions
+        run: deno lint
+      - name: Unit tests
+        working-directory: packages/supabase/supabase/functions
+        run: deno test --allow-env --allow-net=deno.land,esm.sh _tests/
+      - name: Court recorder (ADR-0042)
+        working-directory: tools/court-recorder
+        run: |
+          deno check --config deno.json main.ts
+          deno lint --config deno.json .
+          deno test --config deno.json --allow-net=deno.land schedule.test.ts
+
+  e2e:
+    # M6 #44. Boots the REAL local stack — GoTrue, PostgREST, the edge
+    # runtime, migrations + seed — and drives a booking through it end to
+    # end. This is the only job that exercises the PostgREST layer, which
+    # is where the 2026-08-10 is_admin() recursion hid from pgtap. The
+    # script targets whatever SUPABASE_URL points at, so it doubles as the
+    # staging smoke test once #39/#40 land — CI just points it elsewhere.
+    name: E2E booking happy path
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Start the local stack (migrations + seed apply on boot)
+        # Only db + gotrue + kong + postgrest + edge-runtime are needed;
+        # excluding the rest roughly halves the image pulls.
+        run: |
+          supabase start --workdir packages/supabase \
+            -x realtime,storage-api,imgproxy,mailpit,postgres-meta,studio,logflare,vector,supavisor
+      - name: Run the booking happy path
+        working-directory: packages/supabase
+        run: |
+          eval "$(supabase status -o env | grep -E '^(API_URL|ANON_KEY|SERVICE_ROLE_KEY)=')"
+          SUPABASE_URL="$API_URL" \
+          SUPABASE_ANON_KEY="$ANON_KEY" \
+          SUPABASE_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY" \
+          deno run --no-config --allow-net --allow-env tests/e2e/booking_happy_path.ts
